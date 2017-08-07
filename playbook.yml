@@ -10,4 +10,4 @@
       docker_service:
         build: yes
         state: present
-        project_src: compose
+        project_src: '.'
