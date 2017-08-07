@@ -20,3 +20,6 @@
         env:
           REDIS_HOST: "redis"
           REDIS_PORT: 6379
+          VIRTUAL_HOST: forms.fsfe.org
+          LETSENCRYPT_HOST: forms.fsfe.org
+          LETSENCRYPT_EMAIL: jonas@fsfe.org
