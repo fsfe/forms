@@ -3,6 +3,9 @@
   remote_user: root
 
   tasks:
+    - name: install docker compose
+      command: pip install docker-compose
+
     - name: run
       docker_service:
         build: yes
