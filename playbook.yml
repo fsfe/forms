@@ -8,8 +8,8 @@
 
     - name: run nginx proxy
       docker_container:
-        name: proxy
-        image: jwilder/nginx-proxy
+        name: nginx-proxx
+        image: nginx
         state: started
         restart: yes
 
