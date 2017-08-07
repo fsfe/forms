@@ -8,8 +8,8 @@ services:
       - redis-storage:/data
   web-app:
     build:
-      context: .
-      dockerfile: Dockerfile-web
+      context: ../
+      dockerfile: ./Dockerfile-web
     depends_on:
       - redis
     environment:
@@ -17,12 +17,10 @@ services:
       REDIS_PORT: 6379
     ports:
       - "0.0.0.0:80:8080"
-    volumes:
-      #- /var/share/sender/:/var/sender/src/configuration/
   workers-app:
     build:
-      context: .
-      dockerfile: Dockerfile-worker
+      context: ../
+      dockerfile: ./Dockerfile-worker
     depends_on:
       - redis
     environment:
@@ -30,7 +28,5 @@ services:
       REDIS_PORT: 6379
       SMTP_HOST: "192.168.99.1"
       SMTP_PORT: 25
-    volumes:
-      #- /var/share/sender/:/var/sender/src/configuration/
 volumes:
   redis-storage:

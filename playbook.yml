@@ -3,15 +3,9 @@
   remote_user: root
 
   tasks:
-    - name: build the container
-      docker_service:
-        project_src: .
+    - docker_service:
+        project_src: compose
         build: yes
-
-    - name: run
-      docker_service:
-        project_src: .
-        build: no
         env:
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
