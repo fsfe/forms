@@ -2,5 +2,5 @@ FROM python:3.6
 COPY . /var/sender
 WORKDIR /var/sender
 RUN pip install -r requirements.txt
-EXPOSE 80
+EXPOSE 8080
 CMD gunicorn -b localhost:8080 wsgi:application
