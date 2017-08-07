@@ -3,23 +3,16 @@
   remote_user: root
 
   tasks:
-    - name: build web application
-      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
+    - name: build the container
+      command: docker build -t forms https://git.fsfe.org/FSFE/forms.git
 
-    - name: start redis
+    - name: run
       docker_container:
-        name: redis
-        image: redis:3.2
+        name: forms
+        image: forms
         state: started
-        exposed_ports:
-          - "6379"
-    - name: run web app
-      docker_container:
-        name: web-app
-        image: forms-web
+        restart: yes
         env:
-          REDIS_HOST: "redis"
-          REDIS_PORT: 6379
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
           LETSENCRYPT_EMAIL: jonas@fsfe.org
