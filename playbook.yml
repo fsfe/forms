@@ -4,7 +4,7 @@
 
   tasks:
     - name: build web application
-      command: docker build -f Dockerfile-web -t forms-web .
+      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
 
     - name: start redis
       docker_container:
