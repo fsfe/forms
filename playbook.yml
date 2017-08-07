@@ -1,0 +1,18 @@
+---
+- hosts: lund.fsfeurope.org
+  remote_user: root
+
+  tasks:
+    - name: build the container
+      command: docker build -t forms https://git.fsfe.org/FSFE/forms.git
+
+    - name: run
+      docker_container:
+        name: forms
+        image: forms
+        state: started
+        restart: yes
+        env:
+          VIRTUAL_HOST: forms.fsfe.org
+          LETSENCRYPT_HOST: forms.fsfe.org
+          LETSENCRYPT_EMAIL: jonas@fsfe.org
