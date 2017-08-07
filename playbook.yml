@@ -3,12 +3,6 @@
   remote_user: root
 
   tasks:
-    - name: uninstall old docker tools
-      command: pip uninstall docker docker-py
-
-    - name: install new docker tools
-      command: pip install docker
-
     - name: run nginx proxy
       docker_container:
         name: nginx-proxy
