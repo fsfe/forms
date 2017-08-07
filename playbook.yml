@@ -6,7 +6,14 @@
     - name: build the container
       command: docker build -f Dockerfile-web -t forms https://git.fsfe.org/FSFE/forms.git
 
-    - name: run
+    - name: run nginx proxy
+      docker_container:
+        name: proxy
+        image: jwilder/nginx-proxy
+        state: started
+        restart: yes
+
+    - name: run web app
       docker_container:
         name: forms
         image: forms
