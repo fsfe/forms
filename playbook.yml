@@ -3,6 +3,8 @@
   remote_user: root
 
   tasks:
-    - docker_service:
-        project_src: compose
-        build: yes
+    - name: build containers
+      command: docker-compose build
+
+    - name: run
+      command: docker-compose up
