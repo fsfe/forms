@@ -3,43 +3,8 @@
   remote_user: root
 
   tasks:
-    - name: build containers
-      command: docker build -t forms https://git.fsfe.org/FSFE/forms.git
-
-    - name: run redis
-      docker_container:
-        name: forms-redis
-        image: redis:3.2
-        state: started
-        exposed_ports:
-          - 6379
-
-
-    - name: run forms workers
-      docker_container:
-        name: forms-workers
-        hostname: "redis"
-        image: forms
-        state: started
-        restart: yes
-        entrypoint: cd /var/sender/src && python worker.py worker -l info
-        env:
-          REDIS_HOST: "redis"
-          REDIS_PORT: 6379
-          SMTP_HOST: "mail.fsfe.org"
-          SMTP_PORT: 25
-
-
-    - name: run forms web
-      docker_container:
-        name: forms-web
-        image: forms
-        state: started
-        restart: yes
-        entrypoint: cd /var/sender/src && gunicorn -b 0.0.0.0:80 wsgi:application
-        exposed_ports:
-          - 80
-        env:
-          REDIS_HOST: "redis"
-          REDIS_PORT: 6379
-
+    docker_service:
+      build: yes
+      state: present
+      project_src: .
+      project_name: forms
