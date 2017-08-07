@@ -3,11 +3,22 @@
   remote_user: root
 
   tasks:
-    - name: install docker compose
-      command: pip install docker-compose
+    - name: build web application
+      command: docker build -f Dockerfile-web -t forms-web .
 
-    - name: run
-      docker_service:
-        build: yes
-        state: present
-        project_src: '.'
+    - name: start redis
+      docker_container:
+        name: redis
+        image: redis:3.6
+        state: started
+        exposed_ports:
+          - "6379"
+    - name: run web app
+      docker_container:
+        name: web-app
+        image: forms-web
+        env:
+          REDIS_HOST: "redis"
+          REDIS_PORT: 6379
+        published_ports:
+          - "0.0.0.0:80:8080"
