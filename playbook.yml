@@ -4,7 +4,58 @@
 
   tasks:
     - name: build containers
-      command: docker-compose build
+      command: docker build -t forms https://git.fsfe.org/FSFE/forms.git
 
-    - name: run
-      command: docker-compose up
+    - name: run redis
+      docker_container:
+        name: forms-redis
+        image: redis:3.2
+        state: present
+        recreate: yes
+        exposed_ports:
+          - 6379
+        networks:
+          - name: forms-net
+            aliases:
+              - "redis"
+
+    - name: run forms web
+      docker_container:
+        name: forms-web
+        image: forms
+        state: started
+        restart: yes
+        command: cd /var/sender/src && gunicorn -b 0.0.0.0:8080 wsgi:application
+        exposed_ports:
+          - 8080
+        ports:
+          - "80:8080"
+        links:
+          - "forms-redis:redis"
+        networks:
+          - name: forms-net
+            aliases:
+              - "web"
+        env:
+          REDIS_HOST: "redis"
+          REDIS_PORT: 6379
+
+    - name: run forms workers
+      docker_container:
+        name: forms-workers
+        image: forms
+        state: started
+        restart: yes
+        command: cd /var/sender/src && python worker.py worker -l info
+        links:
+          - "forms-redis:redis"
+        networks:
+          - name: forms-net
+            aliases:
+              - "workers"
+        env:
+          REDIS_HOST: "redis"
+          REDIS_PORT: 6379
+          SMTP_HOST: "mail.fsfe.org"
+          SMTP_PORT: 25
+
