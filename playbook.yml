@@ -4,14 +4,14 @@
 
   tasks:
     - name: build the container
-      command: docker build -t forms https://git.fsfe.org/FSFE/forms.git
+      docker_service:
+        project_src: .
+        build: yes
 
     - name: run
-      docker_container:
-        name: forms
-        image: forms
-        state: started
-        restart: yes
+      docker_service:
+        project_src: .
+        build: no
         env:
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org

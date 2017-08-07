@@ -1,0 +1,25 @@
+{
+  "1": {
+    "ratelimit": 500,
+    "from": "froma.ppid1@example.com",
+    "to": [
+      "to.appid1@example.com"
+    ],
+    "subject": "Thank you!",
+    "include_vars": true,
+    "store": "configuration/store/emails.json",
+    "confirm": true,
+    "redirect": "http://google.com",
+    "template": "second_template"
+  },
+  "2": {
+    "ratelimit": 1000,
+    "from": "email@example.com",
+    "to": [
+      "email@example.com"
+    ],
+    "subject": "Thank you a lot!",
+    "store": "configuration/store/emails_other.json",
+    "redirect": "http://facebook.com"
+  }
+}

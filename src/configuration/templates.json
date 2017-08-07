@@ -1,0 +1,8 @@
+{
+  "first_template": {
+    "content": "<b>Hello, {{ name }}</b>"
+  },
+  "second_template": {
+    "filename": "hello.html"
+  }
+}
