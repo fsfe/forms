@@ -4,7 +4,7 @@
 
   tasks:
     - name: build the container
-      command: docker build -t forms https://git.fsfe.org/FSFE/forms.git
+      command: docker build -f Dockerfile-web -t forms https://git.fsfe.org/FSFE/forms.git
 
     - name: run
       docker_container:
