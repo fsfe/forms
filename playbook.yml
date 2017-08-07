@@ -6,7 +6,3 @@
     - docker_service:
         project_src: compose
         build: yes
-        env:
-          VIRTUAL_HOST: forms.fsfe.org
-          LETSENCRYPT_HOST: forms.fsfe.org
-          LETSENCRYPT_EMAIL: jonas@fsfe.org
