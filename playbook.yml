@@ -10,5 +10,5 @@
       docker_service:
         build: yes
         state: present
-        project_src: '{{ inventory_dir | dirname }}'
+        project_src: '.'
         project_name: forms
