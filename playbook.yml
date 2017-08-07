@@ -3,8 +3,9 @@
   remote_user: root
 
   tasks:
-    docker_service:
-      build: yes
-      state: present
-      project_src: .
-      project_name: forms
+    - name: run
+      docker_service:
+        build: yes
+        state: present
+        project_src: .
+        project_name: forms
