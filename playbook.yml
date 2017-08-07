@@ -20,5 +20,3 @@
         env:
           REDIS_HOST: "redis"
           REDIS_PORT: 6379
-        exposed_ports:
-          - "8080"
