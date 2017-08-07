@@ -10,5 +10,5 @@
       docker_service:
         build: yes
         state: present
-        project_src: '.'
+        project_src: compose
         project_name: forms
