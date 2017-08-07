@@ -3,16 +3,15 @@
   remote_user: root
 
   tasks:
+    - name: reinstall docker tools
+      command: pip uninstall docker docker-py && pip install docker
+
     - name: run nginx proxy
       docker_container:
-        name: nginx-proxx
-        image: nginx
+        name: nginx-proxy
+        image: jwilder/nginx-proxy
         state: started
         restart: yes
-        env:
-          VIRTUAL_HOST: forms.fsfe.org
-          LETSENCRYPT_HOST: forms.fsfe.org
-          LETSENCRYPT_EMAIL: jonas@fsfe.org
 
     - name: build the container
       command: docker build -f Dockerfile-web -t forms https://git.fsfe.org/FSFE/forms.git
@@ -23,3 +22,7 @@
         image: forms
         state: started
         restart: yes
+        env:
+          VIRTUAL_HOST: forms.fsfe.org
+          LETSENCRYPT_HOST: forms.fsfe.org
+          LETSENCRYPT_EMAIL: jonas@fsfe.org
