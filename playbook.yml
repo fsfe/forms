@@ -14,10 +14,6 @@
         recreate: yes
         exposed_ports:
           - 6379
-        networks:
-          - name: forms-net
-            aliases:
-              - "redis"
 
     - name: run forms web
       docker_container:
@@ -32,10 +28,6 @@
           - "80:8080"
         links:
           - "forms-redis:redis"
-        networks:
-          - name: forms-net
-            aliases:
-              - "web"
         env:
           REDIS_HOST: "redis"
           REDIS_PORT: 6379
@@ -49,10 +41,6 @@
         command: cd /var/sender/src && python worker.py worker -l info
         links:
           - "forms-redis:redis"
-        networks:
-          - name: forms-net
-            aliases:
-              - "workers"
         env:
           REDIS_HOST: "redis"
           REDIS_PORT: 6379
