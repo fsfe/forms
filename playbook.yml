@@ -18,12 +18,13 @@
     - name: run forms workers
       docker_container:
         name: forms-workers
+        hostname: "redis"
         image: forms
         state: started
         restart: yes
-        command: cd /var/sender/src && python worker.py worker -l info
+        entrypoint: cd /var/sender/src && python worker.py worker -l info
         env:
-          REDIS_HOST: "forms-redis"
+          REDIS_HOST: "redis"
           REDIS_PORT: 6379
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
@@ -35,10 +36,10 @@
         image: forms
         state: started
         restart: yes
-        command: cd /var/sender/src && gunicorn -b 0.0.0.0:80 wsgi:application
+        entrypoint: cd /var/sender/src && gunicorn -b 0.0.0.0:80 wsgi:application
         exposed_ports:
           - 80
         env:
-          REDIS_HOST: "forms-redis"
+          REDIS_HOST: "redis"
           REDIS_PORT: 6379
 
