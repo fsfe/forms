@@ -1,7 +1,7 @@
 {
   "1": {
     "ratelimit": 500,
-    "from": "froma.ppid1@example.com",
+    "from": "jonas@fsfe.org",
     "to": [
       "to.appid1@example.com"
     ],
@@ -14,7 +14,7 @@
   },
   "2": {
     "ratelimit": 1000,
-    "from": "email@example.com",
+    "from": "jonas@fsfe.org",
     "to": [
       "email@example.com"
     ],

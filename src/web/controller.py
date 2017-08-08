@@ -50,10 +50,3 @@ def confirmation():
         raise exceptions.BadRequest
     config = SenderService.confirm_email(id)
     return redirect(config.redirect)
-
-
-@route('/ping', method='GET')
-@error_handler
-def pingpong():
-    result = SenderService.pingpong()
-    return template('<b>Ping pong: {{pong}}</b>', pong=result)
