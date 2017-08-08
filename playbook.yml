@@ -4,7 +4,7 @@
 
   tasks:
     - name: build proxy server
-      commang: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
+      command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
 
     - name: run nginx proxy
       docker_container:
