@@ -3,9 +3,6 @@
   remote_user: root
 
   tasks:
-    - name: create network
-      command: docker network create forms-network
-
     - name: build proxy server
       command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
 
@@ -16,7 +13,7 @@
         state: started
         restart: yes
         networks:
-          - name: forms-network
+          - name: "{{ docker_network_name }}"
         env:
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
@@ -32,6 +29,6 @@
         state: started
         restart: yes
         networks:
-          - name: forms-network
+          - name: "{{ docker_network_name }}"
             aliases:
               - forms-web
