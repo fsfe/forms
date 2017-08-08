@@ -22,7 +22,7 @@
 
     - name: run web app
       docker_container:
-        name: forms
+        name: forms-web
         image: forms
         state: started
         restart: yes
