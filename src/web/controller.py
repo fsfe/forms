@@ -61,7 +61,8 @@ class PingPong(Serializable):
 
     @classmethod
     def fromJSON(cls, data):
-        return cls(data.get('text'))
+        json_data = json.loads(data)
+        return cls(json_data.get('text'))
 
 
 @route('/ping', method='GET')
