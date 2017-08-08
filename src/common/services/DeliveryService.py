@@ -8,6 +8,7 @@ from common.config import SMTP_HOST, SMTP_PORT
 def send(send_from, send_to, subject, content, reply_to):
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
         smtp.ehlo_or_helo_if_needed()
+        smtp.starttls()
         msg = MIMEText(content)
         msg['Subject'] = subject
         msg['From'] = send_from
