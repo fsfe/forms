@@ -25,8 +25,10 @@
         restart: yes
         published_ports:
           - "0.0.0.0:8080:8080"
+        links:
+          - "redis:formsredis"
         env:
-          REDIS_HOST: "redis"
+          REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
 
     - name: run nginx proxy
