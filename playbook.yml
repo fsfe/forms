@@ -4,7 +4,7 @@
 
   tasks:
     - name: build the container
-      command: docker build -f Dockerfile-web -t forms https://git.fsfe.org/FSFE/forms.git
+      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
 
     - name: build proxy server
       command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
@@ -21,7 +21,7 @@
     - name: run web app
       docker_container:
         name: forms
-        image: forms
+        image: forms-web
         state: started
         restart: yes
         links:

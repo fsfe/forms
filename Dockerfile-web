@@ -3,4 +3,4 @@ COPY . /var/share/forms
 WORKDIR /var/share/forms
 RUN pip install -r requirements.txt
 EXPOSE 8080
-CMD cd /var/share/forms/src && gunicorn -b 0.0.0.0:8080 wsgi:application
+CMD cd /var/share/forms/src && gunicorn -b 127.0.0.1:8080 wsgi:application
