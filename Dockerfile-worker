@@ -2,4 +2,4 @@ FROM python:3.6
 COPY . /var/sender
 WORKDIR /var/sender
 RUN pip install -r requirements.txt
-CMD python worker.py worker -l info
+CMD cd src && python worker.py worker -l info

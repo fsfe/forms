@@ -3,8 +3,11 @@
   remote_user: root
 
   tasks:
-    - name: build the container
+    - name: build web container
       command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
+
+    - name: build worker container
+      command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/FSFE/forms.git
 
     - name: build proxy server
       command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
@@ -20,7 +23,7 @@
 
     - name: run web app
       docker_container:
-        name: forms
+        name: forms-web
         image: forms-web
         state: started
         restart: yes
@@ -37,8 +40,22 @@
         state: started
         restart: yes
         links:
-          - "forms:formshost"
+          - "forms-web:formshost"
         env:
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
           LETSENCRYPT_EMAIL: jonas@fsfe.org
+
+    - name: run worker app
+      docker_container:
+        name: forms-worker
+        image: forms-worker
+        state: started
+        restart: yes
+        links:
+          - "redis:formsredis"
+        env:
+          REDIS_HOST: "formsredis"
+          REDIS_PORT: 6379
+          SMTP_HOST: "mail.fsfe.org"
+          SMTP_PORT: 25
