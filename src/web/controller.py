@@ -1,8 +1,11 @@
-from bottle import route, request, redirect, abort
+import uuid
+import json
+from bottle import route, request, redirect, abort, template
 from common import exceptions
 from common.configurator import configuration
-from common.models import SendData
+from common.models import SendData, Serializable
 from common.services import SenderService
+from common.services import StorageService
 
 
 def error_handler(func):
@@ -47,3 +50,25 @@ def confirmation():
         raise exceptions.BadRequest
     config = SenderService.confirm_email(id)
     return redirect(config.redirect)
+
+
+class PingPong(Serializable):
+    def __init__(self, text):
+        self.text = text
+
+    def toJSON(self):
+        return json.dumps(self.__dict__)
+
+    @classmethod
+    def fromJSON(cls, data):
+        return cls(data.get('text'))
+
+
+@route('/ping', method='GET')
+@error_handler
+def pingpong():
+    id = uuid.uuid4()
+    data = PingPong("pong_%s" % id)
+    StorageService.set('pingpong', id, data)
+    resolved_data = StorageService.get('pingpong', id, PingPong)
+    return template('<b>Ping Pong: {{ping}}', ping=resolved_data.text)
