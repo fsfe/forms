@@ -3,24 +3,11 @@
   remote_user: root
 
   tasks:
-    - name: build proxy server
-      command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
-
-    - name: run nginx proxy
-      docker_container:
-        name: nginx-proxy
-        image: forms-proxy
-        state: started
-        restart: yes
-        networks:
-          - name: "{{ docker_network_name }}"
-        env:
-          VIRTUAL_HOST: forms.fsfe.org
-          LETSENCRYPT_HOST: forms.fsfe.org
-          LETSENCRYPT_EMAIL: jonas@fsfe.org
-
     - name: build the container
       command: docker build -f Dockerfile-web -t forms https://git.fsfe.org/FSFE/forms.git
+
+    - name: build proxy server
+      command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
 
     - name: run web app
       docker_container:
@@ -28,7 +15,18 @@
         image: forms
         state: started
         restart: yes
-        networks:
-          - name: "{{ docker_network_name }}"
-            aliases:
-              - forms-web
+        ports:
+          - "0.0.0.0:8080:8080"
+
+    - name: run nginx proxy
+      docker_container:
+        name: nginx-proxy
+        image: forms-proxy
+        state: started
+        restart: yes
+        links:
+          - "forms:formshost"
+        env:
+          VIRTUAL_HOST: forms.fsfe.org
+          LETSENCRYPT_HOST: forms.fsfe.org
+          LETSENCRYPT_EMAIL: jonas@fsfe.org
