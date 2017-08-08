@@ -33,19 +33,6 @@
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
 
-    - name: run nginx proxy
-      docker_container:
-        name: nginx-proxy
-        image: forms-proxy
-        state: started
-        restart: yes
-        links:
-          - "forms-web:formshost"
-        env:
-          VIRTUAL_HOST: forms.fsfe.org
-          LETSENCRYPT_HOST: forms.fsfe.org
-          LETSENCRYPT_EMAIL: jonas@fsfe.org
-
     - name: run worker app
       docker_container:
         name: forms-worker
@@ -59,3 +46,16 @@
           REDIS_PORT: 6379
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
+
+    - name: run nginx proxy
+      docker_container:
+        name: nginx-proxy
+        image: forms-proxy
+        state: started
+        restart: yes
+        links:
+          - "forms-web:formshost"
+        env:
+          VIRTUAL_HOST: forms.fsfe.org
+          LETSENCRYPT_HOST: forms.fsfe.org
+          LETSENCRYPT_EMAIL: jonas@fsfe.org
