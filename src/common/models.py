@@ -29,6 +29,8 @@ class SendData(Serializable):
     def from_request(cls, appid: str, data: dict, url: str):
         send_from = data.get('from', None)
         send_to = data.get('to', None)
+        if send_to is not None:
+            send_to = send_to.split(',')
         reply_to = data.get('replyto', None)
         subject = data.get('subject', None)
         content = data.get('content', None)
@@ -58,4 +60,5 @@ class SendData(Serializable):
         delivered = json_data.get('delivered', False)
         request_data = json_data.get('request_data', None)
         url = json_data.get('url', None)
-        return cls(appid, send_from, send_to, reply_to, subject, content, template, confirm, delivered, request_data, url)
+        return cls(appid, send_from, send_to, reply_to, subject, content, template, confirm, delivered, request_data,
+                   url)

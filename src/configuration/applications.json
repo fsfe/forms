@@ -2,12 +2,9 @@
   "1": {
     "ratelimit": 500,
     "from": "jonas@fsfe.org",
-    "to": [
-      "to.appid1@example.com"
-    ],
     "subject": "Thank you!",
     "include_vars": true,
-    "store": "configuration/store/emails.json",
+    "store": "store/emails.json",
     "confirm": true,
     "redirect": "http://google.com",
     "template": "second_template"
@@ -19,7 +16,7 @@
       "email@example.com"
     ],
     "subject": "Thank you a lot!",
-    "store": "configuration/store/emails_other.json",
+    "store": "store/emails_other.json",
     "redirect": "http://facebook.com"
   }
 }

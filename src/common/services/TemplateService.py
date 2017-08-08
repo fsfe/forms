@@ -7,7 +7,8 @@ CONFIRMATION_TEMPLATE = 'common/templates/confirmation.html'
 
 
 def render_confirmation(id, data: SendData):
-    return template(CONFIRMATION_TEMPLATE, confirmation_url=_generate_confirmation_url(data.url, id))
+    return template(CONFIRMATION_TEMPLATE, content=render_email(data),
+                    confirmation_url=_generate_confirmation_url(data.url, id))
 
 
 def render_email(data: SendData):
