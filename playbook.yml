@@ -15,7 +15,7 @@
         image: forms-proxy
         state: started
         restart: yes
-        network:
+        networks:
           - name: forms-network
         env:
           VIRTUAL_HOST: forms.fsfe.org
@@ -31,7 +31,7 @@
         image: forms
         state: started
         restart: yes
-        network:
+        networks:
           - name: forms-network
             aliases:
               - forms-web
