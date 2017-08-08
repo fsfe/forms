@@ -9,9 +9,6 @@
     - name: build worker container
       command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/FSFE/forms.git
 
-    - name: build proxy server
-      command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
-
     - name: run redis
       docker_container:
         name: redis
@@ -27,11 +24,16 @@
         image: forms-web
         state: started
         restart: yes
+        exposed_ports:
+          - 8080
         links:
           - "redis:formsredis"
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
+          VIRTUAL_HOST: forms.fsfe.org
+          LETSENCRYPT_HOST: forms.fsfe.org
+          LETSENCRYPT_EMAIL: jonas@fsfe.org
 
     - name: run worker app
       docker_container:
@@ -46,16 +48,3 @@
           REDIS_PORT: 6379
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
-
-    - name: run nginx proxy
-      docker_container:
-        name: nginx-proxy
-        image: forms-proxy
-        state: started
-        restart: yes
-        links:
-          - "forms-web:formshost"
-        env:
-          VIRTUAL_HOST: forms.fsfe.org
-          LETSENCRYPT_HOST: forms.fsfe.org
-          LETSENCRYPT_EMAIL: jonas@fsfe.org
