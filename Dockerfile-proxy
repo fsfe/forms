@@ -2,5 +2,6 @@ FROM nginx
 
 RUN mkdir /etc/nginx/proxy
 
-COPY ./conf/proxy.conf /etc/nginx/proxy.conf
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+
+RUN service nginx restart
