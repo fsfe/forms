@@ -3,19 +3,20 @@
   remote_user: root
 
   tasks:
-    - name: run redis
-      docker_container:
-        name: redis
-        image: redis:3.2
-        published_ports:
-          - "6379:6379"
-
-
     - name: build the container
       command: docker build -f Dockerfile-web -t forms https://git.fsfe.org/FSFE/forms.git
 
     - name: build proxy server
       command: docker build -f Dockerfile-proxy -t forms-proxy https://git.fsfe.org/FSFE/forms.git
+
+    - name: run redis
+      docker_container:
+        name: redis
+        image: redis:3.2
+        state: started
+        restart: yes
+        published_ports:
+          - "6379:6379"
 
     - name: run web app
       docker_container:
