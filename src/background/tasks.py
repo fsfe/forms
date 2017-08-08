@@ -43,3 +43,8 @@ def schedule_email(id: str):
 @app.task(name='tasks.store_emails')
 def store_emails(storage, send_from, send_to, subject, content, reply_to):
     DeliveryService.log(storage, send_from, send_to, subject, content, reply_to)
+
+
+@app.task(name='tasks.pingpong')
+def pingpong(text: str):
+    return "pong_%s" % text

@@ -46,6 +46,12 @@ def confirm_email(id: str) -> Optional[AppConfig]:
     return config
 
 
+def pingpong():
+    id = uuid.uuid4()
+    result = tasks.pingpong.apply_async((id.__str__(),))
+    return result.get(timeout=10)
+
+
 def deliver_confirmation(id: uuid.UUID):
     tasks.schedule_confirmation.apply_async((id.__str__(),))
 

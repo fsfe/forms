@@ -52,24 +52,8 @@ def confirmation():
     return redirect(config.redirect)
 
 
-class PingPong(Serializable):
-    def __init__(self, text):
-        self.text = text
-
-    def toJSON(self):
-        return json.dumps(self.__dict__)
-
-    @classmethod
-    def fromJSON(cls, data):
-        json_data = json.loads(data)
-        return cls(json_data.get('text'))
-
-
 @route('/ping', method='GET')
 @error_handler
 def pingpong():
-    id = uuid.uuid4()
-    data = PingPong("pong_%s" % id)
-    StorageService.set('pingpong', id, data)
-    resolved_data = StorageService.get('pingpong', id, PingPong)
-    return template('<b>Ping Pong: {{ping}}', ping=resolved_data.text)
+    result = SenderService.pingpong()
+    return template('<b>Ping pong: {{pong}}</b>', pong=result)
