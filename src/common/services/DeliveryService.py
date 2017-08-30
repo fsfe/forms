@@ -20,13 +20,14 @@ def send(send_from, send_to, subject, content, reply_to):
             return False
 
 
-def log(storage, send_from, send_to, subject, content, reply_to):
+def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
     text = json.dumps({
         "from": send_from,
         "to": send_to,
         "subject": subject,
         "content": content,
-        "reply-to": reply_to
+        "reply-to": reply_to,
+        "include_vars": include_vars
     }) + "\n"
     with open(storage, "a") as file:
         file.write(text)

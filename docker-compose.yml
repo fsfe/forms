@@ -4,29 +4,3 @@ services:
     image: redis:3.2
     ports:
       - "6379:6379"
-    volumes:
-      - redis-storage:/data
-  web-app:
-    build:
-      context: .
-      dockerfile: Dockerfile-web
-    depends_on:
-      - redis
-    environment:
-      REDIS_HOST: "redis"
-      REDIS_PORT: 6379
-    ports:
-      - "0.0.0.0:80:8080"
-  workers-app:
-    build:
-      context: .
-      dockerfile: Dockerfile-worker
-    depends_on:
-      - redis
-    environment:
-      REDIS_HOST: "redis"
-      REDIS_PORT: 6379
-      SMTP_HOST: "mail.fsfe.org"
-      SMTP_PORT: 25
-volumes:
-  redis-storage:

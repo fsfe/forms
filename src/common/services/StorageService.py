@@ -12,7 +12,8 @@ storage = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 def set(table: str, id: uuid.UUID, data: Serializable, expire: int = None):
     key = _sanitize_key(table, id)
     json_data = data.toJSON()
-    storage.set(key, json_data, expire)
+    binary_data = json_data.encode('utf-8')
+    storage.set(key, binary_data, expire)
 
 
 def create(table: str, data: Serializable, expire: int = None) -> uuid.UUID:
@@ -23,9 +24,10 @@ def create(table: str, data: Serializable, expire: int = None) -> uuid.UUID:
 
 def get(table: str, id: uuid.UUID, type=None):
     key = _sanitize_key(table, id)
-    str_data = storage.get(key)
-    if str_data is None:
+    binary_data = storage.get(key)
+    if binary_data is None:
         return None
+    str_data = binary_data.decode('utf-8')
     if type is not None and issubclass(type, Serializable):
         data = type.fromJSON(str_data)
     else:

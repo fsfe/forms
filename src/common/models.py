@@ -38,7 +38,7 @@ class SendData(Serializable):
         confirm = data.get('confirm', None)
         request_data = dict()
         for name in data:
-            if name in ['from', 'to', 'replyto', 'subject', 'content', 'template', 'confirm']:
+            if name in ['from', 'to', 'replyto', 'subject', 'content', 'template', 'confirm', 'appid']:
                 continue
             request_data[name] = data[name]
         return cls(appid, send_from, send_to, reply_to, subject, content, template, confirm, False, request_data, url)

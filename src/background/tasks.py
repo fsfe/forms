@@ -36,10 +36,10 @@ def schedule_email(id: str):
                                             content, current_config.reply_to)
     if current_config.store is not None:
         store_emails.delay(current_config.store, current_config.send_from, current_config.send_to,
-                           current_config.subject, content, current_config.reply_to)
+                           current_config.subject, content, current_config.reply_to, data.request_data)
     SenderStorageService.remove(id)
 
 
 @app.task(name='tasks.store_emails')
-def store_emails(storage, send_from, send_to, subject, content, reply_to):
-    DeliveryService.log(storage, send_from, send_to, subject, content, reply_to)
+def store_emails(storage, send_from, send_to, subject, content, reply_to, include_vars):
+    DeliveryService.log(storage, send_from, send_to, subject, content, reply_to, include_vars)

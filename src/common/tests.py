@@ -35,8 +35,7 @@ class ConfiguratorTests(unittest.TestCase):
         self.assertEqual(2, len(self.config.appconfigs))
         self.assertEqual(1, len(self.config.tempconfigs))
 
-        self.assertEqual("1", self.config.appconfigs[0].appid)
-        appconf = self.config.appconfigs[0]
+        appconf = self.config.get_config("1")
         self.assertEqual(2, appconf.ratelimit)
         self.assertEqual("email1@example.com", appconf.send_from)
         self.assertEqual(1, len(appconf.send_to))
