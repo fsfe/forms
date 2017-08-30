@@ -2,7 +2,7 @@
   "1": {
     "ratelimit": 500,
     "from": "jonas@fsfe.org",
-    "subject": "Thank you!",
+    "subject": "Thank you, {{ name }}!",
     "include_vars": true,
     "store": "/store/emails.json",
     "confirm": true,

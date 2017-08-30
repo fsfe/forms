@@ -2,6 +2,7 @@ import copy
 import json
 from typing import List
 from common.models import SendData
+from common.services import TemplateRenderService
 import os
 
 CONFIGURATION_FOLDER = "configuration"
@@ -43,18 +44,24 @@ class AppConfig:
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
-        cpy.send_from = self._merge_field(self.send_from, data.send_from)
-        cpy.send_to = self._merge_field(self.send_to, data.send_to)
-        cpy.reply_to = self._merge_field(self.reply_to, data.reply_to)
-        cpy.subject = self._merge_field(self.subject, data.subject)
-        cpy.content = self._merge_field(self.content, data.content)
-        cpy.template = self._merge_field(self.template, data.template)
-        cpy.confirm = self._merge_field(self.confirm, data.confirm)
+        cpy.send_from = self._merge_field(self.send_from, data.send_from, data.request_data)
+        cpy.send_to = self._merge_field(self.send_to, data.send_to, data.request_data)
+        cpy.reply_to = self._merge_field(self.reply_to, data.reply_to, data.request_data)
+        cpy.subject = self._merge_field(self.subject, data.subject, data.request_data)
+        cpy.content = self._merge_field(self.content, data.content, data.request_data)
+        cpy.template = self._merge_field(self.template, data.template, data.request_data)
+        cpy.confirm = self._merge_field(self.confirm, data.confirm, data.request_data)
         return cpy
 
     @staticmethod
-    def _merge_field(config_field, data_field):
-        return data_field if config_field is None else config_field
+    def _merge_field(config_field, data_field, request_data: dict):
+        selected_field = data_field if config_field is None else config_field
+        if isinstance(selected_field, str):
+            try:
+                return TemplateRenderService.render_field(selected_field, request_data)
+            except:
+                return selected_field
+        return selected_field
 
 
 class TemplateConfig:

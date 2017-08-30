@@ -1,14 +1,18 @@
 from urllib.parse import urljoin
-from bottle import jinja2_template as template
 from common.configurator import configuration
 from common.models import SendData
+from common.services import TemplateRenderService
 
 CONFIRMATION_TEMPLATE = 'common/templates/confirmation.html'
 
 
 def render_confirmation(id, data: SendData):
-    return template(CONFIRMATION_TEMPLATE, content=render_email(data),
-                    confirmation_url=_generate_confirmation_url(data.url, id))
+    with open(CONFIRMATION_TEMPLATE) as f:
+        content = f.read()
+    return TemplateRenderService.render_content(content, {
+        'content': render_email(data),
+        'confirmation_url': _generate_confirmation_url(data.url, id)
+    })
 
 
 def render_email(data: SendData):
@@ -21,8 +25,8 @@ def render_email(data: SendData):
     else:
         return None
     if final_config.include_vars:
-        return template(template_content, data.request_data)
-    return template(template_content, dict())
+        return TemplateRenderService.render_content(template_content, data.request_data)
+    return TemplateRenderService.render_content(template_content, dict())
 
 
 def _generate_confirmation_url(url, id):
