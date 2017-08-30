@@ -58,7 +58,7 @@ class AppConfig:
         selected_field = data_field if config_field is None else config_field
         if isinstance(selected_field, str):
             try:
-                return TemplateRenderService.render_field(selected_field, request_data)
+                return TemplateRenderService.render_content(selected_field, request_data)
             except:
                 return selected_field
         return selected_field
@@ -69,6 +69,7 @@ class TemplateConfig:
         self.name = name
         self.filename = filename
         self.content = content
+        self._contents = None
 
     @classmethod
     def load_from_dict(cls, name: str, dict: dict):
@@ -79,9 +80,13 @@ class TemplateConfig:
         return cls(name, filename, content)
 
     def get_template(self):
-        if self.filename is not None:
-            return self.filename
-        return self.content
+        if self._contents is None:
+            if self.content is not None:
+                self._contents = self.content
+            elif self.filename is not None:
+                with open(self.filename) as f:
+                    self._contents = f.read()
+        return self._contents
 
 
 class Configuration:

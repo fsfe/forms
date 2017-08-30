@@ -1,15 +1,11 @@
 import re
 from bottle import jinja2_template as template
 
-field_variables_pattern = re.compile('{{.+?}}', re.MULTILINE)
+containing_variables_pattern = re.compile('{{.+?}}', re.MULTILINE)
 
 
-def render_content(template_contents, data: dict):
-    return template(template_contents, data)
-
-
-def render_field(field, data: dict):
-    if field_variables_pattern.search(field) is None:
-        return field
+def render_content(contents, data: dict):
+    if containing_variables_pattern.search(contents) is None:
+        return contents
     else:
-        return render_content(field, data)
+        return template(contents, data)
