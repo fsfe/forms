@@ -34,6 +34,8 @@
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
           LETSENCRYPT_EMAIL: jonas@fsfe.org
+        volumes:
+          - "/srv/forms:/store:rw"
 
     - name: run worker app
       docker_container:
@@ -48,3 +50,5 @@
           REDIS_PORT: 6379
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
+        volumes:
+          - "/srv/forms:/store:rw"

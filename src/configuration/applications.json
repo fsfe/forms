@@ -4,7 +4,7 @@
     "from": "jonas@fsfe.org",
     "subject": "Thank you!",
     "include_vars": true,
-    "store": "store/emails.json",
+    "store": "/store/emails.json",
     "confirm": true,
     "redirect": "http://google.com",
     "template": "second_template"
@@ -16,7 +16,7 @@
       "email@example.com"
     ],
     "subject": "Thank you a lot!",
-    "store": "store/emails_other.json",
+    "store": "/store/emails_other.json",
     "redirect": "http://facebook.com"
   }
 }
