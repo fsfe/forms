@@ -3,7 +3,7 @@
 The forms API, available under <https://forms.fsfe.org> can be used to send
 form data from a web page submission, via email, to somewhere else. The API
 is highly configurable and can be adapted for a wide variety of situations
-in which you need to send emails form a web page, either with or without
+in which you need to send emails from a web page, either with or without
 double opt-in.
 
 Each application which intends to use this service must be registered in
