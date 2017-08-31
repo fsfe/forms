@@ -39,7 +39,7 @@
     "to": [
        "contact@fsfe.org"
     ],
-    "subject": "New signature from {{ confirm }}",
+    "subject": "New signature to PMPC",
     "include_vars": true,
     "confirm": true,
     "redirect": "https://publiccode.eu/thank-you",
