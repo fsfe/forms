@@ -35,6 +35,7 @@
     "template": "contact-form"
   },
   "pmpc-sign": {
+    "from": "admin@fsfe.org",
     "to": [
        "contact@fsfe.org"
     ],
