@@ -25,8 +25,6 @@ def render_email(data: SendData):
         template_config = configuration.get_template_config(final_config.template)
         template_html_content = template_config.get_html_template()
         template_plain_content = template_config.get_plain_template()
-    elif final_config.content is not None:
-        return TemplateRenderService.render_content(final_config.content, request_data)
     else:
         return None
     html = TemplateRenderService.render_content(template_html_content,

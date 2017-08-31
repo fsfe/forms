@@ -19,8 +19,8 @@ def validate_and_send_email(data: SendData):
         raise exceptions.BadRequest('\"To\" is required')
     if config.subject is None:
         raise exceptions.BadRequest('\"Subject\" is required')
-    if config.content is None and config.template is None:
-        raise exceptions.BadRequest('\"Content\" or \"Template\" is required')
+    if config.template is None:
+        raise exceptions.BadRequest('\"Template\" is required')
     for field in config.required_vars:
         if field not in data.request_data:
             raise exceptions.BadRequest('\"%s\" is required' % field)

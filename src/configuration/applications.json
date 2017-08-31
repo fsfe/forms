@@ -28,12 +28,10 @@
   },
   "contact": {
     "to": [
-       "contact@fsfe.org"
+      "contact@fsfe.org"
     ],
+    "include_vars": true,
     "redirect": "https://fsfe.org/contact/contact-thankyou",
-    "content": "{{ content }}",
-    "required_vars": [
-      "content"
-    ]
+    "template": "contact-form"
   }
 }

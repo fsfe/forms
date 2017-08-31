@@ -27,7 +27,10 @@ class ConfiguratorTests(unittest.TestCase):
             }
         }, {
             "first_template": {
-                "content": "<b>Hello, {{ name }}</b>"
+                "plain": {
+                    "content": "<b>Hello, {{ name }}</b>"
+                },
+                "required_vars": ["name"]
             }
         })
 
@@ -46,8 +49,8 @@ class ConfiguratorTests(unittest.TestCase):
         self.assertEqual("http://google.com", appconf.redirect)
         tempconf = self.config.tempconfigs[0]
         self.assertEqual("first_template", tempconf.name)
-        self.assertEqual("<b>Hello, {{ name }}</b>", tempconf.content)
-        self.assertEqual(None, tempconf.filename)
+        self.assertEqual("<b>Hello, {{ name }}</b>", tempconf.plain.content)
+        self.assertEqual(None, tempconf.plain.filename)
 
 
 class TestData(Serializable):

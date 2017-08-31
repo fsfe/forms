@@ -81,7 +81,7 @@ class TemplateConfig:
 
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
-                 content: str, include_vars: bool, store: str, confirm: bool, redirect: str, template,
+                 include_vars: bool, store: str, confirm: bool, redirect: str, template,
                  required_vars: Set[str], headers: dict):
         self.headers = headers
         self.appid = appid
@@ -91,7 +91,6 @@ class AppConfig:
         self.confirm = confirm
         self.store = store
         self.include_vars = include_vars
-        self.content = content
         self.subject = subject
         self.reply_to = reply_to
         self.send_to = send_to
@@ -106,7 +105,6 @@ class AppConfig:
         confirm = data.get('confirm', None)
         store = data.get('store', None)
         include_vars = data.get('include_vars', False)
-        content = data.get('content', None)
         subject = data.get('subject', None)
         reply_to = data.get('reply_to', None)
         send_to = data.get('to', None)
@@ -114,7 +112,7 @@ class AppConfig:
         send_from = data.get('from', None)
         required_vars = set(data.get('required_vars', list()))
         headers = data.get('headers', dict())
-        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, content, include_vars, store, confirm,
+        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm,
                    redirect, template, required_vars, headers)
 
     def merge_config_with_send_data(self, data: SendData):
@@ -123,7 +121,6 @@ class AppConfig:
         cpy.send_to = _merge_field(self.send_to, data.send_to, data.request_data)
         cpy.reply_to = _merge_field(self.reply_to, data.reply_to, data.request_data)
         cpy.subject = _merge_field(self.subject, data.subject, data.request_data)
-        cpy.content = _merge_field(self.content, data.content, data.request_data)
         cpy.template = _merge_field(self.template, data.template, data.request_data)
         for field, value in cpy.headers.items():
             cpy.headers[field] = _template_field(value, data.request_data)

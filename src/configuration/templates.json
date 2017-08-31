@@ -19,5 +19,13 @@
       "X-OTRS-Constant-tpl": "Promo",
       "X-OTRS-Variable-tpl": "Number: {{ amount }}"
     }
+  },
+  "contact-form": {
+    "plain": {
+      "content": "{{ content }}"
+    },
+    "required_vars": [
+      "content"
+    ]
   }
 }
