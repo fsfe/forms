@@ -18,5 +18,12 @@
     "subject": "Thank you a lot!",
     "store": "/store/emails_other.json",
     "redirect": "http://facebook.com"
+  },
+  "contact": {
+    "to": [
+       "contact@fsfe.org"
+    },
+    "confirm": true,
+    "redirect": "https://fsfe.org/contact/contact-thankyou"
   }
 }
