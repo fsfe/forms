@@ -1,6 +1,6 @@
 import copy
 import json
-from typing import List
+from typing import List, Set
 from common.models import SendData
 from common.services import TemplateRenderService
 import os
@@ -24,7 +24,7 @@ def _merge_field(config_field, data_field, request_data: dict):
 
 
 class TemplateConfig:
-    def __init__(self, name: str, filename: str, content: str, required_vars: List[str], headers: dict):
+    def __init__(self, name: str, filename: str, content: str, required_vars: Set[str], headers: dict):
         self.headers = headers
         self.name = name
         self.filename = filename
@@ -33,14 +33,13 @@ class TemplateConfig:
         self._contents = None
 
     @classmethod
-    def load_from_dict(cls, name: str, dict: dict):
-        filename = dict.get('filename', None)
+    def load_from_dict(cls, name: str, data: dict):
+        filename = data.get('filename', None)
         if filename is not None:
             filename = os.path.join(TEMPLATES_FOLDER, filename)
-        content = dict.get('content', None)
-        required_vars = dict.get('required_vars', None)
-        required_vars = set(required_vars) if required_vars is not None else None
-        headers = dict.get('headers', None)
+        content = data.get('content', None)
+        required_vars = set(data.get('required_vars', list()))
+        headers = data.get('headers', dict())
         return cls(name, filename, content, required_vars, headers)
 
     def get_template(self):
@@ -54,16 +53,15 @@ class TemplateConfig:
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
-        if cpy.headers is not None:
-            for field, value in cpy.headers.items():
-                cpy.headers[field] = _template_field(value, data.request_data)
+        for field, value in cpy.headers.items():
+            cpy.headers[field] = _template_field(value, data.request_data)
         return cpy
 
 
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
                  content: str, include_vars: bool, store: str, confirm: bool, redirect: str, template,
-                 required_vars: List[str], headers: dict):
+                 required_vars: Set[str], headers: dict):
         self.headers = headers
         self.appid = appid
         self.ratelimit = ratelimit
@@ -80,22 +78,20 @@ class AppConfig:
         self.required_vars = required_vars
 
     @classmethod
-    def load_from_dict(cls, appid: str, dict: dict):
-        ratelimit = dict.get('ratelimit', None)
-        template = dict.get('template', None)
-        redirect = dict.get('redirect', None)
-        confirm = dict.get('confirm', None)
-        store = dict.get('store', None)
-        include_vars = dict.get('include_vars', False)
-        content = dict.get('content', None)
-        subject = dict.get('subject', None)
-        reply_to = dict.get('reply_to', None)
-        send_to = dict.get('to', None)
-        send_to = list(send_to) if send_to is not None else None
-        send_from = dict.get('from', None)
-        required_vars = dict.get('required_vars', None)
-        required_vars = set(required_vars) if required_vars is not None else None
-        headers = dict.get('headers', None)
+    def load_from_dict(cls, appid: str, data: dict):
+        ratelimit = data.get('ratelimit', None)
+        template = data.get('template', None)
+        redirect = data.get('redirect', None)
+        confirm = data.get('confirm', None)
+        store = data.get('store', None)
+        include_vars = data.get('include_vars', False)
+        content = data.get('content', None)
+        subject = data.get('subject', None)
+        reply_to = data.get('reply_to', None)
+        send_to = list(data.get('to', list()))
+        send_from = data.get('from', None)
+        required_vars = set(data.get('required_vars', list()))
+        headers = data.get('headers', dict())
         return cls(appid, ratelimit, send_from, send_to, reply_to, subject, content, include_vars, store, confirm,
                    redirect, template, required_vars, headers)
 
@@ -107,19 +103,17 @@ class AppConfig:
         cpy.subject = _merge_field(self.subject, data.subject, data.request_data)
         cpy.content = _merge_field(self.content, data.content, data.request_data)
         cpy.template = _merge_field(self.template, data.template, data.request_data)
-        if cpy.headers is not None:
-            for field, value in cpy.headers.items():
-                cpy.headers[field] = _template_field(value, data.request_data)
+        for field, value in cpy.headers.items():
+            cpy.headers[field] = _template_field(value, data.request_data)
         return cpy
 
     def merge_with_template_config(self, data: TemplateConfig):
         cpy = copy.deepcopy(self)
         cpy.required_vars = cpy.required_vars.union(data.required_vars)
-        if data.headers is not None:
-            for field in data.headers:
-                if field in cpy.headers:
-                    continue
-                cpy.headers[field] = data.headers[field]
+        for field in data.headers:
+            if field in cpy.headers:
+                continue
+            cpy.headers[field] = data.headers[field]
         return cpy
 
 
