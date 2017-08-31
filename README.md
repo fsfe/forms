@@ -21,12 +21,12 @@ according to the API configuration.
 
 These are the available parameters for configuration or request:
 
- * **from**: sets an explicit From address on emails sent
- * **to**: one or more recipients, explicit To address
+ * **from**: sets an explicit From address on emails sent. Could contain variables
+ * **to**: one or more recipients, explicit To address. Could contain variables
  * **replyto**: sets an explicit Reply-To header on emails sent
- * **subject**: sets the Subject of an email
- * **content**: sets the content (plain text) of an email
- * **template**: defines which template file to use as content
+ * **subject**: sets the Subject of an email. Could contain variables
+ * **content**: sets the content (plain text) of an email. Could contain variables
+ * **template**: defines which template configuration will be used to provide content. Could contain variables
 
 If both **content** and **template** is set, then **template** will be used
 instead.
@@ -38,6 +38,8 @@ The following parameters are available only in the API configuration file:
  * **store**: if set to a filename, then information about emails sent will be stored in this file. This will not inclue emails which have not been confirmed (if double opt-in is in use).
  * **confirm**: if set to true, then no email is sent without an explicit confirmation of a suitable e-mail address. The email to confirm should be passed in the **confirm** parameter of the GET request (see later)
  * **redirect**: address to redirect the user to after having accepted and processed a request
+ * **required_vars**: an array with parameter names that has to be presented in request parameters
+ * **headers**: a key-value dictionary that should be included to email as headers. Values could contain variables
 
 
 ## Typical uses
@@ -49,23 +51,42 @@ submission of that form creates a ticket in our ticket system. There's
 no need for an opt-in for this, and we don't want to store information
 outside of the ticket system.
 
-The configuration could look like this:
+The application configuration could look like this:
 
 ```json
   "totick2": {
     "ratelimit": 500,
     "to": [ "contact@fsfe.org" ],
-    "subject": "Registration of event",
+    "subject": "Registration of event from {{ participant_name }}",
     "include_vars": true,
     "redirect": "http://fsfe.org",
-    "template": "totick2-template"
+    "template": "totick2-template",
+    "required_vars": ["participant_name"],
+    "headers": {
+      "X-OTRS-Queue": "Promo"
+    }
   },
+```
+
+The template configuration could look like this:
+
+```json
+  "totick2-template": {
+    "filename": "totick2-template.html",
+    "required_vars": ["country", "message", "participant_name"],
+    "headers": {
+      "X-PARTICIPANT-NAME": "{{ participant_name }}"
+    }
+  }
 ```
 
 The HTML form could look like this:
 
 ```html
 <form method="POST" action="https://forms.fsfe.org/email">
+  <!-- Parameter "appid" is required to identify what application configuration is used to send email -->
+  <input type="hidden" name="appid" value="totick2">
+  Your name: <input type="text" name="participant_name">
   Your e-mail: <input type="email" name="from" />
   Your country: <input type="text" name="country" />
   Your message: <input type="text" name="message" />
@@ -77,6 +98,7 @@ And finally, the template:
 ```
 Hi!
 
+My name is {{ participant_name }}.
 I'm from {{ country }} and would like you to know:
 
   {{ message }}
@@ -105,10 +127,21 @@ The configuration could look like this:
   },
 ```
 
+The template configuration could look like this:
+
+```json
+  "tosign-template": {
+    "filename": "tosign-template.html",
+    "required_vars": ["name", "confirm", "country"]
+  }
+```
+
 The HTML form could look like this:
 
 ```html
 <form method="POST" action="https://forms.fsfe.org/email">
+  <!-- Parameter "appid" is required to identify what application configuration is used to send email -->
+  <input type="hidden" name="appid" value="tosign">
   Please sign our open letter here!
 
   Your name: <input type="text" name="name" />
@@ -154,12 +187,9 @@ file `/store/campaign2.json` will be created with the following content:
 ```json
 {"from": "admin@fsfe.org", "to": ["campaignowner@fsfe.org"], "subject": "New signatory to open letter",
 "content": "Hi!\n\nI support your work and sign your open letter about X!\n\n  John Doe <john@example.com> from Switzerland.\n",
-"reply-to": null}
+"reply-to": null,
+"include_vars": {"name": "John Doe", "confirm": "john@example.com", "country": "Switzerland"}}
 ```
-
-In the future we hope this json data will also contain the included variables
-to make them easier to parse.
-
 
 
 

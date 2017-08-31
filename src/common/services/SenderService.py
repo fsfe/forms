@@ -12,14 +12,17 @@ from common.services import SenderStorageService
 def validate_and_send_email(config: AppConfig, data: SendData):
     if config is None:
         raise exceptions.NotFound('Configuration not found for this AppId')
-    if config.send_from is None and data.send_from is None:
+    if config.send_from is None:
         raise exceptions.BadRequest('\"From\" is required')
-    if (config.send_to is None or not config.send_to) and (data.send_to is None or not data.send_to):
+    if config.send_to is None or not config.send_to:
         raise exceptions.BadRequest('\"To\" is required')
-    if config.subject is None and data.subject is None:
+    if config.subject is None:
         raise exceptions.BadRequest('\"Subject\" is required')
-    if config.content is None and config.template is None and data.template is None and data.content is None:
+    if config.content is None and config.template is None:
         raise exceptions.BadRequest('\"Content\" or \"Template\" is required')
+    for field in config.required_vars:
+        if field not in data.request_data:
+            raise exceptions.BadRequest('\"%s\" is required' % field)
 
     if config.confirm:
         if data.confirm is None:
@@ -40,7 +43,7 @@ def confirm_email(id: str) -> Optional[AppConfig]:
         data.confirmed = True
         SenderStorageService.update_data(id, data)
         deliver_email(id)
-    config = configuration.get_config(data.appid)
+    config = configuration.get_config_merged_with_data(data.appid, data)
     if config is None:
         raise exceptions.NotFound('Configuration not found for this AppId')
     return config

@@ -26,8 +26,9 @@ def email_get():
     appid = request.GET.get('appid', None)
     if appid is None:
         raise exceptions.BadRequest
-    config = configuration.get_config(appid)
-    SenderService.validate_and_send_email(config, SendData.from_request(appid, request.GET, request.url))
+    send_data = SendData.from_request(appid, request.GET, request.url)
+    config = configuration.get_config_merged_with_data(appid, send_data)
+    SenderService.validate_and_send_email(config, send_data)
     return redirect(config.redirect)
 
 
@@ -37,8 +38,9 @@ def email_post():
     appid = request.POST.get('appid', None)
     if appid is None:
         raise exceptions.BadRequest
-    config = configuration.get_config(appid)
-    SenderService.validate_and_send_email(config, SendData.from_request(appid, request.POST, request.url))
+    send_data = SendData.from_request(appid, request.GET, request.url)
+    config = configuration.get_config_merged_with_data(appid, send_data)
+    SenderService.validate_and_send_email(config, send_data)
     return redirect(config.redirect)
 
 

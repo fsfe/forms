@@ -8,8 +8,8 @@ from common.services import DeliveryService, SenderStorageService, TemplateServi
 email_tasks = dict()
 
 
-def send_email(send_from, send_to, subject, content, reply_to):
-    DeliveryService.send(send_from, send_to, subject, content, reply_to)
+def send_email(send_from, send_to, subject, content, reply_to, headers):
+    DeliveryService.send(send_from, send_to, subject, content, reply_to, headers)
 
 
 for config in configuration.get_app_configs():
@@ -21,19 +21,20 @@ for config in configuration.get_app_configs():
 def schedule_confirmation(id: str):
     id = uuid.UUID(id)
     data = SenderStorageService.resolve_data(id)
-    current_config = configuration.get_config(data.appid).merge_config_with_send_data(data)
+    current_config = configuration.get_config_merged_with_data(data.appid, data)
     content = TemplateService.render_confirmation(id, data)
-    email_tasks[data.appid].delay(current_config.send_from, [data.confirm], CONFIRMATION_EMAIL_SUBJECT, content, None)
+    email_tasks[data.appid].delay(current_config.send_from, [data.confirm], CONFIRMATION_EMAIL_SUBJECT, content, None,
+                                  None)
 
 
 @app.task(name='tasks.schedule_email')
 def schedule_email(id: str):
     id = uuid.UUID(id)
     data = SenderStorageService.resolve_data(id)
-    current_config = configuration.get_config(data.appid).merge_config_with_send_data(data)
+    current_config = configuration.get_config_merged_with_data(data.appid, data)
     content = TemplateService.render_email(data)
     email_tasks[current_config.appid].delay(current_config.send_from, current_config.send_to, current_config.subject,
-                                            content, current_config.reply_to)
+                                            content, current_config.reply_to, current_config.headers)
     if current_config.store is not None:
         store_emails.delay(current_config.store, current_config.send_from, current_config.send_to,
                            current_config.subject, content, current_config.reply_to, data.request_data)

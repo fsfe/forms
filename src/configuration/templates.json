@@ -3,6 +3,14 @@
     "content": "<b>Hello, {{ name }}</b>"
   },
   "second_template": {
-    "filename": "hello.html"
+    "filename": "hello.html",
+    "required_vars": [
+      "amount",
+      "name"
+    ],
+    "headers": {
+      "X-OTRS-Constant-tpl": "Promo",
+      "X-OTRS-Variable-tpl": "Number: {{ amount }}"
+    }
   }
 }

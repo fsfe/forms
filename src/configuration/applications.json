@@ -2,12 +2,19 @@
   "1": {
     "ratelimit": 500,
     "from": "jonas@fsfe.org",
-    "subject": "Thank you, {{ name }}!",
+    "subject": "Thank you!",
     "include_vars": true,
     "store": "/store/emails.json",
     "confirm": true,
     "redirect": "http://google.com",
-    "template": "second_template"
+    "template": "second_template",
+    "required_vars": [
+      "queue"
+    ],
+    "headers": {
+      "X-OTRS-Constant-app": "AppValue",
+      "X-OTRS-Variable-app": "Queue: {{ queue }}"
+    }
   },
   "2": {
     "ratelimit": 1000,

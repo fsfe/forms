@@ -9,9 +9,62 @@ CONFIGURATION_FOLDER = "configuration"
 TEMPLATES_FOLDER = "configuration/templates"
 
 
+def _template_field(field, data: dict):
+    if isinstance(field, str):
+        try:
+            return TemplateRenderService.render_content(field, data)
+        except:
+            return field
+    return field
+
+
+def _merge_field(config_field, data_field, request_data: dict):
+    selected_field = data_field if config_field is None else config_field
+    return _template_field(selected_field, request_data)
+
+
+class TemplateConfig:
+    def __init__(self, name: str, filename: str, content: str, required_vars: List[str], headers: dict):
+        self.headers = headers
+        self.name = name
+        self.filename = filename
+        self.content = content
+        self.required_vars = required_vars
+        self._contents = None
+
+    @classmethod
+    def load_from_dict(cls, name: str, dict: dict):
+        filename = dict.get('filename', None)
+        if filename is not None:
+            filename = os.path.join(TEMPLATES_FOLDER, filename)
+        content = dict.get('content', None)
+        required_vars = dict.get('required_vars', None)
+        required_vars = set(required_vars) if required_vars is not None else None
+        headers = dict.get('headers', None)
+        return cls(name, filename, content, required_vars, headers)
+
+    def get_template(self):
+        if self._contents is None:
+            if self.content is not None:
+                self._contents = self.content
+            elif self.filename is not None:
+                with open(self.filename) as f:
+                    self._contents = f.read()
+        return self._contents
+
+    def merge_config_with_send_data(self, data: SendData):
+        cpy = copy.deepcopy(self)
+        if cpy.headers is not None:
+            for field, value in cpy.headers.items():
+                cpy.headers[field] = _template_field(value, data.request_data)
+        return cpy
+
+
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
-                 content: str, include_vars: bool, store: str, confirm: bool, redirect: str, template):
+                 content: str, include_vars: bool, store: str, confirm: bool, redirect: str, template,
+                 required_vars: List[str], headers: dict):
+        self.headers = headers
         self.appid = appid
         self.ratelimit = ratelimit
         self.template = template
@@ -24,6 +77,7 @@ class AppConfig:
         self.reply_to = reply_to
         self.send_to = send_to
         self.send_from = send_from
+        self.required_vars = required_vars
 
     @classmethod
     def load_from_dict(cls, appid: str, dict: dict):
@@ -39,60 +93,49 @@ class AppConfig:
         send_to = dict.get('to', None)
         send_to = list(send_to) if send_to is not None else None
         send_from = dict.get('from', None)
+        required_vars = dict.get('required_vars', None)
+        required_vars = set(required_vars) if required_vars is not None else None
+        headers = dict.get('headers', None)
         return cls(appid, ratelimit, send_from, send_to, reply_to, subject, content, include_vars, store, confirm,
-                   redirect, template)
+                   redirect, template, required_vars, headers)
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
-        cpy.send_from = self._merge_field(self.send_from, data.send_from, data.request_data)
-        cpy.send_to = self._merge_field(self.send_to, data.send_to, data.request_data)
-        cpy.reply_to = self._merge_field(self.reply_to, data.reply_to, data.request_data)
-        cpy.subject = self._merge_field(self.subject, data.subject, data.request_data)
-        cpy.content = self._merge_field(self.content, data.content, data.request_data)
-        cpy.template = self._merge_field(self.template, data.template, data.request_data)
-        cpy.confirm = self._merge_field(self.confirm, data.confirm, data.request_data)
+        cpy.send_from = _merge_field(self.send_from, data.send_from, data.request_data)
+        cpy.send_to = _merge_field(self.send_to, data.send_to, data.request_data)
+        cpy.reply_to = _merge_field(self.reply_to, data.reply_to, data.request_data)
+        cpy.subject = _merge_field(self.subject, data.subject, data.request_data)
+        cpy.content = _merge_field(self.content, data.content, data.request_data)
+        cpy.template = _merge_field(self.template, data.template, data.request_data)
+        if cpy.headers is not None:
+            for field, value in cpy.headers.items():
+                cpy.headers[field] = _template_field(value, data.request_data)
         return cpy
 
-    @staticmethod
-    def _merge_field(config_field, data_field, request_data: dict):
-        selected_field = data_field if config_field is None else config_field
-        if isinstance(selected_field, str):
-            try:
-                return TemplateRenderService.render_content(selected_field, request_data)
-            except:
-                return selected_field
-        return selected_field
-
-
-class TemplateConfig:
-    def __init__(self, name: str, filename: str, content: str):
-        self.name = name
-        self.filename = filename
-        self.content = content
-        self._contents = None
-
-    @classmethod
-    def load_from_dict(cls, name: str, dict: dict):
-        filename = dict.get('filename', None)
-        if filename is not None:
-            filename = os.path.join(TEMPLATES_FOLDER, filename)
-        content = dict.get('content', None)
-        return cls(name, filename, content)
-
-    def get_template(self):
-        if self._contents is None:
-            if self.content is not None:
-                self._contents = self.content
-            elif self.filename is not None:
-                with open(self.filename) as f:
-                    self._contents = f.read()
-        return self._contents
+    def merge_with_template_config(self, data: TemplateConfig):
+        cpy = copy.deepcopy(self)
+        cpy.required_vars = cpy.required_vars.union(data.required_vars)
+        if data.headers is not None:
+            for field in data.headers:
+                if field in cpy.headers:
+                    continue
+                cpy.headers[field] = data.headers[field]
+        return cpy
 
 
 class Configuration:
     def __init__(self, appconfigs: List[AppConfig], tempconfigs: List[TemplateConfig]):
         self.appconfigs = appconfigs
         self.tempconfigs = tempconfigs
+
+    def get_config_merged_with_data(self, appid: str, data: SendData):
+        config = self.get_config(appid)
+        merged_app_config = config.merge_config_with_send_data(data)
+        if merged_app_config.template is not None:
+            template_config = self.get_template_config(merged_app_config.template)
+            merged_template_config = template_config.merge_config_with_send_data(data)
+            merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
+        return merged_app_config
 
     def get_config(self, appid: str):
         configs = [c for c in self.appconfigs if c.appid.__eq__(appid)]
