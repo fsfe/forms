@@ -37,7 +37,7 @@
   "pmpc-sign": {
     "from": "admin@fsfe.org",
     "to": [
-       "contact@fsfe.org"
+       "tech@mehl.mx"
     ],
     "subject": "New signature to PMPC",
     "include_vars": true,
