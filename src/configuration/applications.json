@@ -33,5 +33,15 @@
     "include_vars": true,
     "redirect": "https://fsfe.org/contact/contact-thankyou",
     "template": "contact-form"
+  },
+  "pmpc-sign": {
+    "to": [
+       "contact@fsfe.org"
+    ],
+    "subject": "New signature from {{ confirm }}",
+    "include_vars": true,
+    "redirect": "https://publiccode.eu/thank-you",
+    "template": "pmpc-sign",
+    "store": "/store/pmpc/signatures.json"
   }
 }

@@ -27,5 +27,13 @@
     "required_vars": [
       "content"
     ]
+  },
+  "pmpc-sign": {
+    "plain": {
+       "filename": "pmpc-sign.txt"
+    },
+    "required_vars": [
+      "name"
+    ]
   }
 }

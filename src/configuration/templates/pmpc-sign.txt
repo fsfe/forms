@@ -1,0 +1,12 @@
+Dear FSFE,
+
+I agree to sign the open letter, calling for implementing legislation
+requiring that, as a default setting, publicly financed software must
+be made publicly available under a Free Software licence.
+
+{{ comment }}
+
+Thank you,
+
+{{ name }}
+{{ country }}
