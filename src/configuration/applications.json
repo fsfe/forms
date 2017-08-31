@@ -40,6 +40,7 @@
     ],
     "subject": "New signature from {{ confirm }}",
     "include_vars": true,
+    "confirm": true,
     "redirect": "https://publiccode.eu/thank-you",
     "template": "pmpc-sign",
     "store": "/store/pmpc/signatures.json"
