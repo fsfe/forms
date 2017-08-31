@@ -2,6 +2,7 @@ import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.utils import make_msgid, formatdate
 
 from common.config import SMTP_HOST, SMTP_PORT
 
@@ -23,6 +24,10 @@ def send(send_from, send_to, subject, content, reply_to, headers):
         smtp.ehlo_or_helo_if_needed()
         msg['Subject'] = subject
         msg['From'] = send_from
+        msg['To'] = ', '.join(send_to)
+        msg['Message-ID'] = make_msgid()
+        msg['Date'] = formatdate()
+
         if headers is not None:
             for field, value in headers.items():
                 msg[field] = value
