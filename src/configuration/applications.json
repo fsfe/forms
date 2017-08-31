@@ -29,7 +29,7 @@
   "contact": {
     "to": [
        "contact@fsfe.org"
-    },
+    ],
     "confirm": true,
     "redirect": "https://fsfe.org/contact/contact-thankyou"
   }
