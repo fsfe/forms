@@ -23,24 +23,19 @@ def _merge_field(config_field, data_field, request_data: dict):
     return _template_field(selected_field, request_data)
 
 
-class TemplateConfig:
-    def __init__(self, name: str, filename: str, content: str, required_vars: Set[str], headers: dict):
-        self.headers = headers
-        self.name = name
+class TemplateContentConfig:
+    def __init__(self, filename: str, content: str):
         self.filename = filename
         self.content = content
-        self.required_vars = required_vars
         self._contents = None
 
     @classmethod
-    def load_from_dict(cls, name: str, data: dict):
+    def load_from_dict(cls, data: dict):
         filename = data.get('filename', None)
         if filename is not None:
             filename = os.path.join(TEMPLATES_FOLDER, filename)
         content = data.get('content', None)
-        required_vars = set(data.get('required_vars', list()))
-        headers = data.get('headers', dict())
-        return cls(name, filename, content, required_vars, headers)
+        return cls(filename, content)
 
     def get_template(self):
         if self._contents is None:
@@ -50,6 +45,32 @@ class TemplateConfig:
                 with open(self.filename) as f:
                     self._contents = f.read()
         return self._contents
+
+
+class TemplateConfig:
+    def __init__(self, name: str, required_vars: Set[str], headers: dict, plain, html):
+        self.html = html
+        self.plain = plain
+        self.headers = headers
+        self.name = name
+        self.required_vars = required_vars
+        self._contents = None
+
+    @classmethod
+    def load_from_dict(cls, name: str, data: dict):
+        required_vars = set(data.get('required_vars', list()))
+        headers = data.get('headers', dict())
+        html_dict = data.get('html', None)
+        plain_dict = data.get('plain', None)
+        html = TemplateContentConfig.load_from_dict(html_dict) if html_dict is not None else None
+        plain = TemplateContentConfig.load_from_dict(plain_dict) if plain_dict is not None else None
+        return cls(name, required_vars, headers, plain, html)
+
+    def get_html_template(self):
+        return self.html.get_template() if self.html is not None else None
+
+    def get_plain_template(self):
+        return self.plain.get_template() if self.plain is not None else None
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
@@ -88,7 +109,8 @@ class AppConfig:
         content = data.get('content', None)
         subject = data.get('subject', None)
         reply_to = data.get('reply_to', None)
-        send_to = list(data.get('to', list()))
+        send_to = data.get('to', None)
+        send_to = list(send_to) if send_to is not None else None
         send_from = data.get('from', None)
         required_vars = set(data.get('required_vars', list()))
         headers = data.get('headers', dict())
@@ -124,6 +146,8 @@ class Configuration:
 
     def get_config_merged_with_data(self, appid: str, data: SendData):
         config = self.get_config(appid)
+        if config is None:
+            return None
         merged_app_config = config.merge_config_with_send_data(data)
         if merged_app_config.template is not None:
             template_config = self.get_template_config(merged_app_config.template)

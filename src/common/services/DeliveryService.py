@@ -1,5 +1,6 @@
 import json
 import smtplib
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from common.config import SMTP_HOST, SMTP_PORT
@@ -7,8 +8,19 @@ from common.config import SMTP_HOST, SMTP_PORT
 
 def send(send_from, send_to, subject, content, reply_to, headers):
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+        if isinstance(content, dict):
+            msg = MIMEMultipart('alternative')
+            html_content = content.get('html', None)
+            plain_content = content.get('plain', None)
+            if html_content is not None:
+                html = MIMEText(content.get('html', None), 'html')
+                msg.attach(html)
+            if plain_content is not None:
+                plain = MIMEText(content.get('plain', None), 'plain')
+                msg.attach(plain)
+        else:
+            msg = MIMEText(content)
         smtp.ehlo_or_helo_if_needed()
-        msg = MIMEText(content)
         msg['Subject'] = subject
         msg['From'] = send_from
         if headers is not None:

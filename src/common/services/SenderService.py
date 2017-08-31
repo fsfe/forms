@@ -9,7 +9,8 @@ from common.models import SendData
 from common.services import SenderStorageService
 
 
-def validate_and_send_email(config: AppConfig, data: SendData):
+def validate_and_send_email(data: SendData):
+    config = configuration.get_config_merged_with_data(data.appid, data)
     if config is None:
         raise exceptions.NotFound('Configuration not found for this AppId')
     if config.send_from is None:
@@ -32,6 +33,7 @@ def validate_and_send_email(config: AppConfig, data: SendData):
     else:
         id = SenderStorageService.store_data(data)
         deliver_email(id)
+    return config
 
 
 def confirm_email(id: str) -> Optional[AppConfig]:

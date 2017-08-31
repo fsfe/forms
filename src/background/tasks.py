@@ -13,7 +13,10 @@ def send_email(send_from, send_to, subject, content, reply_to, headers):
 
 
 for config in configuration.get_app_configs():
-    email_task = app.task(send_email, name='send_email:%s' % config.appid, rate_limit='%s/h' % config.ratelimit)
+    if config.ratelimit is not None:
+        email_task = app.task(send_email, name='send_email:%s' % config.appid, rate_limit='%s/h' % config.ratelimit)
+    else:
+        email_task = app.task(send_email, name='send_email:%s' % config.appid)
     email_tasks[config.appid] = email_task
 
 

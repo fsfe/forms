@@ -1,11 +1,8 @@
-import uuid
-import json
-from bottle import route, request, redirect, abort, template
+from bottle import route, request, redirect, abort
 from common import exceptions
 from common.configurator import configuration
-from common.models import SendData, Serializable
+from common.models import SendData
 from common.services import SenderService
-from common.services import StorageService
 
 
 def error_handler(func):
@@ -27,8 +24,7 @@ def email_get():
     if appid is None:
         raise exceptions.BadRequest
     send_data = SendData.from_request(appid, request.GET, request.url)
-    config = configuration.get_config_merged_with_data(appid, send_data)
-    SenderService.validate_and_send_email(config, send_data)
+    config = SenderService.validate_and_send_email(send_data)
     return redirect(config.redirect)
 
 
@@ -38,9 +34,8 @@ def email_post():
     appid = request.POST.get('appid', None)
     if appid is None:
         raise exceptions.BadRequest
-    send_data = SendData.from_request(appid, request.GET, request.url)
-    config = configuration.get_config_merged_with_data(appid, send_data)
-    SenderService.validate_and_send_email(config, send_data)
+    send_data = SendData.from_request(appid, request.POST, request.url)
+    config = SenderService.validate_and_send_email(send_data)
     return redirect(config.redirect)
 
 

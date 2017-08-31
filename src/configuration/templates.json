@@ -1,9 +1,16 @@
 {
   "first_template": {
-    "content": "<b>Hello, {{ name }}</b>"
+    "plain": {
+      "content": "<b>Hello, {{ name }}</b>"
+    }
   },
   "second_template": {
-    "filename": "hello.html",
+    "plain": {
+      "filename": "hello.txt"
+    },
+    "html": {
+      "filename": "hello.html"
+    },
     "required_vars": [
       "amount",
       "name"
