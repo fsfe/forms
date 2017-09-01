@@ -53,6 +53,8 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
 
     if not os.path.exists(os.path.dirname(storage)):
        os.makedirs(os.path.dirname(storage))
+
+    if not os.path.exists(storage):
        with open(storage, "a") as file:
          file.write(json.dumps([]))
 
