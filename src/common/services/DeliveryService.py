@@ -1,5 +1,6 @@
 import json
 import smtplib
+import time
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -43,6 +44,7 @@ def send(send_from, send_to, subject, content, reply_to, headers):
 
 def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
     add = {
+        "timestamp": time.time(),
         "from": send_from,
         "to": send_to,
         "subject": subject,
