@@ -1,5 +1,6 @@
 import json
 import smtplib
+import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import make_msgid, formatdate
@@ -41,13 +42,23 @@ def send(send_from, send_to, subject, content, reply_to, headers):
 
 
 def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
-    text = json.dumps({
+    add = {
         "from": send_from,
         "to": send_to,
         "subject": subject,
         "content": content,
         "reply-to": reply_to,
         "include_vars": include_vars
-    }) + "\n"
-    with open(storage, "a") as file:
-        file.write(text)
+    }
+
+    if not os.path.exists(os.path.dirname(storage)):
+       os.makedirs(os.path.dirname(storage))
+       with open(storage, "a") as file:
+         file.write(json.dumps([]))
+
+    with open(storage, "r") as file:
+        prev = json.loads(file.read())
+
+    with open(storage, "w") as file:
+        file.write(prev.append(add))
+
