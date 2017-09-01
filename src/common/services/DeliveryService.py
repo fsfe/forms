@@ -62,5 +62,6 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
         prev = json.loads(file.read())
 
     with open(storage, "w") as file:
-        file.write(prev.append(add))
+        prev.append(add)
+        file.write(json.dumps(prev))
 
