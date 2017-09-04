@@ -3,15 +3,9 @@
   remote_user: root
 
   tasks:
-    - name: build web container
-      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
-
-    - name: build worker container
-      command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/FSFE/forms.git
-
-    # - name: create network
-    #   docker_network:
-    #     name: FormsNet
+    - name: create network
+      docker_network:
+        name: FormsNet
 
     - name: run redis
       docker_container:
@@ -19,9 +13,15 @@
         image: redis:3.2
         state: started
         restart: yes
-        # command: redis-server --requirepass {{REDIS_PASSWORD}}
-        # networks:
-        #   - name: FormsNet
+#        command: redis-server --requirepass {{REDIS_PASSWORD}}
+        networks:
+          - name: FormsNet
+
+    - name: build web container
+      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
+
+    - name: build worker container
+      command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/FSFE/forms.git
 
     - name: run web app
       docker_container:
@@ -31,19 +31,17 @@
         restart: yes
         exposed_ports:
           - 8080
-        links:
-          - "redis:formsredis"
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
-          #REDIS_PASSWORD: "{{REDIS_PASSWORD}}"
+#          REDIS_PASSWORD: "{{REDIS_PASSWORD}}"
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
           LETSENCRYPT_EMAIL: jonas@fsfe.org
-        # networks:
-        #   - name: FormsNet
-        #     links:
-        #       - "redis:formsredis"
+        networks:
+          - name: FormsNet
+            links:
+              - "redis:formsredis"
         volumes:
           - "/srv/forms:/store:rw"
 
@@ -53,17 +51,15 @@
         image: forms-worker
         state: started
         restart: yes
-        links:
-          - "redis:formsredis"
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
-          #REDIS_PASSWORD: "{{REDIS_PASSWORD}}"
+#          REDIS_PASSWORD: "{{REDIS_PASSWORD}}"
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
-        # networks:
-        #   - name: FormsNet
-        #     links:
-        #       - "redis:formsredis"
+        networks:
+          - name: FormsNet
+            links:
+              - "redis:formsredis"
         volumes:
           - "/srv/forms:/store:rw"
