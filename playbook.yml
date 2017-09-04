@@ -9,6 +9,10 @@
     - name: build worker container
       command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/FSFE/forms.git
 
+    - name: create network
+      docker_network:
+        name: FormsNet
+
     - name: run redis
       docker_container:
         name: redis
