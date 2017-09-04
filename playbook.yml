@@ -15,6 +15,8 @@
         image: redis:3.2
         state: started
         restart: yes
+        networks:
+          - name: FormsNet
 
     - name: run web app
       docker_container:
@@ -24,14 +26,16 @@
         restart: yes
         exposed_ports:
           - 8080
-        links:
-          - "redis:formsredis"
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
           LETSENCRYPT_EMAIL: jonas@fsfe.org
+        networks:
+          - name: FormsNet
+            links:
+              - "redis:formsredis"
         volumes:
           - "/srv/forms:/store:rw"
 
@@ -41,12 +45,14 @@
         image: forms-worker
         state: started
         restart: yes
-        links:
-          - "redis:formsredis"
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
+        networks:
+          - name: FormsNet
+            links:
+              - "redis:formsredis"
         volumes:
           - "/srv/forms:/store:rw"
