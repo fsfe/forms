@@ -3,10 +3,10 @@ import uuid
 
 import redis
 
-from common.config import REDIS_HOST, REDIS_PORT
+from common.config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from common.models import Serializable
 
-storage = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+storage = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, password=REDIS_PASSWORD)
 
 
 def set(table: str, id: uuid.UUID, data: Serializable, expire: int = None):
