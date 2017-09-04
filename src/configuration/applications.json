@@ -42,7 +42,7 @@
     "subject": "New signature to PMPC",
     "include_vars": true,
     "confirm": true,
-    "redirect": "https://publiccode.eu/thank-you",
+    "redirect": "https://publiccode.eu/openletter/confirm",
     "template": "pmpc-sign",
     "store": "/store/pmpc/signatures.json"
   }
