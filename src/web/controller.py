@@ -1,6 +1,6 @@
+import redis
 from bottle import route, request, redirect, abort
 from common import exceptions
-from common.configurator import configuration
 from common.models import SendData
 from common.services import SenderService
 
@@ -13,6 +13,8 @@ def error_handler(func):
             abort(400, e.message)
         except exceptions.NotFound as e:
             abort(404, e.message)
+        except redis.exceptions.ConnectionError as e:
+            abort(500, 'Database connection failed')
 
     return wrapper
 
