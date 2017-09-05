@@ -20,7 +20,7 @@
           - 6379
         networks:
           - name: forms-net
-            ipv4_address: '192.168.201.41'
+            ipv4_address: '192.168.201.42'
             alias: forms-redis
 
     - name: build web container
