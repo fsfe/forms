@@ -45,5 +45,12 @@
        "confirm",
        "optin"
     ]
-  }
+  },
+  "reuse-signup": {
+    "plain": { "content": "{{ confirm }};{{ optin }}" },
+    "required_vars": [ "confirm", "optin" ],
+  },
+  "reuse-signup-confirm": {
+    "plain": { filename: "reuse-signup-confirm.txt" },
+  },
 }

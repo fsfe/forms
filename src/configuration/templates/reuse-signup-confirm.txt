@@ -1,0 +1,20 @@
+Thank you for your interest in our work on making copyrights and licenses
+computer readable!
+
+There's just one step left: you need to confirm we have the right email
+for you, so we know where to reach you to stay in touch about our work
+on this.
+
+Click the link below and we'll be on our way!
+
+  {{ confirmation_url }}
+
+
+Thank you,
+
+Jonas Öberg
+Executive Director
+
+FSFE e.V. - keeping the power of technology in your hands. Your
+support enables our work, please join us today http://fsfe.org/join
+

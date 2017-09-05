@@ -62,5 +62,18 @@
     "redirect-confirmed": "https://publiccode.eu/openletter/success",
     "template": "pmpc-sign",
     "store": "/store/pmpc/signatures.json"
+  },
+  "reuse-signup" {
+    "from": "no-reply@fsfe.org",
+    "to": [ "jonas@fsfe.org" ],
+    "subject": "New signup to REUSE",
+    "confirm": true,
+    "include_vars": true,
+    "redirect" "https://reuse.software/sign-confirm",
+    "redirect-confirmed": "https://reuse.software/sign-success",
+    "template": "reuse-signup",
+    "store": "/store/reuse/signups.json",
+    "confirmation-template": "reuse-signup-confirm",
+    "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
   }
 }
