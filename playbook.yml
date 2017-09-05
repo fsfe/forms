@@ -5,19 +5,23 @@
   tasks:
     - name: create network
       docker_network:
-        name: FormsNet
+        name: forms-net
+        ipam_options:
+          subnet: '192.168.201.32/29'
+        state: present
 
     - name: run redis
       docker_container:
-        name: redis
+        name: forms-redis
         image: redis:3.2
         state: started
         restart: yes
         exposed_ports:
           - 6379
-#        command: redis-server --requirepass {{REDIS_PASSWORD}}
         networks:
-          - name: FormsNet
+          - name: forms-net
+            ipv4_address: '192.168.201.33'
+            alias: forms-redis
 
     - name: build web container
       command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
@@ -36,14 +40,13 @@
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
-#          REDIS_PASSWORD: "{{REDIS_PASSWORD}}"
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
           LETSENCRYPT_EMAIL: jonas@fsfe.org
         networks:
-          - name: FormsNet
+          - name: forms-net
             links:
-              - "redis:formsredis"
+              - forms-redis:formsredis
         volumes:
           - "/srv/forms:/store:rw"
 
@@ -56,12 +59,11 @@
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
-#          REDIS_PASSWORD: "{{REDIS_PASSWORD}}"
           SMTP_HOST: "mail.fsfe.org"
           SMTP_PORT: 25
         networks:
-          - name: FormsNet
+          - name: forms-net
             links:
-              - "redis:formsredis"
+              - forms-redis:formsredis
         volumes:
           - "/srv/forms:/store:rw"
