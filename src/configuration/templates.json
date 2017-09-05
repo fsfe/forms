@@ -1,23 +1,18 @@
 {
-  "first_template": {
+  "test_template": {
     "plain": {
-      "content": "<b>Hello, {{ name }}</b>"
-    }
-  },
-  "second_template": {
-    "plain": {
-      "filename": "hello.txt"
+      "content": "Hello, {{ name }}"
     },
     "html": {
-      "filename": "hello.html"
+      "content": "<p>Hello, <b>{{ name }}</b></p>"
+    }
+  },
+  "test_confirmation_template": {
+    "plain": {
+      "content": "Confirm your email: {{ confirmation_url }}"
     },
-    "required_vars": [
-      "amount",
-      "name"
-    ],
-    "headers": {
-      "X-OTRS-Constant-tpl": "Promo",
-      "X-OTRS-Variable-tpl": "Number: {{ amount }}"
+    "html": {
+      "content": "<p>Confirm your email: <b>{{ confirmation_url }}</b></p>"
     }
   },
   "contact-form": {

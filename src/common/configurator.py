@@ -1,6 +1,8 @@
 import copy
 import json
 from typing import List, Set
+
+from common.config import CONFIRMATION_EMAIL_SUBJECT
 from common.models import SendData
 from common.services import TemplateRenderService
 import os
@@ -82,7 +84,9 @@ class TemplateConfig:
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
                  include_vars: bool, store: str, confirm: bool, redirect: str, redirect_confirmed: str, template,
-                 required_vars: Set[str], headers: dict):
+                 required_vars: Set[str], headers: dict, confirmation_template: str, confirmation_subject: str):
+        self.confirmation_template = confirmation_template
+        self.confirmation_subject = confirmation_subject
         self.headers = headers
         self.appid = appid
         self.ratelimit = ratelimit
@@ -114,8 +118,10 @@ class AppConfig:
         send_from = data.get('from', None)
         required_vars = set(data.get('required_vars', list()))
         headers = data.get('headers', dict())
-        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm,
-                   redirect, redirect_confirmed, template, required_vars, headers)
+        confirmation_template = data.get('confirmation_template', None)
+        confirmation_subject = data.get('confirmation_subject', CONFIRMATION_EMAIL_SUBJECT)
+        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm, redirect,
+                   redirect_confirmed, template, required_vars, headers, confirmation_template, confirmation_subject)
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
@@ -124,8 +130,14 @@ class AppConfig:
         cpy.reply_to = _merge_field(self.reply_to, data.reply_to, data.request_data)
         cpy.subject = _merge_field(self.subject, data.subject, data.request_data)
         cpy.template = _merge_field(self.template, data.template, data.request_data)
+        cpy.confirmation_subject = _template_field(self.confirmation_subject, data.request_data)
         for field, value in cpy.headers.items():
             cpy.headers[field] = _template_field(value, data.request_data)
+        return cpy
+
+    def merge_required_vars_with_template(self, data: TemplateConfig):
+        cpy = copy.deepcopy(self)
+        cpy.required_vars = cpy.required_vars.union(data.required_vars)
         return cpy
 
     def merge_with_template_config(self, data: TemplateConfig):
@@ -143,13 +155,41 @@ class Configuration:
         self.appconfigs = appconfigs
         self.tempconfigs = tempconfigs
 
-    def get_config_merged_with_data(self, appid: str, data: SendData):
-        config = self.get_config(appid)
+    def get_config_merged_with_data(self, data: SendData):
+        config = self.get_config(data.appid)
         if config is None:
             return None
         merged_app_config = config.merge_config_with_send_data(data)
+        return merged_app_config
+
+    def get_config_for_validation(self, data: SendData):
+        merged_app_config = self.get_config_merged_with_data(data)
+        if merged_app_config is None:
+            return None
         if merged_app_config.template is not None:
             template_config = self.get_template_config(merged_app_config.template)
+            merged_app_config = merged_app_config.merge_required_vars_with_template(template_config)
+        if merged_app_config.confirmation_template is not None:
+            confirmation_template_config = self.get_template_config(merged_app_config.confirmation_template)
+            merged_app_config = merged_app_config.merge_required_vars_with_template(confirmation_template_config)
+        return merged_app_config
+
+    def get_config_for_email(self, data: SendData):
+        merged_app_config = self.get_config_merged_with_data(data)
+        if merged_app_config is None:
+            return None
+        if merged_app_config.template is not None:
+            template_config = self.get_template_config(merged_app_config.template)
+            merged_template_config = template_config.merge_config_with_send_data(data)
+            merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
+        return merged_app_config
+
+    def get_config_for_confirmation(self, data: SendData):
+        merged_app_config = self.get_config_merged_with_data(data)
+        if merged_app_config is None:
+            return None
+        if merged_app_config.confirmation_template is not None:
+            template_config = self.get_template_config(merged_app_config.confirmation_template)
             merged_template_config = template_config.merge_config_with_send_data(data)
             merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
         return merged_app_config

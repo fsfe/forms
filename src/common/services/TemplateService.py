@@ -7,16 +7,41 @@ CONFIRMATION_TEMPLATE = 'common/templates/confirmation.html'
 
 
 def render_confirmation(id, data: SendData):
-    with open(CONFIRMATION_TEMPLATE) as f:
-        content = f.read()
-    return TemplateRenderService.render_content(content, {
-        'content': render_email(data),
-        'confirmation_url': _generate_confirmation_url(data.url, id)
-    })
+    final_config = configuration.get_config_for_confirmation(data)
+    email_content = render_email(data)
+    confirmation_url = _generate_confirmation_url(data.url, id)
+    if final_config.confirmation_template is not None:
+        if final_config.include_vars:
+            request_data = data.request_data
+        else:
+            request_data = dict()
+        request_data['content'] = email_content
+        request_data['confirmation_url'] = confirmation_url
+        if final_config.confirmation_template is not None:
+            template_config = configuration.get_template_config(final_config.confirmation_template)
+            template_html_content = template_config.get_html_template()
+            template_plain_content = template_config.get_plain_template()
+        else:
+            return None
+        html = TemplateRenderService.render_content(template_html_content,
+                                                    request_data) if template_html_content is not None else None
+        plain = TemplateRenderService.render_content(template_plain_content,
+                                                     request_data) if template_plain_content is not None else None
+        return {
+            "html": html,
+            "plain": plain
+        }
+    else:
+        with open(CONFIRMATION_TEMPLATE) as f:
+            content = f.read()
+        return TemplateRenderService.render_content(content, {
+            'content': email_content,
+            'confirmation_url': confirmation_url
+        })
 
 
 def render_email(data: SendData):
-    final_config = configuration.get_config_merged_with_data(data.appid, data)
+    final_config = configuration.get_config_for_email(data)
     if final_config.include_vars:
         request_data = data.request_data
     else:
