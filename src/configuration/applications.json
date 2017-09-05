@@ -61,6 +61,8 @@
     "redirect": "https://publiccode.eu/openletter/confirm",
     "redirect-confirmed": "https://publiccode.eu/openletter/success",
     "template": "pmpc-sign",
+    "confirmation-template": "pmpc-confirm",
+    "confirmation-subject": "Just one step left - confirm your email to sign the Open Letter for Public Code!",
     "store": "/store/pmpc/signatures.json"
   },
   "reuse-signup" {

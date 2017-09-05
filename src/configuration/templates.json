@@ -31,6 +31,11 @@
       "name"
     ]
   },
+  "pmpc-confirm": {
+    "plain": {
+       "filename": "pmpc-confirm.txt"
+    }
+  },
   "art13-presignup-confirm": {
     "plain": {
        "filename": "art13-presignup-confirm.txt"
