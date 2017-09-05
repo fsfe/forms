@@ -24,17 +24,17 @@ for config in configuration.get_app_configs():
 def schedule_confirmation(id: str):
     id = uuid.UUID(id)
     data = SenderStorageService.resolve_data(id)
-    current_config = configuration.get_config_merged_with_data(data.appid, data)
+    current_config = configuration.get_config_for_confirmation(data)
     content = TemplateService.render_confirmation(id, data)
-    email_tasks[data.appid].delay(current_config.send_from, [data.confirm], CONFIRMATION_EMAIL_SUBJECT, content, None,
-                                  None)
+    email_tasks[data.appid].delay(current_config.send_from, [data.confirm], current_config.confirmation_subject,
+                                  content, None, current_config.headers)
 
 
 @app.task(name='tasks.schedule_email')
 def schedule_email(id: str):
     id = uuid.UUID(id)
     data = SenderStorageService.resolve_data(id)
-    current_config = configuration.get_config_merged_with_data(data.appid, data)
+    current_config = configuration.get_config_for_email(data)
     content = TemplateService.render_email(data)
     email_tasks[current_config.appid].delay(current_config.send_from, current_config.send_to, current_config.subject,
                                             content, current_config.reply_to, current_config.headers)

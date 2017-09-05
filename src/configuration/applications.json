@@ -6,25 +6,18 @@
     "include_vars": true,
     "store": "/store/emails.json",
     "confirm": true,
+    "confirmation-template": "test_confirmation_template",
+    "confirmation-subject": "{{ name }}. One step to continue.",
     "redirect": "http://google.com",
-    "template": "second_template",
+    "template": "test_template",
     "required_vars": [
-      "queue"
+      "queue",
+      "name"
     ],
     "headers": {
       "X-OTRS-Constant-app": "AppValue",
       "X-OTRS-Variable-app": "Queue: {{ queue }}"
     }
-  },
-  "2": {
-    "ratelimit": 1000,
-    "from": "jonas@fsfe.org",
-    "to": [
-      "email@example.com"
-    ],
-    "subject": "Thank you a lot!",
-    "store": "/store/emails_other.json",
-    "redirect": "http://facebook.com"
   },
   "contact": {
     "to": [
@@ -59,12 +52,13 @@
   "pmpc-sign": {
     "from": "admin@fsfe.org",
     "to": [
-       "tech@mehl.mx"
+      "tech@mehl.mx"
     ],
     "subject": "New signature to PMPC",
     "include_vars": true,
     "confirm": true,
     "redirect": "https://publiccode.eu/openletter/confirm",
+    "redirect-confirmed": "https://publiccode.eu/openletter/success",
     "template": "pmpc-sign",
     "store": "/store/pmpc/signatures.json"
   }

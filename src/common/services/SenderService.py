@@ -10,7 +10,7 @@ from common.services import SenderStorageService
 
 
 def validate_and_send_email(data: SendData):
-    config = configuration.get_config_merged_with_data(data.appid, data)
+    config = configuration.get_config_for_validation(data)
     if config is None:
         raise exceptions.NotFound('Configuration not found for this AppId')
     if config.send_from is None:
@@ -45,7 +45,7 @@ def confirm_email(id: str) -> Optional[AppConfig]:
         data.confirmed = True
         SenderStorageService.update_data(id, data)
         deliver_email(id)
-    config = configuration.get_config_merged_with_data(data.appid, data)
+    config = configuration.get_config_merged_with_data(data)
     if config is None:
         raise exceptions.NotFound('Configuration not found for this AppId')
     return config
