@@ -36,6 +36,7 @@
     "template": "contact-form"
   },
   "art13-presignup": {
+    "from": "no-reply@fsfe.org",
     "to": [
       "jonas@fsfe.org"
     ],
