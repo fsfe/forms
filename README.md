@@ -32,6 +32,7 @@ To setup the environment:
 ```
 $ export REDIS_HOST=redishostname
 $ export REDIS_PORT=redispost
+$ export REDIS_PASSWORD=redispassword  # if required
 $ pip install -r requirements.txt
 ```
 
@@ -257,6 +258,8 @@ The following parameters are available only in the API configuration file:
  * **redirect-confirmed**: address to redirect the user to after the user has confirmed their email (if using confirm==true)
  * **required_vars**: an array with parameter names that has to be presented in request parameters
  * **headers**: a key-value dictionary that should be included to email as headers. Values could contain variables
+ * **confirmation-template**: name of a template defined in templates config that will be used as confirmation email. For confirmation emails already provided 2 variables: "confirmation_url" and "content". Content is the rendered email that will be sent after confirmation
+ * **confirmation-subject**: custom subject for confirmation email. Could contain variables
 
 ## Contribute
 We'd love to get feedback on these practices, ideally in the form

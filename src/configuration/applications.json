@@ -6,8 +6,8 @@
     "include_vars": true,
     "store": "/store/emails.json",
     "confirm": true,
-    "confirmation_template": "test_confirmation_template",
-    "confirmation_subject": "{{ name }}. One step to continue.",
+    "confirmation-template": "test_confirmation_template",
+    "confirmation-subject": "{{ name }}. One step to continue.",
     "redirect": "http://google.com",
     "template": "test_template",
     "required_vars": [

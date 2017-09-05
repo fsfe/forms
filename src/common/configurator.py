@@ -118,8 +118,8 @@ class AppConfig:
         send_from = data.get('from', None)
         required_vars = set(data.get('required_vars', list()))
         headers = data.get('headers', dict())
-        confirmation_template = data.get('confirmation_template', None)
-        confirmation_subject = data.get('confirmation_subject', CONFIRMATION_EMAIL_SUBJECT)
+        confirmation_template = data.get('confirmation-template', None)
+        confirmation_subject = data.get('confirmation-subject', CONFIRMATION_EMAIL_SUBJECT)
         return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm, redirect,
                    redirect_confirmed, template, required_vars, headers, confirmation_template, confirmation_subject)
 
