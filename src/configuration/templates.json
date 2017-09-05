@@ -38,11 +38,11 @@
   },
   "art13-presignup": {
     "plain": {
-       "content": "{{ name }};{{ email }};{{ optin }}"
+       "content": "{{ name }};{{ confirm }};{{ optin }}"
     },
     "required_vars": [
        "name",
-       "email",
+       "confirm",
        "optin"
     ]
   }
