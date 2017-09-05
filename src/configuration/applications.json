@@ -34,6 +34,14 @@
     "redirect": "https://fsfe.org/contact/contact-thankyou",
     "template": "contact-form"
   },
+  "art13contact": {
+    "to": [
+      "contact@fsfe.org"
+    ],
+    "include_vars": true,
+    "redirect": "https://savecodeshare.eu/thank-you",
+    "template": "contact-form"
+  },
   "pmpc-sign": {
     "from": "admin@fsfe.org",
     "to": [
