@@ -42,6 +42,20 @@
     "redirect": "https://savecodeshare.eu/thank-you",
     "template": "contact-form"
   },
+  "art13-presignup": {
+    "to": [
+      "jonas@fsfe.org"
+    ],
+    "include_vars": true,
+    "confirm": true,
+    "redirect": "https://savecodeshare.eu/thank-you-signup",
+    "redirect-confirmed": "https://savecodeshare.eu/thank-you-confirmed",
+    "store": "/store/art13/presignup.json",
+    "subject": "New signup to savecodeshare",
+    "confirmation-template": "art13-presignup-confirm",
+    "confirmation-subject": "Just one step left! Confirm your email to save code share!",
+    "template": "art13-presignup"
+  },
   "pmpc-sign": {
     "from": "admin@fsfe.org",
     "to": [

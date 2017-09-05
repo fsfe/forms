@@ -35,5 +35,20 @@
     "required_vars": [
       "name"
     ]
+  },
+  "art13-presignup-confirm": {
+    "plain": {
+       "filename": "art13-presignup-confirm.txt"
+    }
+  },
+  "art13-presignup": {
+    "plain": {
+       "content": "{{ name }};{{ email }};{{ optin }}"
+    },
+    "required_vars": [
+       "name",
+       "email",
+       "optin"
+    ]
   }
 }
