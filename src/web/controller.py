@@ -48,4 +48,4 @@ def confirmation():
     if id is None:
         raise exceptions.BadRequest
     config = SenderService.confirm_email(id)
-    return redirect(config.redirect)
+    return redirect(config.redirect_confirmed or config.redirect)

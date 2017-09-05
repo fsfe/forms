@@ -81,13 +81,14 @@ class TemplateConfig:
 
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
-                 include_vars: bool, store: str, confirm: bool, redirect: str, template,
+                 include_vars: bool, store: str, confirm: bool, redirect: str, redirect_confirm: str, template,
                  required_vars: Set[str], headers: dict):
         self.headers = headers
         self.appid = appid
         self.ratelimit = ratelimit
         self.template = template
         self.redirect = redirect
+        self.redirect_confirm = redirect_confirm
         self.confirm = confirm
         self.store = store
         self.include_vars = include_vars
@@ -102,6 +103,7 @@ class AppConfig:
         ratelimit = data.get('ratelimit', None)
         template = data.get('template', None)
         redirect = data.get('redirect', None)
+        redirect_confirmed = data.get('redirect-confirmed', None)
         confirm = data.get('confirm', None)
         store = data.get('store', None)
         include_vars = data.get('include_vars', False)
@@ -113,7 +115,7 @@ class AppConfig:
         required_vars = set(data.get('required_vars', list()))
         headers = data.get('headers', dict())
         return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm,
-                   redirect, template, required_vars, headers)
+                   redirect, redirect_confirmed, template, required_vars, headers)
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)

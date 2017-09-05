@@ -254,6 +254,7 @@ The following parameters are available only in the API configuration file:
  * **store**: if set to a filename, then information about emails sent will be stored in this file. This will not inclue emails which have not been confirmed (if double opt-in is in use).
  * **confirm**: if set to true, then no email is sent without an explicit confirmation of a suitable e-mail address. The email to confirm should be passed in the **confirm** parameter of the GET request (see later)
  * **redirect**: address to redirect the user to after having accepted and processed a request
+ * **redirect-confirmed**: address to redirect the user to after the user has confirmed their email (if using confirm==true)
  * **required_vars**: an array with parameter names that has to be presented in request parameters
  * **headers**: a key-value dictionary that should be included to email as headers. Values could contain variables
 
