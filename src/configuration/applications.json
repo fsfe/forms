@@ -51,6 +51,7 @@
     "include_vars": true,
     "confirm": true,
     "redirect": "https://publiccode.eu/openletter/confirm",
+    "redirect-confirmed": "https://publiccode.eu/openletter/success",
     "template": "pmpc-sign",
     "store": "/store/pmpc/signatures.json"
   }
