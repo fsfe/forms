@@ -45,7 +45,7 @@
     "confirmation-subject": "Just one step left - confirm your email to sign the Open Letter for Public Code!",
     "store": "/store/pmpc/signatures.json"
   },
-  "reuse-signup" {
+  "reuse-signup": {
     "from": "no-reply@fsfe.org",
     "to": [ "jonas@fsfe.org" ],
     "subject": "New signup to REUSE",
