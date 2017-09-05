@@ -7,7 +7,7 @@
       docker_network:
         name: forms-net
         ipam_options:
-          subnet: '192.168.201.32/29'
+          subnet: '192.168.201.40/29'
         state: present
 
     - name: run redis
@@ -20,7 +20,7 @@
           - 6379
         networks:
           - name: forms-net
-            ipv4_address: '192.168.201.33'
+            ipv4_address: '192.168.201.41'
             alias: forms-redis
 
     - name: build web container
