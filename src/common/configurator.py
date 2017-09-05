@@ -81,14 +81,14 @@ class TemplateConfig:
 
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
-                 include_vars: bool, store: str, confirm: bool, redirect: str, redirect_confirm: str, template,
+                 include_vars: bool, store: str, confirm: bool, redirect: str, redirect_confirmed: str, template,
                  required_vars: Set[str], headers: dict):
         self.headers = headers
         self.appid = appid
         self.ratelimit = ratelimit
         self.template = template
         self.redirect = redirect
-        self.redirect_confirm = redirect_confirm
+        self.redirect_confirmed = redirect_confirmed
         self.confirm = confirm
         self.store = store
         self.include_vars = include_vars
