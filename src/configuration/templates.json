@@ -1,20 +1,4 @@
 {
-  "test_template": {
-    "plain": {
-      "content": "Hello, {{ name }}"
-    },
-    "html": {
-      "content": "<p>Hello, <b>{{ name }}</b></p>"
-    }
-  },
-  "test_confirmation_template": {
-    "plain": {
-      "content": "Confirm your email: {{ confirmation_url }}"
-    },
-    "html": {
-      "content": "<p>Confirm your email: <b>{{ confirmation_url }}</b></p>"
-    }
-  },
   "contact-form": {
     "plain": {
       "content": "{{ content }}"

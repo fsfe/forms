@@ -1,24 +1,4 @@
 {
-  "1": {
-    "ratelimit": 500,
-    "from": "jonas@fsfe.org",
-    "subject": "Thank you!",
-    "include_vars": true,
-    "store": "/store/emails.json",
-    "confirm": true,
-    "confirmation-template": "test_confirmation_template",
-    "confirmation-subject": "{{ name }}. One step to continue.",
-    "redirect": "http://google.com",
-    "template": "test_template",
-    "required_vars": [
-      "queue",
-      "name"
-    ],
-    "headers": {
-      "X-OTRS-Constant-app": "AppValue",
-      "X-OTRS-Variable-app": "Queue: {{ queue }}"
-    }
-  },
   "contact": {
     "to": [
       "contact@fsfe.org"
