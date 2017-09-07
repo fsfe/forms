@@ -15,12 +15,12 @@ With your help we can achieve our goal to make all publicly financed
 software to be released as Free Software! Don't forget to tell your 
 friends and colleagues.
 
+Visit www.publiccode.eu for more information on this campaign
+
 
 Thank you for your support,
 Matthias Kirschner, President FSFE
 
-
-Visit www.publiccode.eu for more information on this campaign
 
 -- 
 You received this email because the Open Letter for Public Code has been 
@@ -30,7 +30,7 @@ FSFE respects your privacy. Your data will only be stored on our own
 infrastructure: https://publiccode.eu/privacy
 
 If you didn't make this signature, you can ignore this message. If you 
-receive too many of these message, please write to contact@fsfe.org
+receive too many of these messages, please write to contact@fsfe.org
 
 "Public Money, Public Code" is an FSFE campaign
 Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany
