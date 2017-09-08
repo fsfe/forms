@@ -9,9 +9,9 @@ Please confirm your signature by clicking on the link below:
   <{{ confirmation_url }}>
 
 The link is valid for the next 24 hours. If you do not confirm your 
-email, your signature won't be counted.
+email, your signature will not be counted.
 
-With your help we can achieve our goal to make all publicly financed 
+With your help we can achieve our goal of making all publicly financed 
 software to be released as Free Software! Don't forget to tell your 
 friends and colleagues.
 
@@ -29,8 +29,9 @@ signed with your address: https://publiccode.eu/openletter
 FSFE respects your privacy. Your data will only be stored on our own 
 infrastructure: https://publiccode.eu/privacy
 
-If you didn't make this signature, you can ignore this message. If you 
-receive too many of these messages, please write to contact@fsfe.org
+If you didn't request to sign our open letter, you can ignore this 
+message. If you receive too many of these messages, please write to 
+contact@fsfe.org
 
 "Public Money, Public Code" is an FSFE campaign
 Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany
