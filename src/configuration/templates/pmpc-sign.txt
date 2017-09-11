@@ -7,7 +7,7 @@ be made publicly available under a Free Software licence.
 Name: {{ name }}
 Country: {{ country }}
 Comment: {{ comment }}
-Email: {{ email }}
+Email: {{ confirm }}
 
 Thank you,
 The signatory
