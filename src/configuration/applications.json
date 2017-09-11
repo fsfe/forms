@@ -32,9 +32,10 @@
   },
   "pmpc-sign": {
     "from": "admin@fsfe.org",
-    "to": [
-      "tech@mehl.mx"
-    ],
+    "to": [ "contact@fsfe.org" ],
+    "headers": {
+      "X-OTRS-Queue": "PMPC"
+    },
     "subject": "New signature to PMPC",
     "include_vars": true,
     "confirm": true,
