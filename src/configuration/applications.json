@@ -18,7 +18,8 @@
   "art13-presignup": {
     "from": "no-reply@fsfe.org",
     "to": [
-      "jonas@fsfe.org"
+      "jonas@fsfe.org",
+      "diana@openforumeurope.org"
     ],
     "include_vars": true,
     "confirm": true,

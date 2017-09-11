@@ -27,7 +27,7 @@
   },
   "art13-presignup": {
     "plain": {
-       "content": "{{ name }};{{ confirm }};{{ optin }}"
+       "content": "New pre-signup: {{ name }} {{ confirm }}"
     },
     "required_vars": [
        "name",
