@@ -4,9 +4,14 @@ I agree to sign the open letter, calling for implementing legislation
 requiring that, as a default setting, publicly financed software must
 be made publicly available under a Free Software licence.
 
-{{ comment }}
+Name: {{ name }}
+Country: {{ country }}
+Comment: {{ comment }}
+Email: {{ email }}
 
 Thank you,
+The signatory
 
-{{ name }}
-{{ country }}
+Privacy statement accepted: {{ permissionPriv }}
+Signature shall be public: {{ permissionPub }}
+I want to receive updates: {{ permissionNews }}
