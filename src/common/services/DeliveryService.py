@@ -1,5 +1,6 @@
 import json
 import smtplib
+import filelock
 import time
 import os
 from email.mime.multipart import MIMEMultipart
@@ -53,17 +54,19 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
         "include_vars": include_vars
     }
 
-    if not os.path.exists(os.path.dirname(storage)):
-       os.makedirs(os.path.dirname(storage))
+    lock = filelock.FileLock("/tmp/forms.lock")
+    with lock:
+       if not os.path.exists(os.path.dirname(storage)):
+          os.makedirs(os.path.dirname(storage))
 
-    if not os.path.exists(storage):
-       with open(storage, "a") as file:
-         file.write(json.dumps([]))
+       if not os.path.exists(storage):
+          with open(storage, "a") as file:
+            file.write(json.dumps([]))
 
-    with open(storage, "r") as file:
-        prev = json.loads(file.read())
+       with open(storage, "r") as file:
+          prev = json.loads(file.read())
 
-    with open(storage, "w") as file:
-        prev.append(add)
-        file.write(json.dumps(prev))
+       with open(storage, "w") as file:
+          prev.append(add)
+          file.write(json.dumps(prev))
 
