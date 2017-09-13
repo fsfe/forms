@@ -38,7 +38,7 @@ class SendData(Serializable):
         for name in data:
             if name in ['from', 'to', 'replyto', 'subject', 'template', 'appid']:
                 continue
-            request_data[name] = data.get(name, '').decode('utf-8')
+            request_data[name] = data[name].decode('utf-8')
         return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url)
 
     def toJSON(self):
