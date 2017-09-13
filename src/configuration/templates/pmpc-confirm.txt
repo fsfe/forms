@@ -6,7 +6,7 @@ sector.
 
 Please confirm your signature by clicking on the link below:
 
-  <{{ confirmation_url }}>
+  {{ confirmation_url }}
 
 The link is valid for the next 24 hours. If you do not confirm your 
 email, your signature will not be counted.
