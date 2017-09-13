@@ -38,7 +38,7 @@ class SendData(Serializable):
         for name in data:
             if name in ['from', 'to', 'replyto', 'subject', 'template', 'appid']:
                 continue
-            request_data[name] = data[name]
+            request_data[name] = getattr(data, name)
         return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url)
 
     def toJSON(self):

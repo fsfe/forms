@@ -36,7 +36,7 @@ def email_post():
     appid = request.POST.get('appid', None)
     if appid is None:
         raise exceptions.BadRequest
-    send_data = SendData.from_request(appid, request.POST, request.url)
+    send_data = SendData.from_request(appid, request.forms, request.url)
     config = SenderService.validate_and_send_email(send_data)
     return redirect(config.redirect)
 
