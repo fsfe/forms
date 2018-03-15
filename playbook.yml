@@ -45,6 +45,7 @@
           LETSENCRYPT_EMAIL: jonas@fsfe.org
         networks:
           - name: forms-net
+            ipv4_address: '192.168.201.42'
             links:
               - forms-redis:formsredis
         volumes:
@@ -63,6 +64,7 @@
           SMTP_PORT: 25
         networks:
           - name: forms-net
+            ipv4_address: '192.168.201.43'
             links:
               - forms-redis:formsredis
         volumes:
