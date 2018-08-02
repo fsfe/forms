@@ -24,10 +24,10 @@
             alias: forms-redis
 
     - name: build web container
-      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/FSFE/forms.git
+      command: docker build -f Dockerfile-web -t forms-web https://git.fsfe.org/fsfe-system-hackers/forms.git
 
     - name: build worker container
-      command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/FSFE/forms.git
+      command: docker build -f Dockerfile-worker -t forms-worker https://git.fsfe.org/fsfe-system-hackers/forms.git
 
     - name: run web app
       docker_container:
@@ -42,7 +42,7 @@
           REDIS_PORT: 6379
           VIRTUAL_HOST: forms.fsfe.org
           LETSENCRYPT_HOST: forms.fsfe.org
-          LETSENCRYPT_EMAIL: jonas@fsfe.org
+          LETSENCRYPT_EMAIL: contact@fsfe.org
         networks:
           - name: forms-net
             ipv4_address: '192.168.201.42'
