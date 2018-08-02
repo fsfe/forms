@@ -1,6 +1,6 @@
 # forms API
 
-[![Build Status](https://drone.fsfe.org/api/badges/fsfe-system-hackers/forms/status.svg)](https://drone.fsfe.org/FSFE/forms)
+[![Build Status](https://drone.fsfe.org/api/badges/fsfe-system-hackers/forms/status.svg)](https://drone.fsfe.org/fsfe-system-hackers/forms)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
 The forms API, available under <https://forms.fsfe.org> can be used to send
