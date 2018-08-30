@@ -1,0 +1,6 @@
+Dear LN coordinator,
+
+We have received a new application for the Legal Network.
+
+Name: {{ applicant_name }}
+Email: {{ applicant_email }}

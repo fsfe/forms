@@ -59,5 +59,19 @@
     "store": "/store/reuse/signups.json",
     "confirmation-template": "reuse-signup-confirm",
     "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
+  },
+  "ln-apply": {
+    "from": "no-reply@fsfe.org",
+    "to": [ "tech@mehl.mx" ],
+    "replyto": "{{ applicant_email }}",
+    "subject": "Application for Legal Network membership by {{ applicant_name }}",
+    "include_vars": true,
+    "redirect": "https://fsfe.org/activities/ftf/ln.en.html",
+    "template": "ln-apply",
+    "headers": {
+      "X-OTRS-Queue": "Promo",
+      "X-OTRS-VAR": "TEST"
+    },
+    "store": "/store/ln/applications.json"
   }
 }

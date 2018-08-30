@@ -41,5 +41,12 @@
   },
   "reuse-signup-confirm": {
     "plain": { "filename": "reuse-signup-confirm.txt" }
+  },
+  "ln-apply": {
+    "filename": "ln-apply.html",
+    "required_vars": ["applicant_name"],
+    "headers": {
+      "X-APPLICANT-NAME": "{{ applicant_name }}"
+    }
   }
 }
