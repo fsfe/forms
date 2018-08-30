@@ -43,10 +43,11 @@
     "plain": { "filename": "reuse-signup-confirm.txt" }
   },
   "ln-apply": {
-    "filename": "ln-apply.txt",
-    "required_vars": ["name", "email"],
-    "headers": {
-      "X-APPLICANT-NAME": "{{ applicant_name }}"
-    }
-  }
+    "plain": {
+       "filename": "ln-apply.txt"
+    },
+    "required_vars": [
+      "name", 
+      "email"
+    ]
 }
