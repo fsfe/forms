@@ -2,5 +2,9 @@ Dear LN coordinator,
 
 We have received a new application for the Legal Network.
 
-Name: {{ applicant_name }}
-Email: {{ applicant_email }}
+Name: {{ name }}
+Email: {{ email }}
+Profession: {{ profession }}
+
+How can I contribute to the LN?
+{{ contribution }}

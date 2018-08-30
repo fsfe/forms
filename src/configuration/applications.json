@@ -61,13 +61,13 @@
     "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
   },
   "ln-apply": {
-    "from": "no-reply@fsfe.org",
+    "from": "{{ email }}",
     "to": [ "tech@mehl.mx" ],
-    "replyto": "{{ applicant_email }}",
-    "subject": "Application for Legal Network membership by {{ applicant_name }}",
+    "subject": "Application for Legal Network membership by {{ name }}",
     "include_vars": true,
-    "redirect": "https://fsfe.org/activities/ftf/ln.en.html",
+    "redirect": "https://fsfe.org/activities/ftf/ln.html",
     "template": "ln-apply",
+    "required_vars": [ "name", "email" ],
     "headers": {
       "X-OTRS-Queue": "Promo",
       "X-OTRS-VAR": "TEST"
