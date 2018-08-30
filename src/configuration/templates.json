@@ -44,7 +44,7 @@
   },
   "ln-apply": {
     "filename": "ln-apply.txt",
-    "required_vars": ["applicant_name"],
+    "required_vars": ["name", "email"],
     "headers": {
       "X-APPLICANT-NAME": "{{ applicant_name }}"
     }
