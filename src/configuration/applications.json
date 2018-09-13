@@ -62,7 +62,7 @@
   },
   "ln-apply": {
     "from": "contact@fsfe.org",
-    "to": [ "tech@mehl.mx" ],
+    "to": [ "contact@fsfe.org" ],
     "subject": "Application for Legal Network membership by {{ name }}",
     "include_vars": true,
     "confirm": true,
