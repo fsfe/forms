@@ -48,7 +48,13 @@
     },
     "required_vars": [
       "name", 
-      "email"
+      "email",
+      "activities"
     ]
+  },
+  "ln-apply-confirm": {
+    "plain": {
+       "filename": "ln-apply-confirm.txt"
+    }
   }
 }

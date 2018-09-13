@@ -1,0 +1,26 @@
+Dear {{ name }},
+
+Thank you for your interest in joining the Legal Network.
+
+Please confirm your request by clicking on the link below:
+
+  {{ confirmation_url }}
+
+The link is valid for the next 24 hours. If you do not confirm your 
+email, your application cannot be evaluated.
+
+Best regards,
+Matthias Kirschner, President FSFE
+
+-- 
+You received this email because an application form has been submitted 
+with your email address.
+
+If you didn't request membership of the Legal Network, you can ignore 
+this message. If you receive too many of these messages, please write 
+to contact@fsfe.org
+
+FSFE respects your privacy. Your data will only be stored on our own 
+infrastructure: https://fsfe.org/about/legal/imprint.html
+
+Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany
