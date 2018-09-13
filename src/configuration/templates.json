@@ -48,7 +48,7 @@
     },
     "required_vars": [
       "name", 
-      "email",
+      "confirm",
       "activities"
     ]
   },

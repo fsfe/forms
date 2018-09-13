@@ -3,7 +3,7 @@ Dear LN coordinator,
 We have received a new application for the Legal Network.
 
 Name: {{ name }}
-Email: {{ email }}
+Email: {{ confirm }}
 
 Background and current activities related to Free Software legal and licensing questions:
 {{ activities }}
