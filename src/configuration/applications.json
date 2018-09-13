@@ -72,7 +72,7 @@
     "confirmation-template": "ln-apply-confirm",
     "confirmation-subject": "Legal Network: Please confirm your membership request",
     "headers": {
-      "X-OTRS-Queue": "LN Applications",
+      "X-OTRS-Queue": "LN Applications"
     },
     "store": "/store/ln/applications.json"
   }
