@@ -5,16 +5,23 @@ We have received a new application for the Legal Network.
 Name: {{ name }}
 Email: {{ confirm }}
 
-Background and current activities related to Free Software legal and licensing questions:
+  # Background and current activities related to Free Software legal 
+    and licensing questions:
+
 {{ activities }}
 
-URL(s) to additional profile pages (optional):
+  # URL(s) to additional profile pages (optional):
+
 {{ profiles }}
 
-References to articles, presentations, or other examples of work in the Free Software area (optional):
+  # References to articles, presentations, or other examples of work 
+    in the Free Software area (optional):
+
 {{ references }}
 
-Name of existing member(s) sponsoring your addition. Welcome to include their short recommendations (a few sentences) (optional):
+  # Name of existing member(s) sponsoring your addition. Welcome to 
+    include their short recommendations (a few sentences) (optional):
+
 {{ sponsors }}
 
 LN rules and privacy policy accepted: {{ obligatory }}
