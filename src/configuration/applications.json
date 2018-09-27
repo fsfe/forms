@@ -44,7 +44,7 @@
     "redirect": "https://publiccode.eu/openletter/confirm",
     "redirect-confirmed": "https://publiccode.eu/openletter/success",
     "template": "pmpc-sign",
-    "confirmation-from": "admin@fsfe.org",
+    "confirmation-from": "no-reply@fsfe.org",
     "confirmation-template": "pmpc-confirm",
     "confirmation-subject": "Public Code: Please confirm your signature",
     "store": "/store/pmpc/signatures.json"
@@ -72,7 +72,7 @@
     "redirect": "https://fsfe.org/activities/ftf/ln-application-confirm.html",
     "redirect-confirmed": "https://fsfe.org/activities/ftf/ln-application-success.html",
     "template": "ln-apply",
-    "confirmation-from": "contact@fsfe.org",
+    "confirmation-from": "no-reply@fsfe.org",
     "confirmation-template": "ln-apply-confirm",
     "confirmation-subject": "Legal Network: Please confirm your membership request",
     "headers": {

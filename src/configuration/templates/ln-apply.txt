@@ -1,5 +1,3 @@
-Dear LN coordinator,
-
 We have received a new application for the Legal Network.
 
 Name: {{ name }}
@@ -24,4 +22,6 @@ Email: {{ confirm }}
 
 {{ sponsors }}
 
-LN rules and privacy policy accepted: {{ obligatory }}
+  # LN rules and privacy policy accepted? 
+
+{{ obligatory }}
