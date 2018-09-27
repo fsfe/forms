@@ -64,7 +64,7 @@
     "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
   },
   "ln-apply": {
-    "from": "{{ confirm }}",
+    "from": "{{ name }} <{{ confirm }}>",
     "to": [ "contact@fsfe.org" ],
     "subject": "Application for Legal Network membership by {{ name }}",
     "include_vars": true,
