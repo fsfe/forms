@@ -27,6 +27,7 @@
     "redirect-confirmed": "https://savecodeshare.eu/thank-you-confirmed",
     "store": "/store/art13/presignup.json",
     "subject": "New signup to savecodeshare",
+    "confirmation-from": "no-reply@fsfe.org",
     "confirmation-template": "art13-presignup-confirm",
     "confirmation-subject": "Just one step left! Confirm your email to save code share!",
     "template": "art13-presignup"
@@ -43,6 +44,7 @@
     "redirect": "https://publiccode.eu/openletter/confirm",
     "redirect-confirmed": "https://publiccode.eu/openletter/success",
     "template": "pmpc-sign",
+    "confirmation-from": "admin@fsfe.org",
     "confirmation-template": "pmpc-confirm",
     "confirmation-subject": "Public Code: Please confirm your signature",
     "store": "/store/pmpc/signatures.json"
@@ -57,11 +59,11 @@
     "redirect-confirmed": "https://reuse.software/sign-success",
     "template": "reuse-signup",
     "store": "/store/reuse/signups.json",
+    "confirmation-from": "no-reply@fsfe.org",
     "confirmation-template": "reuse-signup-confirm",
     "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
   },
   "ln-apply": {
-    "from": "contact@fsfe.org",
     "to": [ "contact@fsfe.org" ],
     "subject": "Application for Legal Network membership by {{ name }}",
     "include_vars": true,
@@ -69,6 +71,7 @@
     "redirect": "https://fsfe.org/activities/ftf/ln-application-confirm.html",
     "redirect-confirmed": "https://fsfe.org/activities/ftf/ln-application-success.html",
     "template": "ln-apply",
+    "confirmation-from": "contact@fsfe.org",
     "confirmation-template": "ln-apply-confirm",
     "confirmation-subject": "Legal Network: Please confirm your membership request",
     "headers": {

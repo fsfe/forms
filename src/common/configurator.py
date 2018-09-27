@@ -84,7 +84,9 @@ class TemplateConfig:
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
                  include_vars: bool, store: str, confirm: bool, redirect: str, redirect_confirmed: str, template,
-                 required_vars: Set[str], headers: dict, confirmation_template: str, confirmation_subject: str):
+                 required_vars: Set[str], headers: dict,
+                 confirmation_from: str, confirmation_template: str, confirmation_subject: str):
+        self.confirmation_from = confirmation_from
         self.confirmation_template = confirmation_template
         self.confirmation_subject = confirmation_subject
         self.headers = headers
@@ -118,10 +120,12 @@ class AppConfig:
         send_from = data.get('from', None)
         required_vars = set(data.get('required_vars', list()))
         headers = data.get('headers', dict())
+        confirmation_from = data.get('confirmation-from', None)
         confirmation_template = data.get('confirmation-template', None)
         confirmation_subject = data.get('confirmation-subject', CONFIRMATION_EMAIL_SUBJECT)
         return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm, redirect,
-                   redirect_confirmed, template, required_vars, headers, confirmation_template, confirmation_subject)
+                   redirect_confirmed, template, required_vars, headers,
+                   confirmation_from, confirmation_template, confirmation_subject)
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)

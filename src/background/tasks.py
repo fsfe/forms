@@ -26,8 +26,8 @@ def schedule_confirmation(id: str):
     data = SenderStorageService.resolve_data(id)
     current_config = configuration.get_config_for_confirmation(data)
     content = TemplateService.render_confirmation(id, data)
-    email_tasks[data.appid].delay(current_config.send_from, [data.confirm], current_config.confirmation_subject,
-                                  content, None, current_config.headers)
+    email_tasks[data.appid].delay(current_config.confirmation_from, [data.confirm], current_config.confirmation_subject,
+                                  content, None, None)
 
 
 @app.task(name='tasks.schedule_email')
