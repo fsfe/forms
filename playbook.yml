@@ -16,6 +16,7 @@
         image: redis:3.2
         state: started
         restart: yes
+        restart_policy: always
         exposed_ports:
           - 6379
         networks:
@@ -35,6 +36,7 @@
         image: forms-web
         state: started
         restart: yes
+        restart_policy: always
         exposed_ports:
           - 8080
         env:
@@ -57,6 +59,7 @@
         image: forms-worker
         state: started
         restart: yes
+        restart_policy: always
         env:
           REDIS_HOST: "formsredis"
           REDIS_PORT: 6379
