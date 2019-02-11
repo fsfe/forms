@@ -79,7 +79,9 @@ The template configuration could look like this:
 
 ```json
   "totick2-template": {
-    "filename": "totick2-template.html",
+    "plain": {
+      "filename": "totick2-template.txt"
+    },
     "required_vars": ["country", "message", "participant_name"],
     "headers": {
       "X-PARTICIPANT-NAME": "{{ participant_name }}"
@@ -100,7 +102,7 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template:
+And finally, the template (totick2-template.txt):
 
 ```
 Hi!
@@ -124,6 +126,7 @@ The configuration could look like this:
   "tosign": {
     "ratelimit": 500,
     "from": "admin@fsfe.org",
+    "confirmation-from": "admin@fsfe.org",
     "to": [ "campaignowner@fsfe.org" ],
     "subject": "New signatory to open letter",
     "include_vars": true,
@@ -138,7 +141,9 @@ The template configuration could look like this:
 
 ```json
   "tosign-template": {
-    "filename": "tosign-template.html",
+    "plain": {
+      "filename": "tosign-template.txt",
+    },
     "required_vars": ["name", "confirm", "country"]
   }
 ```
@@ -157,7 +162,7 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template:
+And finally, the template (tosign-template.txt):
 
 ```
 Hi!
