@@ -140,7 +140,9 @@ The template configuration could look like this:
 
 ```json
   "tosign-template": {
-    "filename": "tosign-template.html",
+    "plain": {
+      "filename": "tosign-template.txt",
+    },
     "required_vars": ["name", "confirm", "country"]
   }
 ```
@@ -159,7 +161,7 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template:
+And finally, the template (tosign-template.txt):
 
 ```
 Hi!
