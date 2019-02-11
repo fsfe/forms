@@ -126,6 +126,7 @@ The configuration could look like this:
   "tosign": {
     "ratelimit": 500,
     "from": "admin@fsfe.org",
+    "confirmation-from": "admin@fsfe.org",
     "to": [ "campaignowner@fsfe.org" ],
     "subject": "New signatory to open letter",
     "include_vars": true,
