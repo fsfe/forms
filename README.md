@@ -79,7 +79,9 @@ The template configuration could look like this:
 
 ```json
   "totick2-template": {
-    "filename": "totick2-template.html",
+    "plain": {
+      "filename": "totick2-template.txt"
+    },
     "required_vars": ["country", "message", "participant_name"],
     "headers": {
       "X-PARTICIPANT-NAME": "{{ participant_name }}"
