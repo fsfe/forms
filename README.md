@@ -102,7 +102,7 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template:
+And finally, the template (totick2-template.txt):
 
 ```
 Hi!
