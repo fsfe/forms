@@ -266,18 +266,6 @@ The following parameters are available only in the API configuration file:
  * **confirmation-template**: name of a template defined in templates config that will be used as confirmation email. For confirmation emails already provided 2 variables: "confirmation_url" and "content". Content is the rendered email that will be sent after confirmation
  * **confirmation-subject**: custom subject for confirmation email. Could contain variables
 
-## Contribute
-We'd love to get feedback on these practices, ideally in the form
-of pull requests which we can discuss around. To be able to contribute
-in this way, you need an account on `git.fsfe.org`, which you can
-get by following our instrictions for [volunteer accounts](https://wiki.fsfe.org/KnowHow/FSFELife/VolunteerAccountCreation).
-
-Once you've registered, your account needs to be activated. Just shoot a mail to <contact@fsfe.org> saying you've registered and would like to be activated. As soon as your account is activated, you can set a username and proceed to login to `git.fsfe.org`.
-
-We also accept and appreciate feedback by creating issues in the project
-(requires the same account creation), or by sending e-mail to, again,
-<contact@fsfe.org>.
-
 ## License
 This software is copyright 2018 by the Free Software Foundation Europe e.V.
 and licensed under the GPLv3 license. For details see the "LICENSE" file in
