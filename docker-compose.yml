@@ -1,6 +1,60 @@
-version: "2"
+version: '3'
 services:
-  redis:
+  forms-redis:
+    container_name: forms-redis
     image: redis:3.2
-    ports:
-      - "6379:6379"
+    restart: always
+    expose:
+      - 6379
+
+  forms-web:
+    container_name: forms-web
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    image: forms-web
+    restart: always
+    expose:
+      - 8080
+    environment:
+      - VIRTUAL_HOST=forms.fsfe.org
+      - LETSENCRYPT_HOST=forms.fsfe.org
+      - LETSENCRYPT_EMAIL=contact@fsfe.org
+      - REDIS_HOST=forms-redis
+      - REDIS_PORT=6379
+    volumes:
+      - "/srv/forms:/store:rw"
+
+  forms-worker:
+    container_name: forms-worker
+    build:
+      context: .
+      dockerfile: Dockerfile-worker
+    image: forms-worker
+    environment:
+      - REDIS_HOST=forms-redis
+      - REDIS_PORT=6379
+      - SMTP_HOST=mail.fsfe.org
+      - SMTP_PORT=25
+    volumes:
+      - "/srv/forms:/store:rw"
+
+#  forms-fakesmtp:
+#    container_name: forms-fakesmtp
+#    build:
+#      context: ./fake-smtp-server
+#      dockerfile: Dockerfile-smtp
+#    image: forms-fakesmtp
+#    ports:
+#    - 1025
+#    - 1080
+
+  # Connect the container which exposes the service to the 'bridge' network as
+  # this is where the reverse proxy is
+  connect-bridge:
+    image: docker:dind
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - forms-web
+    command: /bin/sh -c 'docker network connect bridge forms-web'

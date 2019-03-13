@@ -1,16 +1,11 @@
 pipeline:
-  build:
-    image: williamyeh/ansible:debian8
-    commands:
-        - ansible-playbook -vvv playbook.yml -i hosts --syntax-check
-
   deploy:
-    image: williamyeh/ansible:debian8
-    secrets: [ ssh_key, redis_password ]
     commands:
-      - mkdir /root/.ssh && echo "$SSH_KEY" > /root/.ssh/id_rsa && chmod 0600 /root/.ssh/id_rsa
-      - ssh-keyscan -H lund.fsfeurope.org >> ~/.ssh/known_hosts
-      - ansible-playbook playbook.yml -i hosts --extra-vars "REDIS_PASSWORD=$REDIS_PASSWORD"
+      # Run docker compose
+      - docker-compose up --build -d
+    image: tmaier/docker-compose
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     when:
        branch: master
-
+       event: [push, tag, deployment]
