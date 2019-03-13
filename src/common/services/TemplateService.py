@@ -1,9 +1,11 @@
+import os
+import re
 from urllib.parse import urljoin
 from common.configurator import configuration
 from common.models import SendData
 from common.services import TemplateRenderService
 
-CONFIRMATION_TEMPLATE = 'common/templates/confirmation.html'
+from common.config import DEFAULT_SUBJECT_LANG, CONFIRMATION_MULTILANG_TEMPLATE
 
 
 def render_confirmation(id, data: SendData):
@@ -32,12 +34,15 @@ def render_confirmation(id, data: SendData):
             "plain": plain
         }
     else:
-        with open(CONFIRMATION_TEMPLATE) as f:
+        filename = CONFIRMATION_MULTILANG_TEMPLATE.format(lang=data.lang)
+        if not os.path.isfile(filename):
+            filename = CONFIRMATION_MULTILANG_TEMPLATE.format(lang=DEFAULT_SUBJECT_LANG)
+        with open(filename) as f:
             content = f.read()
-        return TemplateRenderService.render_content(content, {
-            'content': email_content,
-            'confirmation_url': confirmation_url
-        })
+            return TemplateRenderService.render_content(content, {
+                'content': email_content,
+                'confirmation_url': confirmation_url
+            })
 
 
 def render_email(data: SendData):
@@ -48,8 +53,8 @@ def render_email(data: SendData):
         request_data = dict()
     if final_config.template is not None:
         template_config = configuration.get_template_config(final_config.template)
-        template_html_content = template_config.get_html_template()
-        template_plain_content = template_config.get_plain_template()
+        template_html_content = template_config.get_html_template(data.lang)
+        template_plain_content = template_config.get_plain_template(data.lang)
     else:
         return None
     html = TemplateRenderService.render_content(template_html_content,

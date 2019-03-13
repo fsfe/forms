@@ -9,3 +9,7 @@ SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
 
 CONFIRMATION_EMAIL_SUBJECT = 'Confirm your email'
 CONFIRMATION_EXPIRATION_SECS = 86400  # You can set None if you don't want to have expiration of emails confirmation
+
+DEFAULT_SUBJECT_LANG = 'en'
+LANG_STRING_TOKEN = '{lang}'
+CONFIRMATION_MULTILANG_TEMPLATE = f"common/templates/confirmation.{LANG_STRING_TOKEN}.html"

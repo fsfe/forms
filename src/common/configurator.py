@@ -2,13 +2,13 @@ import copy
 import json
 from typing import List, Set
 
-from common.config import CONFIRMATION_EMAIL_SUBJECT
+from common.config import CONFIRMATION_EMAIL_SUBJECT, DEFAULT_SUBJECT_LANG, LANG_STRING_TOKEN
 from common.models import SendData
 from common.services import TemplateRenderService
 import os
 
-CONFIGURATION_FOLDER = "configuration"
-TEMPLATES_FOLDER = "configuration/templates"
+CONFIGURATION_FOLDER = 'configuration'
+TEMPLATES_FOLDER = 'configuration/templates'
 
 
 def _template_field(field, data: dict):
@@ -17,6 +17,8 @@ def _template_field(field, data: dict):
             return TemplateRenderService.render_content(field, data)
         except:
             return field
+    if isinstance(field, dict):
+        return {k: _template_field(v, data) for k, v in field.items()}
     return field
 
 
@@ -29,7 +31,6 @@ class TemplateContentConfig:
     def __init__(self, filename: str, content: str):
         self.filename = filename
         self.content = content
-        self._contents = None
 
     @classmethod
     def load_from_dict(cls, data: dict):
@@ -39,15 +40,20 @@ class TemplateContentConfig:
         content = data.get('content', None)
         return cls(filename, content)
 
-    def get_template(self):
-        if self._contents is None:
-            if self.content is not None:
-                self._contents = self.content
-            elif self.filename is not None:
-                with open(self.filename) as f:
-                    self._contents = f.read()
-        return self._contents
+    def get_template(self, lang):
+        if self.content:
+            return self.content
+        filename = self.get_filename(lang)
+        with open(filename) as f:
+            return f.read()
 
+    def get_filename(self, lang, default_lang=DEFAULT_SUBJECT_LANG):
+        if LANG_STRING_TOKEN in self.filename:
+            filename = self.filename.format(lang=lang)
+            if os.path.isfile(filename):
+                return filename
+            return self.filename.format(lang=default_lang)
+        return self.filename
 
 class TemplateConfig:
     def __init__(self, name: str, required_vars: Set[str], headers: dict, plain, html):
@@ -56,7 +62,6 @@ class TemplateConfig:
         self.headers = headers
         self.name = name
         self.required_vars = required_vars
-        self._contents = None
 
     @classmethod
     def load_from_dict(cls, name: str, data: dict):
@@ -68,11 +73,11 @@ class TemplateConfig:
         plain = TemplateContentConfig.load_from_dict(plain_dict) if plain_dict is not None else None
         return cls(name, required_vars, headers, plain, html)
 
-    def get_html_template(self):
-        return self.html.get_template() if self.html is not None else None
+    def get_html_template(self, lang=None):
+        return self.html.get_template(lang) if self.html is not None else None
 
-    def get_plain_template(self):
-        return self.plain.get_template() if self.plain is not None else None
+    def get_plain_template(self, lang=None):
+        return self.plain.get_template(lang) if self.plain is not None else None
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)

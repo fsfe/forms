@@ -1,7 +1,8 @@
 import uuid
 
+from typing import Optional, Union
 from background.app import app
-from common.config import CONFIRMATION_EMAIL_SUBJECT
+from common.config import DEFAULT_SUBJECT_LANG
 from common.configurator import configuration
 from common.services import DeliveryService, SenderStorageService, TemplateService
 
@@ -26,7 +27,8 @@ def schedule_confirmation(id: str):
     data = SenderStorageService.resolve_data(id)
     current_config = configuration.get_config_for_confirmation(data)
     content = TemplateService.render_confirmation(id, data)
-    email_tasks[data.appid].delay(current_config.confirmation_from, [data.confirm], current_config.confirmation_subject,
+    subject = get_subject(current_config.confirmation_subject, data.lang)
+    email_tasks[data.appid].delay(current_config.confirmation_from, [data.confirm], subject,
                                   content, None, None)
 
 
@@ -36,14 +38,23 @@ def schedule_email(id: str):
     data = SenderStorageService.resolve_data(id)
     current_config = configuration.get_config_for_email(data)
     content = TemplateService.render_email(data)
-    email_tasks[current_config.appid].delay(current_config.send_from, current_config.send_to, current_config.subject,
+    subject = get_subject(current_config.subject, data.lang)
+    email_tasks[current_config.appid].delay(current_config.send_from, current_config.send_to, subject,
                                             content, current_config.reply_to, current_config.headers)
     if current_config.store is not None:
         store_emails.delay(current_config.store, current_config.send_from, current_config.send_to,
-                           current_config.subject, content, current_config.reply_to, data.request_data)
+                           subject, content, current_config.reply_to, data.request_data)
     SenderStorageService.remove(id)
 
 
 @app.task(name='tasks.store_emails')
 def store_emails(storage, send_from, send_to, subject, content, reply_to, include_vars):
     DeliveryService.log(storage, send_from, send_to, subject, content, reply_to, include_vars)
+
+def get_subject(subject: Union[str, dict], lang: Union[None, str], default_lang: Union[None, str] = DEFAULT_SUBJECT_LANG):
+    if isinstance(subject, str):
+        return subject
+    if isinstance(subject, dict):
+        _lang = lang if lang in subject else default_lang
+        return subject[_lang]
+    raise ValueError('Subject should be a string or a dict')

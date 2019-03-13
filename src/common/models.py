@@ -1,4 +1,5 @@
 import json
+import re
 
 
 class Serializable:
@@ -12,7 +13,7 @@ class Serializable:
 
 class SendData(Serializable):
     def __init__(self, appid, send_from, send_to, reply_to, subject, template, confirm, confirmed,
-                 request_data, url):
+                 request_data, url, lang):
         self.url = url
         self.request_data = request_data
         self.confirmed = confirmed
@@ -23,6 +24,7 @@ class SendData(Serializable):
         self.subject = subject
         self.template = template
         self.confirm = confirm
+        self.lang = get_secure_lang(lang)
 
     @classmethod
     def from_request(cls, appid: str, data: dict, url: str):
@@ -34,12 +36,13 @@ class SendData(Serializable):
         subject = data.get('subject', None)
         template = data.get('template', None)
         confirm = data.get('confirm', None)
+        lang = data.get('lang', None)
         request_data = dict()
         for name in data:
             if name in ['from', 'to', 'replyto', 'subject', 'template', 'appid']:
                 continue
             request_data[name] = getattr(data, name)
-        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url)
+        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url, lang)
 
     def toJSON(self):
         return json.dumps(self.__dict__)
@@ -57,4 +60,10 @@ class SendData(Serializable):
         delivered = json_data.get('delivered', False)
         request_data = json_data.get('request_data', None)
         url = json_data.get('url', None)
-        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, delivered, request_data, url)
+        lang = json_data.get('lang', None)
+        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, delivered, request_data, url, lang)
+
+def get_secure_lang(lang):
+    if lang and re.match('[a-z]{2}$', lang):
+        return lang
+    return None

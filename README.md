@@ -203,7 +203,23 @@ file `/store/campaign2.json` will be created with the following content:
 "include_vars": {"name": "John Doe", "confirm": "john@example.com", "country": "Switzerland"}}
 ```
 
+### Multi lang (optional)
 
+If you want to send an email in a specific language you have to add an hidden field in your form:
+`<input type="hidden" name="lang" value="it">`
+
+Moreover you have to update the configuration fields:
+- `subject` and `confirmation-subject`: in a dict `
+  {"de": "....", "fr": "...", "en": "..."}
+`
+- `filename`: with the template `filename.{lang}.txt` (ex: `totick2-template.{lang}.txt`)
+
+Rules:
+- If a request provides the `lang` argument:
+  - The API searches the `subject` and `confirmation-subject` in the hash provided in the configuration file and returns it
+  - The API replaces the `{lang}` (in `filename.{lang}.txt`) with the language provided in the request
+- If no argument `lang` is received (or is not provide in conf):
+  The API returns missing elements (subject, confirmation-subject, file) in English (replace `{lang}` by 'en').
 
 ## API
 
