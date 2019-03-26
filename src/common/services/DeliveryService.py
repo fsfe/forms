@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import make_msgid, formatdate
 
-from common.config import SMTP_HOST, SMTP_PORT
+from common.config import SMTP_HOST, SMTP_PORT, LOCK_FILENAME
 
 
 def send(send_from, send_to, subject, content, reply_to, headers):
@@ -54,7 +54,20 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
         "include_vars": include_vars
     }
 
-    lock = filelock.FileLock("/tmp/forms.lock")
+    lock = filelock.FileLock(LOCK_FILENAME)
+    logs = read_log(storage, lock) + [add]
+    logs_in_json = json.dumps(logs)
+    with lock, open(storage, "w") as file:
+          file.write(logs_in_json)
+
+
+def read_log(storage, lock=filelock.FileLock(LOCK_FILENAME)):
+    _create_log_file_if_not_exist(storage, lock)
+    with lock, open(storage, "r") as file:
+          f = file.read()
+    return json.loads(f)
+
+def _create_log_file_if_not_exist(storage, lock):
     with lock:
        if not os.path.exists(os.path.dirname(storage)):
           os.makedirs(os.path.dirname(storage))
@@ -62,11 +75,3 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
        if not os.path.exists(storage):
           with open(storage, "a") as file:
             file.write(json.dumps([]))
-
-       with open(storage, "r") as file:
-          prev = json.loads(file.read())
-
-       with open(storage, "w") as file:
-          prev.append(add)
-          file.write(json.dumps(prev))
-

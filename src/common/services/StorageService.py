@@ -44,5 +44,23 @@ def get_queue_tasks_count(queue_name: str):
     return int(storage.llen(queue_name))
 
 
+def get_all(table: str, type=None):
+    key = storage.keys(_sanitize_key(table, '*'))
+    for k in key:
+        binary_data = storage.get(k)
+        str_data = binary_data.decode('utf-8')
+        if type is not None and issubclass(type, Serializable):
+            data = type.fromJSON(str_data)
+        else:
+            data = json.loads(str_data)
+        _key = k.decode("utf-8").split(':')[-1]
+        yield (_key, data)
+
+
+def get_ttl(table: str, id: uuid.UUID):
+    key = _sanitize_key(table, id)
+    return storage.ttl(key)
+
+
 def _sanitize_key(table: str, key: uuid.UUID) -> str:
     return 'datastorage.%s:%s' % (table, key)
