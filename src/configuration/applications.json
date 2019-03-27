@@ -64,7 +64,7 @@
     "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
   },
   "ln-apply": {
-    "from": "{{ name }} <{{ confirm }}>",
+    "from": "{{ name }} <no-reply@fsfe.org>",
     "to": [ "contact@fsfe.org" ],
     "subject": "Application for Legal Network membership by {{ name }}",
     "include_vars": true,
@@ -76,7 +76,8 @@
     "confirmation-template": "ln-apply-confirm",
     "confirmation-subject": "Legal Network: Please confirm your membership request",
     "headers": {
-      "X-OTRS-Queue": "Legal Network"
+      "X-OTRS-Queue": "Legal Network",
+      "Reply-To": "{{ name }} <{{ confirm }}>"
     },
     "store": "/store/ln/applications.json"
   }
