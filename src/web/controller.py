@@ -15,9 +15,6 @@ def error_handler(func):
             abort(404, e.message)
         except redis.exceptions.ConnectionError as e:
             abort(500, 'Database connection failed')
-        except Exception as e:
-            print(e)
-            abort(500, str(e))
 
     return wrapper
 
