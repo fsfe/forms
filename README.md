@@ -284,30 +284,26 @@ The following parameters are available only in the API configuration file:
 
 ## Contribute
 
-In order to contribute, a local testing setup is very useful. All you need is Docker and docker-compose. In the repository, just run `docker-compose up -d --build` to spin up the three containers this application includes.
+In order to contribute, a local testing setup is very useful. All you need is Docker and docker-compose. In the repository, just run `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build` to spin up the three default containers this application includes and an extra "fake SMTP" for local testing.
 
 ### Fake SMTP server
 
-To test emails, consider using `fake-smtp-server` linked as submodule in this repository. It allows you to use a local SMTP server which does not send the emails but lists them in your browser. Doing this, you can view and debug sent emails without having to set up this service.
+To test emails, you are recommended to use `fake-smtp-server` linked as submodule in this repository. It allows you to use a local SMTP server which does not send the emails but lists them in your browser. Doing this, you can view and debug sent emails without having to set up this service.
 
-To activate this service, uncomment the service `forms-fakesmtp` in `docker-compose.yml`. Afterwards, set `SMTP_HOST=forms-fakesmtp` and `SMTP_PORT=1025` in the service `forms-worker`. Do not forget to revert these changes when pushing something to the actual repo.
+The above command using the extra file `docker-compose.dev.yml` sets this up automatically.
 
 More info on the fake smtp server on [its official website](https://www.npmjs.com/package/fake-smtp-server).
 
 ### Use the service locally
 
-After running docker-compose, you can access all services locally. To find out their IP addresses, run:
+After running docker-compose, you can access all services locally:
 
-```
-# For the forms web interface, for example 172.20.0.4
-docker inspect -f '{{.NetworkSettings.Networks.forms_default.IPAddress}}' forms-web
-# For the fake SMTP server, for example 172.20.0.5
-docker inspect -f '{{.NetworkSettings.Networks.forms_default.IPAddress}}' forms-fakesmtp
-```
+* forms-web: http://localhost:8080
+* forms-fakesmtp: https://localhost:1080
 
-Now you either replace the URLs of a form with `http://$ipadress:8080/email` (for example in your browser with developer tools), or send POST requests via curl like: `curl -X POST "http://172.20.0.4:8080/email" -d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`.
+Now you either replace the URLs of a form with `http://localhost:8080/email` (for example in your browser with developer tools), or send POST requests via curl like: `curl -X POST "http://localhost:8080/email" -d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`.
 
-On `http://172.20.0.5:1080` you can then see the sent email.
+On `http://localhost:1080` you can then see the sent emails.
 
 ## License
 

@@ -39,16 +39,6 @@ services:
     volumes:
       - "/srv/forms:/store:rw"
 
-#  forms-fakesmtp:
-#    container_name: forms-fakesmtp
-#    build:
-#      context: ./fake-smtp-server
-#      dockerfile: Dockerfile-smtp
-#    image: forms-fakesmtp
-#    ports:
-#    - 1025
-#    - 1080
-
   # Connect the container which exposes the service to the 'bridge' network as
   # this is where the reverse proxy is
   connect-bridge:
