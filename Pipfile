@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+bottle = "==0.12.13"
+celery = "==3.1.25"
+gunicorn = "==19.7.1"
+redis = "==2.10.5"
+filelock = "==2.0.12"
+Jinja2 = "==2.9.6"
+
+[requires]
+python_version = "3.6"

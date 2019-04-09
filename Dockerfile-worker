@@ -1,5 +1,10 @@
 FROM python:3.6
+
+RUN pip install "pipenv==2018.11.26"
+COPY Pipfile Pipfile.lock ./
+RUN pipenv install --system --deploy
+
 COPY . /var/sender
 WORKDIR /var/sender
-RUN pip install -r requirements.txt
+
 CMD cd src && python worker.py worker -l info

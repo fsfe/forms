@@ -1,6 +1,11 @@
 FROM python:3.6
+EXPOSE 8080
+
+RUN pip install "pipenv==2018.11.26"
+COPY Pipfile Pipfile.lock ./
+RUN pipenv install --system --deploy
+
 COPY . /var/share/forms
 WORKDIR /var/share/forms
-RUN pip install -r requirements.txt
-EXPOSE 8080
+
 CMD cd src && gunicorn -b 0.0.0.0:8080 wsgi:application
