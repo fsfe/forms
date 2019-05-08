@@ -20,6 +20,11 @@
        "filename": "pmpc-confirm.txt"
     }
   },
+  "pmpc-confirmation-duplicate": {
+    "plain": {
+       "filename": "pmpc-confirmation-duplicate.txt"
+    }
+  },
   "art13-presignup-confirm": {
     "plain": {
        "filename": "art13-presignup-confirm.txt"

@@ -46,6 +46,9 @@
     "template": "pmpc-sign",
     "confirmation-from": "no-reply@fsfe.org",
     "confirmation-template": "pmpc-confirm",
+    "confirmation-check-duplicates": true,
+    "confirmation-duplicate-template": "pmpc-confirmation-duplicate",
+    "confirmation-duplicate-subject": "Public Code: Duplicated signature",
     "confirmation-subject": "Public Code: Please confirm your signature",
     "store": "/store/pmpc/signatures.json"
   },

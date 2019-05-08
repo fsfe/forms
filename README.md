@@ -280,7 +280,10 @@ The following parameters are available only in the API configuration file:
  * **required_vars**: an array with parameter names that has to be presented in request parameters
  * **headers**: a key-value dictionary that should be included to email as headers. Values could contain variables
  * **confirmation-template**: name of a template defined in templates config that will be used as confirmation email. For confirmation emails already provided 2 variables: "confirmation_url" and "content". Content is the rendered email that will be sent after confirmation
+ * **confirmation-duplicate-template**: name of a template defined in templates config that will be used for user that want make multiples signatures
  * **confirmation-subject**: custom subject for confirmation email. Could contain variables
+ * **confirmation-duplicate-subject**: custom subject for duplicate confirmation email. Could contain variables
+ * **confirmation-check-duplicates**: set to `true` to the check whether the email already confirmed (duplicated). Disabled by default
 
 ## Contribute
 
@@ -299,7 +302,7 @@ More info on the fake smtp server on [its official website](https://www.npmjs.co
 After running docker-compose, you can access all services locally:
 
 * forms-web: http://localhost:8080
-* forms-fakesmtp: https://localhost:1080
+* forms-fakesmtp: http://localhost:1080
 
 Now you either replace the URLs of a form with `http://localhost:8080/email` (for example in your browser with developer tools), or send POST requests via curl like: `curl -X POST "http://localhost:8080/email" -d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`.
 

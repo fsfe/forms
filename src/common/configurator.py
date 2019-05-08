@@ -2,7 +2,7 @@ import copy
 import json
 from typing import List, Set
 
-from common.config import CONFIRMATION_EMAIL_SUBJECT, DEFAULT_SUBJECT_LANG, LANG_STRING_TOKEN
+from common.config import CONFIRMATION_EMAIL_SUBJECT, CONFIRMATION_DUPLICATE_EMAIL_SUBJECT, DEFAULT_SUBJECT_LANG, LANG_STRING_TOKEN
 from common.models import SendData
 from common.services import TemplateRenderService
 import os
@@ -88,12 +88,17 @@ class TemplateConfig:
 
 class AppConfig:
     def __init__(self, appid: str, ratelimit: int, send_from: str, send_to: List[str], reply_to: str, subject: str,
-                 include_vars: bool, store: str, confirm: bool, redirect: str, redirect_confirmed: str, template,
+                 include_vars: bool, store: str,
+                 confirm: bool, confirmation_check_duplicates: bool,
+                 redirect: str, redirect_confirmed: str, template,
                  required_vars: Set[str], headers: dict,
-                 confirmation_from: str, confirmation_template: str, confirmation_subject: str):
+                 confirmation_from: str, confirmation_template: str, confirmation_duplicate_template: str,
+                 confirmation_subject: str, confirmation_duplicate_subject: str):
         self.confirmation_from = confirmation_from
         self.confirmation_template = confirmation_template
+        self.confirmation_duplicate_template = confirmation_duplicate_template
         self.confirmation_subject = confirmation_subject
+        self.confirmation_duplicate_subject = confirmation_duplicate_subject
         self.headers = headers
         self.appid = appid
         self.ratelimit = ratelimit
@@ -101,6 +106,7 @@ class AppConfig:
         self.redirect = redirect
         self.redirect_confirmed = redirect_confirmed
         self.confirm = confirm
+        self.confirmation_check_duplicates = confirmation_check_duplicates
         self.store = store
         self.include_vars = include_vars
         self.subject = subject
@@ -116,6 +122,7 @@ class AppConfig:
         redirect = data.get('redirect', None)
         redirect_confirmed = data.get('redirect-confirmed', None)
         confirm = data.get('confirm', None)
+        confirmation_check_duplicates = data.get('confirmation-check-duplicates', False)
         store = data.get('store', None)
         include_vars = data.get('include_vars', False)
         subject = data.get('subject', None)
@@ -127,10 +134,14 @@ class AppConfig:
         headers = data.get('headers', dict())
         confirmation_from = data.get('confirmation-from', None)
         confirmation_template = data.get('confirmation-template', None)
+        confirmation_duplicate_template = data.get('confirmation-duplicate-template', None)
         confirmation_subject = data.get('confirmation-subject', CONFIRMATION_EMAIL_SUBJECT)
-        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store, confirm, redirect,
-                   redirect_confirmed, template, required_vars, headers,
-                   confirmation_from, confirmation_template, confirmation_subject)
+        confirmation_duplicate_subject = data.get('confirmation-duplicate-subject', CONFIRMATION_DUPLICATE_EMAIL_SUBJECT)
+        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store,
+                   confirm, confirmation_check_duplicates,
+                   redirect, redirect_confirmed, template, required_vars, headers,
+                   confirmation_from, confirmation_template, confirmation_duplicate_template,
+                   confirmation_subject, confirmation_duplicate_subject)
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
@@ -181,27 +192,19 @@ class Configuration:
         if merged_app_config.confirmation_template is not None:
             confirmation_template_config = self.get_template_config(merged_app_config.confirmation_template)
             merged_app_config = merged_app_config.merge_required_vars_with_template(confirmation_template_config)
+        if merged_app_config.confirmation_duplicate_template is not None:
+            confirmation_duplicate_template_config = self.get_template_config(merged_app_config.confirmation_duplicate_template)
+            merged_app_config = merged_app_config.merge_required_vars_with_template(confirmation_duplicate_template_config)
         return merged_app_config
 
     def get_config_for_email(self, data: SendData):
-        merged_app_config = self.get_config_merged_with_data(data)
-        if merged_app_config is None:
-            return None
-        if merged_app_config.template is not None:
-            template_config = self.get_template_config(merged_app_config.template)
-            merged_template_config = template_config.merge_config_with_send_data(data)
-            merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
-        return merged_app_config
+        return self._get_config_for_field(data, 'template')
 
     def get_config_for_confirmation(self, data: SendData):
-        merged_app_config = self.get_config_merged_with_data(data)
-        if merged_app_config is None:
-            return None
-        if merged_app_config.confirmation_template is not None:
-            template_config = self.get_template_config(merged_app_config.confirmation_template)
-            merged_template_config = template_config.merge_config_with_send_data(data)
-            merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
-        return merged_app_config
+        return self._get_config_for_field(data, 'confirmation_template')
+
+    def get_config_for_confirmation_duplicate(self, data: SendData):
+        return self._get_config_for_field(data, 'confirmation_duplicate_template')
 
     def get_config(self, appid: str):
         configs = [c for c in self.appconfigs if c.appid.__eq__(appid)]
@@ -236,6 +239,16 @@ class Configuration:
                     template_configs.append(temp_config)
         return cls(application_configs, template_configs)
 
+    def _get_config_for_field(self, data: SendData, field: str):
+        merged_app_config = self.get_config_merged_with_data(data)
+        if merged_app_config is None:
+            return None
+        merged_app_config_attr = getattr(merged_app_config, field)
+        if merged_app_config_attr is not None:
+            template_config = self.get_template_config(merged_app_config_attr)
+            merged_template_config = template_config.merge_config_with_send_data(data)
+            merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
+        return merged_app_config
 
 def load_json_dict(filename: str) -> dict:
     with open(filename) as fp:

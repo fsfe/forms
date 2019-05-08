@@ -37,14 +37,14 @@ def extract_data_and_config(func):
 @app.task(name='tasks.schedule_confirmation')
 @extract_data_and_config
 def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConfig):
-    previous_task_id = get_previous_task_id(id, data.appid, data.request_data['confirm'])
+    user_email = data.request_data.get('confirm')
+    previous_task_id = _get_previous_task_id(id, data.appid, user_email)
     if previous_task_id:
         ttl = SenderStorageService.get_ttl(previous_task_id)
         SenderStorageService.update_data(previous_task_id, data, ttl)
         SenderStorageService.remove(id)
         id = previous_task_id
-    content = TemplateService.render_confirmation(id, data)
-    subject = get_subject(current_config.confirmation_subject, data.lang)
+    subject, content = _get_email_subject_and_content(current_config, user_email, data, id)
     email_tasks[data.appid].delay(current_config.confirmation_from, [data.confirm], subject,
                                   content, None, None)
 
@@ -53,7 +53,7 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConf
 @extract_data_and_config
 def schedule_email(id: uuid.UUID, data: SendData, current_config: AppConfig):
     content = TemplateService.render_email(data)
-    subject = get_subject(current_config.subject, data.lang)
+    subject = _get_subject(current_config.subject, data.lang)
     email_tasks[current_config.appid].delay(current_config.send_from, current_config.send_to, subject,
                                             content, current_config.reply_to, current_config.headers)
     if current_config.store is not None:
@@ -67,7 +67,27 @@ def store_emails(storage, send_from, send_to, subject, content, reply_to, includ
     DeliveryService.log(storage, send_from, send_to, subject, content, reply_to, include_vars)
 
 
-def get_subject(subject: Union[str, dict], lang: Union[None, str], default_lang: Union[None, str] = DEFAULT_SUBJECT_LANG):
+def _get_email_subject_and_content(current_config, user_email, data, task_id):
+    have_to_check_duplicates = current_config.confirmation_check_duplicates
+
+    if have_to_check_duplicates and _has_signed_open_letter(current_config.store, user_email):
+        config_subject = current_config.confirmation_duplicate_subject
+        content = TemplateService.render_confirmation_duplicate
+    else:
+        config_subject = current_config.confirmation_subject
+        content = TemplateService.render_confirmation
+
+    return _get_subject(config_subject, data.lang), content(task_id, data)
+
+
+def _has_signed_open_letter(storage: str, email: str) -> bool:
+    logs = DeliveryService.read_log(storage)
+    logs_with_same_email = filter(lambda l: l.get('include_vars', {}).get('confirm') == email, logs)
+    exist = next(logs_with_same_email, None)
+    return True if exist else False
+
+
+def _get_subject(subject: Union[str, dict], lang: Union[None, str], default_lang: Union[None, str] = DEFAULT_SUBJECT_LANG):
     if isinstance(subject, str):
         return subject
     if isinstance(subject, dict):
@@ -75,10 +95,12 @@ def get_subject(subject: Union[str, dict], lang: Union[None, str], default_lang:
         return subject[_lang]
     raise ValueError('Subject should be a string or a dict')
 
-def get_previous_task_id(id: uuid.UUID, appid: str, email: str) -> uuid.UUID:
+
+def _get_previous_task_id(id: uuid.UUID, appid: str, email: str) -> uuid.UUID:
     previous_tasks = SenderStorageService.get_all()
     previous_tasks_with_same_email = filter(lambda d: d[1].request_data.get('confirm') == email, previous_tasks)
     previous_tasks_without_same_id = filter(lambda d: uuid.UUID(d[0]) != id, previous_tasks_with_same_email)
     previous_tasks_with_same_appid = filter(lambda d: d[1].appid == appid, previous_tasks_without_same_id)
     previous_tasks = next(previous_tasks_with_same_appid, None)
     return uuid.UUID(previous_tasks[0]) if previous_tasks else None
+

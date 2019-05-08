@@ -1,0 +1,34 @@
+Dear {{ name }},
+
+We have noticed that you already signed the open letter “Public Money, 
+Public Code”, calling for legislation that supports Free Software in 
+the public sector, with your email address.
+
+To ensure that each signature is unique, we cannot count double 
+signatures. But you can still help! Make your friends and colleagues 
+aware of this initiative and convince them of signing the open letter 
+just like you did.
+
+With your help we can achieve our goal of making all publicly financed 
+software to be released as Free Software!
+
+Visit www.publiccode.eu for more information on this campaign
+
+
+Thank you for your support,
+Matthias Kirschner, President FSFE
+
+
+-- 
+You received this email because the Open Letter for Public Code has been 
+signed with your address: https://publiccode.eu/openletter
+
+FSFE respects your privacy. Your data will only be stored on our own 
+infrastructure: https://publiccode.eu/privacy
+
+If you didn't request to sign our open letter, you can ignore this 
+message. If you receive too many of these messages, please write to 
+contact@fsfe.org
+
+"Public Money, Public Code" is an FSFE campaign
+Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany
