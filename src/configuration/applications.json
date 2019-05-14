@@ -1,36 +1,9 @@
 {
   "contact": {
-    "to": [
-      "contact@fsfe.org"
-    ],
+    "to": [ "contact@fsfe.org" ],
     "include_vars": true,
-    "redirect": "https://fsfe.org/contact/contact-thankyou",
+    "redirect": "https://fsfe.org/contact/",
     "template": "contact-form"
-  },
-  "art13contact": {
-    "to": [
-      "contact@fsfe.org"
-    ],
-    "include_vars": true,
-    "redirect": "https://savecodeshare.eu/thank-you",
-    "template": "contact-form"
-  },
-  "art13-presignup": {
-    "from": "no-reply@fsfe.org",
-    "to": [
-      "jonas@fsfe.org",
-      "diana@openforumeurope.org"
-    ],
-    "include_vars": true,
-    "confirm": true,
-    "redirect": "https://savecodeshare.eu/thank-you-signup",
-    "redirect-confirmed": "https://savecodeshare.eu/thank-you-confirmed",
-    "store": "/store/art13/presignup.json",
-    "subject": "New signup to savecodeshare",
-    "confirmation-from": "no-reply@fsfe.org",
-    "confirmation-template": "art13-presignup-confirm",
-    "confirmation-subject": "Just one step left! Confirm your email to save code share!",
-    "template": "art13-presignup"
   },
   "pmpc-sign": {
     "from": "admin@fsfe.org",
@@ -51,20 +24,6 @@
     "confirmation-duplicate-subject": "Public Code: Duplicated signature",
     "confirmation-subject": "Public Code: Please confirm your signature",
     "store": "/store/pmpc/signatures.json"
-  },
-  "reuse-signup": {
-    "from": "no-reply@fsfe.org",
-    "to": [ "jonas@fsfe.org" ],
-    "subject": "New signup to REUSE",
-    "confirm": true,
-    "include_vars": true,
-    "redirect": "https://reuse.software/sign-confirm",
-    "redirect-confirmed": "https://reuse.software/sign-success",
-    "template": "reuse-signup",
-    "store": "/store/reuse/signups.json",
-    "confirmation-from": "no-reply@fsfe.org",
-    "confirmation-template": "reuse-signup-confirm",
-    "confirmation-subject": "Just one step left! Confirm your email for REUSE!"
   },
   "ln-apply": {
     "from": "{{ name }} <no-reply@fsfe.org>",

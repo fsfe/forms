@@ -25,28 +25,6 @@
        "filename": "pmpc-confirmation-duplicate.txt"
     }
   },
-  "art13-presignup-confirm": {
-    "plain": {
-       "filename": "art13-presignup-confirm.txt"
-    }
-  },
-  "art13-presignup": {
-    "plain": {
-       "content": "New pre-signup: {{ name }} {{ confirm }}"
-    },
-    "required_vars": [
-       "name",
-       "confirm",
-       "optin"
-    ]
-  },
-  "reuse-signup": {
-    "plain": { "content": "{{ confirm }};{{ optin }}" },
-    "required_vars": [ "confirm", "optin" ]
-  },
-  "reuse-signup-confirm": {
-    "plain": { "filename": "reuse-signup-confirm.txt" }
-  },
   "ln-apply": {
     "plain": {
        "filename": "ln-apply.txt"
