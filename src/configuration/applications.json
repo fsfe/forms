@@ -3,7 +3,8 @@
     "to": [ "contact@fsfe.org" ],
     "include_vars": true,
     "redirect": "https://fsfe.org/contact/",
-    "template": "contact-form"
+    "template": "contact-form",
+    "store": "/store/contact/contact.json"
   },
   "pmpc-sign": {
     "from": "admin@fsfe.org",
