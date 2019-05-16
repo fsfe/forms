@@ -1,30 +1,19 @@
 import uuid
 
 from typing import Optional, Union
-from background.app import app
 from common import exceptions
 from common.config import DEFAULT_SUBJECT_LANG
 from common.configurator import configuration, AppConfig
 from common.services import DeliveryService, SenderStorageService, TemplateService
 from common.models import SendData
 
-email_tasks = dict()
-
 
 def send_email(send_from, send_to, subject, content, reply_to, headers):
     DeliveryService.send(send_from, send_to, subject, content, reply_to, headers)
 
 
-for config in configuration.get_app_configs():
-    if config.ratelimit is not None:
-        email_task = app.task(send_email, name='send_email:%s' % config.appid, rate_limit='%s/h' % config.ratelimit)
-    else:
-        email_task = app.task(send_email, name='send_email:%s' % config.appid)
-    email_tasks[config.appid] = email_task
-
 def extract_data_and_config(func):
-    def wrapper(id: str):
-        id = uuid.UUID(id)
+    def wrapper(id: uuid.UUID):
         data = SenderStorageService.resolve_data(id)
         if data:
             current_config = configuration.get_config_for_email(data)
@@ -34,7 +23,7 @@ def extract_data_and_config(func):
         raise exceptions.NotFound('Confirmation ID is Not Found')
     return wrapper
 
-@app.task(name='tasks.schedule_confirmation')
+
 @extract_data_and_config
 def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConfig):
     user_email = data.request_data.get('confirm')
@@ -45,25 +34,22 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConf
         SenderStorageService.remove(id)
         id = previous_task_id
     subject, content = _get_email_subject_and_content(current_config, user_email, data, id)
-    email_tasks[data.appid].delay(current_config.confirmation_from, [data.confirm], subject,
-                                  content, None, None)
+    send_email(current_config.confirmation_from, [data.confirm], subject, content, None, None)
 
 
-@app.task(name='tasks.schedule_email')
 @extract_data_and_config
 def schedule_email(id: uuid.UUID, data: SendData, current_config: AppConfig):
     content = TemplateService.render_email(data)
     subject = _get_subject(current_config.subject, data.lang)
-    email_tasks[current_config.appid].delay(current_config.send_from, current_config.send_to, subject,
-                                            content, current_config.reply_to, current_config.headers)
+    send_email(current_config.send_from, current_config.send_to, subject,
+               content, current_config.reply_to, current_config.headers)
     if current_config.store is not None:
-        store_emails.delay(current_config.store, current_config.send_from, current_config.send_to,
-                           subject, content, current_config.reply_to, data.request_data)
+        _store_emails(current_config.store, current_config.send_from, current_config.send_to,
+                     subject, content, current_config.reply_to, data.request_data)
     SenderStorageService.remove(id)
 
 
-@app.task(name='tasks.store_emails')
-def store_emails(storage, send_from, send_to, subject, content, reply_to, include_vars):
+def _store_emails(storage, send_from, send_to, subject, content, reply_to, include_vars):
     DeliveryService.log(storage, send_from, send_to, subject, content, reply_to, include_vars)
 
 

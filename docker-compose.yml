@@ -22,19 +22,6 @@ services:
       - LETSENCRYPT_EMAIL=contact@fsfe.org
       - REDIS_HOST=forms-redis
       - REDIS_PORT=6379
-    volumes:
-      - "/srv/forms:/store:rw"
-
-  forms-worker:
-    container_name: forms-worker
-    build:
-      context: .
-      dockerfile: Dockerfile-worker
-    image: forms-worker
-    restart: always
-    environment:
-      - REDIS_HOST=forms-redis
-      - REDIS_PORT=6379
       - SMTP_HOST=mail.fsfe.org
       - SMTP_PORT=25
     volumes:

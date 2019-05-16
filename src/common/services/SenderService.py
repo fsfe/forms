@@ -52,8 +52,8 @@ def confirm_email(id: str) -> Optional[AppConfig]:
 
 
 def deliver_confirmation(id: uuid.UUID):
-    tasks.schedule_confirmation.apply_async((id.__str__(),))
+    tasks.schedule_confirmation(id)
 
 
 def deliver_email(id: uuid.UUID):
-    tasks.schedule_email.apply_async((id.__str__(),))
+    tasks.schedule_email(id)

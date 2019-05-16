@@ -4,11 +4,9 @@ services:
   forms-web:
     ports:
     - "8080:8080"
-
-  forms-worker:
     environment:
-      - SMTP_HOST=forms-fakesmtp
-      - SMTP_PORT=1025
+    - SMTP_HOST=forms-fakesmtp
+    - SMTP_PORT=1025
 
   forms-fakesmtp:
     container_name: forms-fakesmtp
@@ -17,5 +15,5 @@ services:
       dockerfile: Dockerfile-smtp
     image: forms-fakesmtp
     ports:
-    - 1025
+    - "1025:1025"
     - "1080:1080"

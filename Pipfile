@@ -6,7 +6,6 @@ verify_ssl = true
 
 [packages]
 bottle = "==0.12.13"
-celery = "==3.1.25"
 gunicorn = "==19.7.1"
 redis = "==2.10.5"
 filelock = "==2.0.12"
