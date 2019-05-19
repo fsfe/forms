@@ -2,14 +2,18 @@
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[dev-packages]
-
 [packages]
 bottle = "==0.12.13"
 gunicorn = "==19.7.1"
-redis = "==2.10.5"
+redis = "*"
 filelock = "==2.0.12"
 Jinja2 = "==2.9.6"
+
+[dev-packages]
+fakeredis = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+webtest = "*"
 
 [requires]
 python_version = "3.6"

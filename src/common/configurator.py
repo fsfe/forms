@@ -7,8 +7,8 @@ from common.models import SendData
 from common.services import TemplateRenderService
 import os
 
-CONFIGURATION_FOLDER = 'configuration'
-TEMPLATES_FOLDER = 'configuration/templates'
+CONFIGURATION_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'configuration')
+TEMPLATES_FOLDER = os.path.join(CONFIGURATION_FOLDER, 'templates')
 
 
 def _template_field(field, data: dict):
