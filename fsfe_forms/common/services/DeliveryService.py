@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import make_msgid, formatdate
 
-from common.config import SMTP_HOST, SMTP_PORT, LOCK_FILENAME
+from fsfe_forms.common.config import SMTP_HOST, SMTP_PORT, LOCK_FILENAME
 
 
 def send(send_from, send_to, subject, content, reply_to, headers):

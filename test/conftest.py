@@ -47,7 +47,7 @@ def redis_mock(mocker):
 def file_mock(mocker):
     mocker.patch('os.makedirs')
     return mocker.patch(
-            'common.services.DeliveryService.open',
+            'fsfe_forms.common.services.DeliveryService.open',
             mocker.mock_open(read_data="[\n]"))
 
 
@@ -59,7 +59,7 @@ def file_mock(mocker):
 def app(redis_mock):
     # Redis must be patched before we import the app, since the connection is
     # created in module init code.
-    import wsgi
+    from fsfe_forms import wsgi
     return webtest.TestApp(wsgi.application)
 
 
@@ -76,5 +76,5 @@ def signed_up(app):
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})
     # Return the confirmation ID
-    from common.services.StorageService import storage
+    from fsfe_forms.common.services.StorageService import storage
     return storage.keys()[0].split(b':')[-1]

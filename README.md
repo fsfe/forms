@@ -10,7 +10,7 @@ in which you need to send emails from a web page, either with or without
 double opt-in.
 
 Each application which intends to use this service must be registered in
-the API configuration, which is available in `src/configuration/applications.json`.
+the API configuration, which is available in `fsfe_forms/configuration/applications.json`.
 
 ## Table of Contents
 
@@ -39,15 +39,11 @@ $ pip install -r requirements.txt
 You can then run the web app with:
 
 ```
-src/$ gunicorn -b 0.0.0.0:8080 wsgi:application
+$ gunicorn -b 0.0.0.0:8080 fsfe_forms.wsgi:application
 ```
 
 This will run the web application on port 8080 on the default network
-interface. Starting the background worker is done with:
-
-```
-src/$ python worker.py worker -l info
-```
+interface.
 
 ## Usage
 
