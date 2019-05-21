@@ -2,9 +2,9 @@ import copy
 import json
 from typing import List, Set
 
-from common.config import CONFIRMATION_EMAIL_SUBJECT, CONFIRMATION_DUPLICATE_EMAIL_SUBJECT, DEFAULT_SUBJECT_LANG, LANG_STRING_TOKEN
-from common.models import SendData
-from common.services import TemplateRenderService
+from fsfe_forms.common.config import CONFIRMATION_EMAIL_SUBJECT, CONFIRMATION_DUPLICATE_EMAIL_SUBJECT, DEFAULT_SUBJECT_LANG, LANG_STRING_TOKEN
+from fsfe_forms.common.models import SendData
+from fsfe_forms.common.services import TemplateRenderService
 import os
 
 CONFIGURATION_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'configuration')

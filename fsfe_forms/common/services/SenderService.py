@@ -1,12 +1,12 @@
 import uuid
 from typing import Optional
 
-from background import tasks
-from common import exceptions
-from common.config import CONFIRMATION_EXPIRATION_SECS
-from common.configurator import AppConfig, configuration
-from common.models import SendData
-from common.services import SenderStorageService
+from fsfe_forms.background import tasks
+from fsfe_forms.common import exceptions
+from fsfe_forms.common.config import CONFIRMATION_EXPIRATION_SECS
+from fsfe_forms.common.configurator import AppConfig, configuration
+from fsfe_forms.common.models import SendData
+from fsfe_forms.common.services import SenderStorageService
 
 
 def validate_and_send_email(data: SendData):

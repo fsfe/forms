@@ -1,5 +1,5 @@
 # =============================================================================
-# Continuous Delivery instructions
+# Functional tests for the FSFE Form Server
 # =============================================================================
 # This file is part of the FSFE Form Server.
 #
@@ -15,24 +15,3 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
-
-pipeline:
-  quality:
-    image: fsfe/alpine-pipenv:latest
-    commands:
-      - make virtualenv
-      - make pytest
-
-  deploy:
-    image: tmaier/docker-compose
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker-compose build
-      - docker-compose up -d
-    when:
-       event:
-         - push
-         - tag
-         - deployment
-       branch: master

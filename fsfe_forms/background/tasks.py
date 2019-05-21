@@ -1,11 +1,11 @@
 import uuid
 
 from typing import Optional, Union
-from common import exceptions
-from common.config import DEFAULT_SUBJECT_LANG
-from common.configurator import configuration, AppConfig
-from common.services import DeliveryService, SenderStorageService, TemplateService
-from common.models import SendData
+from fsfe_forms.common import exceptions
+from fsfe_forms.common.config import DEFAULT_SUBJECT_LANG
+from fsfe_forms.common.configurator import configuration, AppConfig
+from fsfe_forms.common.services import DeliveryService, SenderStorageService, TemplateService
+from fsfe_forms.common.models import SendData
 
 
 def send_email(send_from, send_to, subject, content, reply_to, headers):

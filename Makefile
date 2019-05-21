@@ -16,7 +16,7 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-SOURCE_DIR = src
+SOURCE_DIR = fsfe_forms
 
 .DEFAULT_GOAL := help
 
@@ -65,7 +65,7 @@ lint:  ##@quality Check the Python source code for coding standards compliance.
 .PHONY: lint
 
 pytest:  ##@quality Run the functional tests.
-	@PYTHONPATH=src pipenv run pytest --cov=$(SOURCE_DIR)
+	@pipenv run pytest --cov=$(SOURCE_DIR)
 	@pipenv run coverage html
 .PHONY: pytest
 

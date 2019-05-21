@@ -1,11 +1,11 @@
 import os
 from typing import Union
 from urllib.parse import urljoin
-from common.configurator import configuration
-from common.models import SendData
-from common.services import TemplateRenderService
+from fsfe_forms.common.configurator import configuration
+from fsfe_forms.common.models import SendData
+from fsfe_forms.common.services import TemplateRenderService
 
-from common.config import DEFAULT_SUBJECT_LANG, CONFIRMATION_MULTILANG_TEMPLATE, CONFIRMATION_DUPLICATE_MULTILANG_TEMPLATE
+from fsfe_forms.common.config import DEFAULT_SUBJECT_LANG, CONFIRMATION_MULTILANG_TEMPLATE, CONFIRMATION_DUPLICATE_MULTILANG_TEMPLATE
 
 
 def render_confirmation_duplicate(id, data: SendData):

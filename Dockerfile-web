@@ -8,4 +8,4 @@ RUN pipenv install --system --deploy
 COPY . /var/share/forms
 WORKDIR /var/share/forms
 
-CMD cd src && gunicorn -b 0.0.0.0:8080 wsgi:application
+CMD gunicorn -b 0.0.0.0:8080 fsfe_forms.wsgi:application

@@ -3,8 +3,8 @@ import uuid
 
 import redis
 
-from common.config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
-from common.models import Serializable
+from fsfe_forms.common.config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+from fsfe_forms.common.models import Serializable
 
 storage = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, password=REDIS_PASSWORD)
 

@@ -1,8 +1,8 @@
 import redis
 from bottle import route, request, redirect, abort
-from common import exceptions
-from common.models import SendData
-from common.services import SenderService
+from fsfe_forms.common import exceptions
+from fsfe_forms.common.models import SendData
+from fsfe_forms.common.services import SenderService
 
 
 def error_handler(func):

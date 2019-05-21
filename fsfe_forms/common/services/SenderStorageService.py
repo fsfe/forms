@@ -1,6 +1,6 @@
 import uuid
-from common.services import StorageService
-from common.models import SendData
+from fsfe_forms.common.services import StorageService
+from fsfe_forms.common.models import SendData
 from typing import Iterator, Tuple
 
 SENDER_TABLE = 'sender'

@@ -1,4 +1,4 @@
-from web.controller import *
+from fsfe_forms.web.controller import *
 from bottle import run
 
 if __name__ == '__main__':
