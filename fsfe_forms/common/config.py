@@ -15,5 +15,8 @@ CONFIRMATION_EXPIRATION_SECS = 86400  # You can set None if you don't want to ha
 
 DEFAULT_SUBJECT_LANG = 'en'
 LANG_STRING_TOKEN = '{lang}'
-CONFIRMATION_MULTILANG_TEMPLATE = f'common/templates/confirmation.{LANG_STRING_TOKEN}.html'
-CONFIRMATION_DUPLICATE_MULTILANG_TEMPLATE = f'common/templates/confirmation_duplicate.{LANG_STRING_TOKEN}.html'
+
+CONFIGURATION_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'configuration')
+TEMPLATES_FOLDER = os.path.join(CONFIGURATION_FOLDER, 'templates')
+CONFIRMATION_MULTILANG_TEMPLATE = os.path.join(TEMPLATES_FOLDER, f'confirmation.{LANG_STRING_TOKEN}.html')
+CONFIRMATION_DUPLICATE_MULTILANG_TEMPLATE = os.path.join(TEMPLATES_FOLDER, f'confirmation_duplicate.{LANG_STRING_TOKEN}.html')
