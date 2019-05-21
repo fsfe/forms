@@ -23,9 +23,7 @@ the API configuration, which is available in `fsfe_forms/configuration/applicati
 ## Install
 
 It is not expected that you install the forms API code yourself, but if you
-choose to do so, you will be expected to install and run both the worker and
-web app. Both need access to a Redis. The web app takes care of the frontend
-API, whereas the worker is responsible for actually sending out emails.
+choose to do so, you will also need access to a Redis instance.
 
 To setup the environment:
 
@@ -283,9 +281,30 @@ The following parameters are available only in the API configuration file:
 
 ## Contribute
 
+### Testing in the git checkout directory
+
+The repository contains automatic functional tests which can be run from the
+git checkout directory, without installing anything.
+
+When you have checked out the git repository, you can use the command
+```bash
+make virtualenv
+```
+to set up a virtual environment for this project, where all dependencies will
+be contained. After you have done that, you can at any time run
+```bash
+make pytest
+```
+to run the automatic functional tests.
+
+All these tests work against simulated Redis and email servers, so there is no
+need for a real Redis instance or a connection to an email server.
+
+### Testing in a local docker container
+
 In order to contribute, a local testing setup is very useful. All you need is Docker and docker-compose. In the repository, just run `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build` to spin up the three default containers this application includes and an extra "fake SMTP" for local testing.
 
-### Fake SMTP server
+#### Fake SMTP server
 
 To test emails, you are recommended to use `fake-smtp-server` linked as submodule in this repository. It allows you to use a local SMTP server which does not send the emails but lists them in your browser. Doing this, you can view and debug sent emails without having to set up this service.
 
@@ -293,7 +312,7 @@ The above command using the extra file `docker-compose.dev.yml` sets this up aut
 
 More info on the fake smtp server on [its official website](https://www.npmjs.com/package/fake-smtp-server).
 
-### Use the service locally
+#### Use the service locally
 
 After running docker-compose, you can access all services locally:
 
