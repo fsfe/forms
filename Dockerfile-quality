@@ -1,5 +1,5 @@
 # =============================================================================
-# Continuous Delivery instructions
+# Build instructions for the quality check Docker container
 # =============================================================================
 # This file is part of the FSFE Form Server.
 #
@@ -16,32 +16,10 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-pipeline:
-  build-quality:
-    image: tmaier/docker-compose
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker-compose --file docker-compose-quality.yml build
+FROM fsfe/alpine-pipenv:latest
 
-  quality:
-    image: fsfe-forms-quality
-    commands:
-      - export $(grep -v "#" .env)
-#     - isort --check-only --diff
-#     - pylama
-      - pytest
+WORKDIR /root
 
-  deploy:
-    image: tmaier/docker-compose
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker-compose build
-      - docker-compose up -d
-    when:
-       event:
-         - push
-         - tag
-         - deployment
-       branch: master
+# Install Python packages
+COPY Pipfile Pipfile.lock ./
+RUN pipenv install --system --deploy --dev
