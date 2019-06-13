@@ -8,11 +8,12 @@ from fsfe_forms.common.services import DeliveryService, SenderStorageService, Te
 from fsfe_forms.common.models import SendData
 
 
-def send_email(send_from, send_to, subject, content, reply_to, headers):
-    DeliveryService.send(send_from, send_to, subject, content, reply_to, headers)
-
-
 def extract_data_and_config(func):
+    '''
+    Extract data and configuration from a ID
+    ID can come from a previous API call or generate during the API flow of a request
+    This ID map a application configuration (AppId) and user request
+    '''
     def wrapper(id: uuid.UUID):
         data = SenderStorageService.resolve_data(id)
         if data:
@@ -26,6 +27,11 @@ def extract_data_and_config(func):
 
 @extract_data_and_config
 def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConfig):
+    '''
+    Send a confirmation email to a user
+    A check is done on previous emails sent (in case of spam or email lost for example)
+    If a confirmation email was sent, it's data are updates with new email data and a new confirmation email is sent again with the same url link
+    '''
     user_email = data.request_data.get('confirm')
     previous_task_id = _get_previous_task_id(id, data.appid, user_email)
     if previous_task_id:
@@ -34,23 +40,23 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConf
         SenderStorageService.remove(id)
         id = previous_task_id
     subject, content = _get_email_subject_and_content(current_config, user_email, data, id)
-    send_email(current_config.confirmation_from, [data.confirm], subject, content, None, None)
+    DeliveryService.send(current_config.confirmation_from, [data.confirm], subject, content, None, None)
 
 
 @extract_data_and_config
 def schedule_email(id: uuid.UUID, data: SendData, current_config: AppConfig):
+    '''
+    Generate a email from configuration and user data then send it
+    When sent, email is log and user unique ID is remove
+    '''
     content = TemplateService.render_email(data)
     subject = _get_subject(current_config.subject, data.lang)
-    send_email(current_config.send_from, current_config.send_to, subject,
-               content, current_config.reply_to, current_config.headers)
+    DeliveryService.send(current_config.send_from, current_config.send_to, subject,
+                         content, current_config.reply_to, current_config.headers)
     if current_config.store is not None:
-        _store_emails(current_config.store, current_config.send_from, current_config.send_to,
-                     subject, content, current_config.reply_to, data.request_data)
+        DeliveryService.log(current_config.store, current_config.send_from, current_config.send_to,
+                            subject, content, current_config.reply_to, data.request_data)
     SenderStorageService.remove(id)
-
-
-def _store_emails(storage, send_from, send_to, subject, content, reply_to, include_vars):
-    DeliveryService.log(storage, send_from, send_to, subject, content, reply_to, include_vars)
 
 
 def _get_email_subject_and_content(current_config, user_email, data, task_id):

@@ -1,27 +1,11 @@
+import os
 import copy
 import json
-from typing import List, Set
+from typing import List, Set, Any, Dict
 
 from fsfe_forms.common.config import CONFIGURATION_FOLDER, CONFIRMATION_EMAIL_SUBJECT, CONFIRMATION_DUPLICATE_EMAIL_SUBJECT, DEFAULT_SUBJECT_LANG, LANG_STRING_TOKEN, TEMPLATES_FOLDER
 from fsfe_forms.common.models import SendData
 from fsfe_forms.common.services import TemplateRenderService
-import os
-
-
-def _template_field(field, data: dict):
-    if isinstance(field, str):
-        try:
-            return TemplateRenderService.render_content(field, data)
-        except:
-            return field
-    if isinstance(field, dict):
-        return {k: _template_field(v, data) for k, v in field.items()}
-    return field
-
-
-def _merge_field(config_field, data_field, request_data: dict):
-    selected_field = data_field if config_field is None else config_field
-    return _template_field(selected_field, request_data)
 
 
 class TemplateContentConfig:
@@ -31,10 +15,10 @@ class TemplateContentConfig:
 
     @classmethod
     def load_from_dict(cls, data: dict):
-        filename = data.get('filename', None)
+        filename = data.get('filename')
         if filename is not None:
             filename = os.path.join(TEMPLATES_FOLDER, filename)
-        content = data.get('content', None)
+        content = data.get('content')
         return cls(filename, content)
 
     def get_template(self, lang):
@@ -52,8 +36,9 @@ class TemplateContentConfig:
             return self.filename.format(lang=default_lang)
         return self.filename
 
+
 class TemplateConfig:
-    def __init__(self, name: str, required_vars: Set[str], headers: dict, plain, html):
+    def __init__(self, name: str, required_vars: Set[str], headers: Dict, plain, html):
         self.html = html
         self.plain = plain
         self.headers = headers
@@ -62,12 +47,10 @@ class TemplateConfig:
 
     @classmethod
     def load_from_dict(cls, name: str, data: dict):
-        required_vars = set(data.get('required_vars', list()))
-        headers = data.get('headers', dict())
-        html_dict = data.get('html', None)
-        plain_dict = data.get('plain', None)
-        html = TemplateContentConfig.load_from_dict(html_dict) if html_dict is not None else None
-        plain = TemplateContentConfig.load_from_dict(plain_dict) if plain_dict is not None else None
+        required_vars = set(data.get('required_vars', []))
+        headers = data.get('headers', {})
+        html = TemplateContentConfig.load_from_dict(data['html']) if 'html' in data else None
+        plain = TemplateContentConfig.load_from_dict(data['plain']) if 'plain' in data else None
         return cls(name, required_vars, headers, plain, html)
 
     def get_html_template(self, lang=None):
@@ -114,31 +97,28 @@ class AppConfig:
 
     @classmethod
     def load_from_dict(cls, appid: str, data: dict):
-        ratelimit = data.get('ratelimit', None)
-        template = data.get('template', None)
-        redirect = data.get('redirect', None)
-        redirect_confirmed = data.get('redirect-confirmed', None)
-        confirm = data.get('confirm', None)
-        confirmation_check_duplicates = data.get('confirmation-check-duplicates', False)
-        store = data.get('store', None)
-        include_vars = data.get('include_vars', False)
-        subject = data.get('subject', None)
-        reply_to = data.get('reply_to', None)
-        send_to = data.get('to', None)
-        send_to = list(send_to) if send_to is not None else None
-        send_from = data.get('from', None)
-        required_vars = set(data.get('required_vars', list()))
-        headers = data.get('headers', dict())
-        confirmation_from = data.get('confirmation-from', None)
-        confirmation_template = data.get('confirmation-template', None)
-        confirmation_duplicate_template = data.get('confirmation-duplicate-template', None)
-        confirmation_subject = data.get('confirmation-subject', CONFIRMATION_EMAIL_SUBJECT)
-        confirmation_duplicate_subject = data.get('confirmation-duplicate-subject', CONFIRMATION_DUPLICATE_EMAIL_SUBJECT)
-        return cls(appid, ratelimit, send_from, send_to, reply_to, subject, include_vars, store,
-                   confirm, confirmation_check_duplicates,
-                   redirect, redirect_confirmed, template, required_vars, headers,
-                   confirmation_from, confirmation_template, confirmation_duplicate_template,
-                   confirmation_subject, confirmation_duplicate_subject)
+        args = {
+            'ratelimit': data.get('ratelimit'),
+            'template': data.get('template'),
+            'redirect': data.get('redirect'),
+            'redirect_confirmed': data.get('redirect-confirmed'),
+            'confirm': data.get('confirm'),
+            'confirmation_check_duplicates': data.get('confirmation-check-duplicates', False),
+            'store': data.get('store'),
+            'include_vars': data.get('include_vars', False),
+            'subject': data.get('subject'),
+            'reply_to': data.get('reply_to'),
+            'send_to': list(data['to']) if 'to' in data else None,
+            'send_from': data.get('from'),
+            'required_vars': set(data.get('required_vars', [])),
+            'headers': data.get('headers', {}),
+            'confirmation_from': data.get('confirmation-from'),
+            'confirmation_template': data.get('confirmation-template'),
+            'confirmation_duplicate_template': data.get('confirmation-duplicate-template'),
+            'confirmation_subject': data.get('confirmation-subject', CONFIRMATION_EMAIL_SUBJECT),
+            'confirmation_duplicate_subject': data.get('confirmation-duplicate-subject', CONFIRMATION_DUPLICATE_EMAIL_SUBJECT)
+        }
+        return cls(appid, **args)
 
     def merge_config_with_send_data(self, data: SendData):
         cpy = copy.deepcopy(self)
@@ -183,15 +163,9 @@ class Configuration:
         merged_app_config = self.get_config_merged_with_data(data)
         if merged_app_config is None:
             return None
-        if merged_app_config.template is not None:
-            template_config = self.get_template_config(merged_app_config.template)
-            merged_app_config = merged_app_config.merge_required_vars_with_template(template_config)
-        if merged_app_config.confirmation_template is not None:
-            confirmation_template_config = self.get_template_config(merged_app_config.confirmation_template)
-            merged_app_config = merged_app_config.merge_required_vars_with_template(confirmation_template_config)
-        if merged_app_config.confirmation_duplicate_template is not None:
-            confirmation_duplicate_template_config = self.get_template_config(merged_app_config.confirmation_duplicate_template)
-            merged_app_config = merged_app_config.merge_required_vars_with_template(confirmation_duplicate_template_config)
+        merged_app_config = self._merged_app_config(merged_app_config, 'template')
+        merged_app_config = self._merged_app_config(merged_app_config, 'confirmation_template')
+        merged_app_config = self._merged_app_config(merged_app_config, 'confirmation_duplicate_template')
         return merged_app_config
 
     def get_config_for_email(self, data: SendData):
@@ -204,37 +178,26 @@ class Configuration:
         return self._get_config_for_field(data, 'confirmation_duplicate_template')
 
     def get_config(self, appid: str):
-        configs = [c for c in self.appconfigs if c.appid.__eq__(appid)]
-        if len(configs) > 0:
-            return configs[0]
-        else:
-            return None
-
-    def get_app_configs(self) -> List[AppConfig]:
-        return list(self.appconfigs)
+        configs = filter(lambda c: c.appid.__eq__(appid), self.appconfigs)
+        return next(configs, None)
 
     def get_template_config(self, name: str):
-        configs = [c for c in self.tempconfigs if c.name.__eq__(name)]
-        if len(configs) > 0:
-            return configs[0]
-        else:
-            return None
+        configs = filter(lambda c: c.name.__eq__(name), self.tempconfigs)
+        return next(configs, None)
 
     @classmethod
     def load_from_dict(cls, applications_dict: dict, templates_dict):
-        application_configs = list()
-        template_configs = list()
-        if applications_dict is not None:
-            for appid in applications_dict:
-                app_config = AppConfig.load_from_dict(str(appid), applications_dict.get(appid))
-                if app_config is not None:
-                    application_configs.append(app_config)
-        if template_configs is not None:
-            for template_name in templates_dict:
-                temp_config = TemplateConfig.load_from_dict(template_name, templates_dict.get(template_name))
-                if temp_config is not None:
-                    template_configs.append(temp_config)
+        _load_conf = lambda obj_conf, confs: _load_from_dict(obj_conf, confs) if confs else []
+        application_configs = _load_conf(AppConfig, applications_dict)
+        template_configs = _load_conf(TemplateConfig, templates_dict)
         return cls(application_configs, template_configs)
+
+    def _merged_app_config(self, merged_app_config, template_name):
+        template = getattr(merged_app_config, template_name)
+        if template is not None:
+            template_config = self.get_template_config(template)
+            merged_app_config = merged_app_config.merge_required_vars_with_template(template_config)
+        return merged_app_config
 
     def _get_config_for_field(self, data: SendData, field: str):
         merged_app_config = self.get_config_merged_with_data(data)
@@ -247,9 +210,33 @@ class Configuration:
             merged_app_config = merged_app_config.merge_with_template_config(merged_template_config)
         return merged_app_config
 
+
+def _merge_field(config_field, data_field, request_data: dict):
+    selected_field = data_field if config_field is None else config_field
+    return _template_field(selected_field, request_data)
+
+
+def _template_field(field, data: dict):
+    if isinstance(field, str):
+        try:
+            return TemplateRenderService.render_content(field, data)
+        except:
+            return field
+    if isinstance(field, dict):
+        return {k: _template_field(v, data) for k, v in field.items()}
+    return field
+
+
 def load_json_dict(filename: str) -> dict:
     with open(filename) as fp:
         return json.load(fp)
+
+
+def _load_from_dict(config_cls: object, confs: Dict[str, Any]) -> List[object]:
+    # Load configuration for each application
+    configs = map(lambda c: config_cls.load_from_dict(str(c), confs.get(c)), confs)
+    # Remove empty configuration
+    return list(filter(None, configs))
 
 
 configuration = Configuration.load_from_dict(load_json_dict(os.path.join(CONFIGURATION_FOLDER, 'applications.json')),

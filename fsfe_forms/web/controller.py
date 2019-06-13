@@ -19,12 +19,21 @@ def error_handler(func):
     return wrapper
 
 
+def id_extractor(id_name, method):
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            _id = getattr(request, method).get(id_name)
+            if _id:
+                return function(_id, *args, **kwargs)
+            raise exceptions.BadRequest
+        return wrapper
+    return decorator
+
+
 @route('/email', method='GET')
 @error_handler
-def email_get():
-    appid = request.GET.get('appid', None)
-    if appid is None:
-        raise exceptions.BadRequest
+@id_extractor('appid', 'GET')
+def email_get(appid):
     send_data = SendData.from_request(appid, request.GET, request.url)
     config = SenderService.validate_and_send_email(send_data)
     return redirect(config.redirect)
@@ -32,10 +41,8 @@ def email_get():
 
 @route('/email', method='POST')
 @error_handler
-def email_post():
-    appid = request.POST.get('appid', None)
-    if appid is None:
-        raise exceptions.BadRequest
+@id_extractor('appid', 'POST')
+def email_post(appid):
     send_data = SendData.from_request(appid, request.forms, request.url)
     config = SenderService.validate_and_send_email(send_data)
     return redirect(config.redirect)
@@ -43,9 +50,7 @@ def email_post():
 
 @route('/confirm', method='GET')
 @error_handler
-def confirmation():
-    id = request.GET.get('id', None)
-    if id is None:
-        raise exceptions.BadRequest
+@id_extractor('id', 'GET')
+def confirmation(id):
     config = SenderService.confirm_email(id)
     return redirect(config.redirect_confirmed or config.redirect)
