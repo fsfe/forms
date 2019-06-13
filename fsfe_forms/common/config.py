@@ -20,3 +20,5 @@ CONFIGURATION_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
 TEMPLATES_FOLDER = os.path.join(CONFIGURATION_FOLDER, 'templates')
 CONFIRMATION_MULTILANG_TEMPLATE = os.path.join(TEMPLATES_FOLDER, f'confirmation.{LANG_STRING_TOKEN}.html')
 CONFIRMATION_DUPLICATE_MULTILANG_TEMPLATE = os.path.join(TEMPLATES_FOLDER, f'confirmation_duplicate.{LANG_STRING_TOKEN}.html')
+
+SENDER_TABLE = 'sender'
