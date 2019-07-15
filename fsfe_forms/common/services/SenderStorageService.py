@@ -20,8 +20,10 @@ def resolve_data(id: uuid.UUID) -> SendData:
 def remove(id: uuid.UUID):
     StorageService.remove(SENDER_TABLE, id)
 
+
 def get_all() -> Tuple[str, Iterator[SendData]]:
     yield from StorageService.get_all(SENDER_TABLE, SendData)
+
 
 def get_ttl(id: uuid.UUID) -> int:
     return StorageService.get_ttl(SENDER_TABLE, id)

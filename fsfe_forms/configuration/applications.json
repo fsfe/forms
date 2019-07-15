@@ -1,42 +1,74 @@
 {
   "contact": {
+    "required_vars": [
+      "content"
+    ],
     "to": [ "contact@fsfe.org" ],
-    "include_vars": true,
     "redirect": "https://fsfe.org/contact/",
-    "template": "contact-form",
+    "template": {
+      "plain": {
+        "content": "{{ content }}"
+      }
+    },
     "store": "/store/contact/contact.json"
   },
   "pmpc-sign": {
+    "required_vars": [
+      "name"
+    ],
     "from": "admin@fsfe.org",
     "to": [ "contact@fsfe.org" ],
     "headers": {
       "X-OTRS-Queue": "PMPC"
     },
     "subject": "New signature to PMPC",
-    "include_vars": true,
     "confirm": true,
     "redirect": "https://publiccode.eu/openletter/confirm",
     "redirect-confirmed": "https://publiccode.eu/openletter/success",
-    "template": "pmpc-sign",
+    "template": {
+      "plain": {
+         "filename": "pmpc-sign.txt"
+      }
+    },
     "confirmation-from": "no-reply@fsfe.org",
-    "confirmation-template": "pmpc-confirm",
+    "confirmation-template": {
+      "plain": {
+         "filename": "pmpc-confirm.txt"
+      }
+    },
     "confirmation-check-duplicates": true,
-    "confirmation-duplicate-template": "pmpc-confirmation-duplicate",
+    "confirmation-duplicate-template": {
+      "plain": {
+         "filename": "pmpc-confirmation-duplicate.txt"
+      }
+    },
     "confirmation-duplicate-subject": "Public Code: Duplicated signature",
     "confirmation-subject": "Public Code: Please confirm your signature",
     "store": "/store/pmpc/signatures.json"
   },
   "ln-apply": {
+    "required_vars": [
+      "name",
+      "confirm",
+      "activities"
+    ],
     "from": "{{ name }} <no-reply@fsfe.org>",
     "to": [ "contact@fsfe.org" ],
     "subject": "Application for Legal Network membership by {{ name }}",
-    "include_vars": true,
     "confirm": true,
     "redirect": "https://fsfe.org/activities/ftf/ln-application-confirm.html",
     "redirect-confirmed": "https://fsfe.org/activities/ftf/ln-application-success.html",
-    "template": "ln-apply",
+    "template": {
+      "plain": {
+         "filename": "ln-apply.txt"
+      }
+    },
     "confirmation-from": "no-reply@fsfe.org",
-    "confirmation-template": "ln-apply-confirm",
+    "confirmation-template": {
+      "plain": {
+         "filename": "ln-apply-confirm.txt"
+      }
+    },
     "confirmation-subject": "Legal Network: Please confirm your membership request",
     "headers": {
       "X-OTRS-Queue": "Legal Network",

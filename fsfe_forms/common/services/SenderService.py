@@ -10,7 +10,7 @@ from fsfe_forms.common.services import SenderStorageService
 
 
 def validate_and_send_email(data: SendData):
-    config = configuration.get_config_for_validation(data)
+    config = configuration.get_config(data)
     if config is None:
         raise exceptions.NotFound('Configuration not found for this AppId')
     if config.send_from is None:
@@ -29,10 +29,10 @@ def validate_and_send_email(data: SendData):
         if data.confirm is None:
             raise exceptions.BadRequest('\"Confirm\" address is required')
         id = SenderStorageService.store_data(data, CONFIRMATION_EXPIRATION_SECS)
-        schedule_confirmation(id)
+        schedule_confirmation(id, data, config)
     else:
         id = SenderStorageService.store_data(data)
-        schedule_email(id)
+        schedule_email(id, data, config)
     return config
 
 
@@ -41,11 +41,11 @@ def confirm_email(id: str) -> Optional[AppConfig]:
     data = SenderStorageService.resolve_data(id)
     if data is None:
         raise exceptions.NotFound('Confirmation ID is Not Found')
+    config = configuration.get_config(data)
+    if config is None:
+        raise exceptions.NotFound('Configuration not found for this AppId')
     if not data.confirmed:
         data.confirmed = True
         SenderStorageService.update_data(id, data)
-        schedule_email(id)
-    config = configuration.get_config_merged_with_data(data)
-    if config is None:
-        raise exceptions.NotFound('Configuration not found for this AppId')
+        schedule_email(id, data, config)
     return config

@@ -58,20 +58,21 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
     logs = read_log(storage, lock) + [add]
     logs_in_json = json.dumps(logs)
     with lock, open(storage, "w") as file:
-          file.write(logs_in_json)
+        file.write(logs_in_json)
 
 
 def read_log(storage, lock=filelock.FileLock(LOCK_FILENAME)):
     _create_log_file_if_not_exist(storage, lock)
     with lock, open(storage, "r") as file:
-          f = file.read()
+        f = file.read()
     return json.loads(f)
+
 
 def _create_log_file_if_not_exist(storage, lock):
     with lock:
-       if not os.path.exists(os.path.dirname(storage)):
-          os.makedirs(os.path.dirname(storage))
+        if not os.path.exists(os.path.dirname(storage)):
+            os.makedirs(os.path.dirname(storage))
 
-       if not os.path.exists(storage):
-          with open(storage, "a") as file:
-            file.write(json.dumps([]))
+        if not os.path.exists(storage):
+            with open(storage, "w") as file:
+                file.write(json.dumps([]))

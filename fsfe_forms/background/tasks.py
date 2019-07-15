@@ -1,6 +1,6 @@
 import uuid
 
-from typing import Optional, Union
+from typing import Union
 from fsfe_forms.common import exceptions
 from fsfe_forms.common.config import DEFAULT_SUBJECT_LANG
 from fsfe_forms.common.configurator import configuration, AppConfig
@@ -8,24 +8,6 @@ from fsfe_forms.common.services import DeliveryService, SenderStorageService, Te
 from fsfe_forms.common.models import SendData
 
 
-def extract_data_and_config(func):
-    '''
-    Extract data and configuration from a ID
-    ID can come from a previous API call or generate during the API flow of a request
-    This ID map a application configuration (AppId) and user request
-    '''
-    def wrapper(id: uuid.UUID):
-        data = SenderStorageService.resolve_data(id)
-        if data:
-            current_config = configuration.get_config_for_email(data)
-            if current_config:
-                return func(id, data, current_config)
-        print(f'Error with id "{id}" with data equal to "{data}"')
-        raise exceptions.NotFound('Confirmation ID is Not Found')
-    return wrapper
-
-
-@extract_data_and_config
 def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConfig):
     '''
     Send a confirmation email to a user
@@ -43,13 +25,12 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConf
     DeliveryService.send(current_config.confirmation_from, [data.confirm], subject, content, None, None)
 
 
-@extract_data_and_config
 def schedule_email(id: uuid.UUID, data: SendData, current_config: AppConfig):
     '''
     Generate a email from configuration and user data then send it
     When sent, email is log and user unique ID is remove
     '''
-    content = TemplateService.render_email(data)
+    content = TemplateService.render_email(current_config, data)
     subject = _get_subject(current_config.subject, data.lang)
     DeliveryService.send(current_config.send_from, current_config.send_to, subject,
                          content, current_config.reply_to, current_config.headers)
@@ -69,7 +50,7 @@ def _get_email_subject_and_content(current_config, user_email, data, task_id):
         config_subject = current_config.confirmation_subject
         content = TemplateService.render_confirmation
 
-    return _get_subject(config_subject, data.lang), content(task_id, data)
+    return _get_subject(config_subject, data.lang), content(current_config, task_id, data)
 
 
 def _has_signed_open_letter(storage: str, email: str) -> bool:
@@ -95,4 +76,3 @@ def _get_previous_task_id(id: uuid.UUID, appid: str, email: str) -> uuid.UUID:
     previous_tasks_with_same_appid = filter(lambda d: d[1].appid == appid, previous_tasks_without_same_id)
     previous_tasks = next(previous_tasks_with_same_appid, None)
     return uuid.UUID(previous_tasks[0]) if previous_tasks else None
-
