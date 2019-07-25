@@ -1,11 +1,18 @@
 import os
 
-REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
-REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
-REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
+RATELIMIT_DEFAULT = os.environ.get('RATELIMIT_DEFAULT')
 
 SMTP_HOST = os.environ.get('SMTP_HOST', 'localhost')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
+SMTP_USERNAME = os.environ.get('SMTP_USERNAME')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
+
+LOG_EMAIL_FROM = os.environ.get('LOG_EMAIL_FROM')
+LOG_EMAIL_TO = os.environ.get('LOG_EMAIL_TO')
+
+REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
 
 LOCK_FILENAME = os.environ.get('LOCK_FILENAME', '/tmp/forms.lock')
 

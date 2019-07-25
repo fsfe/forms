@@ -25,10 +25,10 @@
 # Without confirmation
 # -----------------------------------------------------------------------------
 
-def test_email_get(app, smtp_mock, redis_mock, file_mock):
-    response = app.get(
-            url='/email',
-            params={
+def test_email_get(client, smtp_mock, redis_mock, file_mock):
+    response = client.get(
+            path='/email',
+            data={
                 'appid': 'contact',
                 'from': 'EMAIL@example.com',
                 'subject': "EMAIL-SUBJECT",
@@ -51,27 +51,27 @@ def test_email_get(app, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-CONTENT" in email[2]
 
 
-def test_email_get_no_params(app):
-    response = app.get(
-            url='/email',
-            status=400)
+def test_email_get_no_params(client):
+    response = client.get(
+            path='/email')
+    assert response.status_code == 422
 
 
-def test_email_get_bad_appid(app):
-    response = app.get(
-            url='/email',
-            params={'appid': 'BAD-APPID'},
-            status=404)
+def test_email_get_bad_appid(client):
+    response = client.get(
+            path='/email',
+            data={'appid': 'BAD-APPID'})
+    assert response.status_code == 404
 
 
 # -----------------------------------------------------------------------------
 # With confirmation
 # -----------------------------------------------------------------------------
 
-def test_email_get_with_confirmation(app, smtp_mock, redis_mock, file_mock):
-    response = app.get(
-            url='/email',
-            params={
+def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
+    response = client.get(
+            path='/email',
+            data={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})
@@ -90,10 +90,10 @@ def test_email_get_with_confirmation(app, smtp_mock, redis_mock, file_mock):
     assert "Subject: Public Code: Please confirm your signature" in email[2]
 
 
-def test_email_get_duplicate(app, smtp_mock, redis_mock, file_mock, signed_up):
-    response = app.get(
-            url='/email',
-            params={
+def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up):
+    response = client.get(
+            path='/email',
+            data={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})
@@ -120,10 +120,10 @@ def test_email_get_duplicate(app, smtp_mock, redis_mock, file_mock, signed_up):
 # Without confirmation
 # -----------------------------------------------------------------------------
 
-def test_email_post(app, smtp_mock, redis_mock, file_mock):
-    response = app.post(
-            url='/email',
-            params={
+def test_email_post(client, smtp_mock, redis_mock, file_mock):
+    response = client.post(
+            path='/email',
+            data={
                 'appid': 'contact',
                 'from': 'EMAIL@example.com',
                 'subject': "EMAIL-SUBJECT",
@@ -146,14 +146,14 @@ def test_email_post(app, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-CONTENT" in email[2]
 
 
-def test_email_post_no_params(app):
-    response = app.post(
-            url='/email',
-            status=400)
+def test_email_post_no_params(client):
+    response = client.post(
+            path='/email')
+    assert response.status_code == 422
 
 
-def test_email_post_bad_appid(app):
-    response = app.post(
-            url='/email',
-            params={'appid': 'BAD-APPID'},
-            status=404)
+def test_email_post_bad_appid(client):
+    response = client.post(
+            path='/email',
+            data={'appid': 'BAD-APPID'})
+    assert response.status_code == 404

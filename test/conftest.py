@@ -17,7 +17,6 @@
 # =============================================================================
 
 import pytest
-import webtest
 from fakeredis import FakeRedis
 
 
@@ -59,8 +58,8 @@ def file_mock(mocker):
 def app(redis_mock):
     # Redis must be patched before we import the app, since the connection is
     # created in module init code.
-    from fsfe_forms import wsgi
-    return webtest.TestApp(wsgi.application)
+    from fsfe_forms import create_app
+    return create_app(testing=True)
 
 
 # -----------------------------------------------------------------------------
@@ -68,10 +67,10 @@ def app(redis_mock):
 # -----------------------------------------------------------------------------
 
 @pytest.fixture
-def signed_up(app):
-    app.get(
-            url='/email',
-            params={
+def signed_up(client):
+    client.get(
+            path='/email',
+            data={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})

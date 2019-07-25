@@ -1,38 +1,58 @@
+# =============================================================================
+# Deployment instructions for the Docker container
+# =============================================================================
+# This file is part of the FSFE Form Server.
+#
+# Copyright © 2017-2019 Free Software Foundation Europe <contact@fsfe.org>
+#
+# The FSFE Form Server is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# The FSFE Form Server is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details <http://www.gnu.org/licenses/>.
+# =============================================================================
+
 version: '3'
 services:
   forms-redis:
-    container_name: forms-redis
     image: redis:3.2
-    restart: always
+    container_name: forms-redis
+    labels:
+      fsfe-monitoring: "true"
     expose:
       - 6379
-
-  forms-web:
-    container_name: forms-web
-    build:
-      context: .
-      dockerfile: Dockerfile-web
-    image: forms-web
     restart: always
-    expose:
-      - 8080
+
+  forms:
+    depends_on:
+      - forms-redis
+    image: forms
+    build: .
+    container_name: forms
+    labels:
+      fsfe-monitoring: "true"
     environment:
-      - VIRTUAL_HOST=forms.fsfe.org
-      - LETSENCRYPT_HOST=forms.fsfe.org
-      - LETSENCRYPT_EMAIL=contact@fsfe.org
-      - REDIS_HOST=forms-redis
-      - REDIS_PORT=6379
-      - SMTP_HOST=mail.fsfe.org
-      - SMTP_PORT=25
+      VIRTUAL_HOST: "forms.fsfe.org"
+      LETSENCRYPT_HOST: "forms.fsfe.org"
+      LETSENCRYPT_EMAIL: "contact@fsfe.org"
+      RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
+      SMTP_HOST: "mail.fsfe.org"
+      LOG_EMAIL_FROM: "contact@fsfe.org"
+      LOG_EMAIL_TO: "contact@fsfe.org"
+      REDIS_HOST: "forms-redis"
+      REDIS_PORT: "6379"
     volumes:
       - "/srv/forms:/store:rw"
+    restart: always
 
-  # Connect the container which exposes the service to the 'bridge' network as
-  # this is where the reverse proxy is
   connect-bridge:
+    depends_on:
+      - forms
     image: docker:dind
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - forms-web
-    command: /bin/sh -c 'docker network connect bridge forms-web'
+    command: docker network connect bridge forms

@@ -1,7 +1,6 @@
 import uuid
 
 from typing import Union
-from fsfe_forms.common import exceptions
 from fsfe_forms.common.config import DEFAULT_SUBJECT_LANG
 from fsfe_forms.common.configurator import configuration, AppConfig
 from fsfe_forms.common.services import DeliveryService, SenderStorageService, TemplateService

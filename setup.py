@@ -1,5 +1,6 @@
+#!/usr/bin/env python3
 # =============================================================================
-# Deployment instructions for the developer's Docker container
+# Install the FSFE Form Server locally
 # =============================================================================
 # This file is part of the FSFE Form Server.
 #
@@ -16,23 +17,17 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-version: '3'
-services:
-  forms:
-    ports:
-      - "8080:8080"
-    environment:
-      "SMTP_HOST": "forms-fakesmtp"
-      "SMTP_PORT": "1025"
-      "LOG_EMAIL_FROM": "contact@fsfe.org"
-      "LOG_EMAIL_TO": "contact@fsfe.org"
+from setuptools import find_packages, setup
 
-  forms-fakesmtp:
-    image: forms-fakesmtp
-    build:
-      context: ./fake-smtp-server
-      dockerfile: Dockerfile-smtp
-    container_name: forms-fakesmtp
-    ports:
-      - "1025:1025"
-      - "1080:1080"
+
+setup(
+    name="fsfe-forms",
+    description="FSFE Form Server",
+    url="https://git.fsfe.org/fsfe-system-hackers/forms",
+    author="Free Software Foundation Europe",
+    author_email="contact@fsfe.org",
+    license="GPL",
+    packages=find_packages(exclude=["test"]),
+    include_package_data=True,
+    zip_safe=False
+)

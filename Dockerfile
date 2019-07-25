@@ -1,5 +1,5 @@
 # =============================================================================
-# Deployment instructions for the developer's Docker container
+# Build instructions for the Docker container
 # =============================================================================
 # This file is part of the FSFE Form Server.
 #
@@ -16,23 +16,24 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-version: '3'
-services:
-  forms:
-    ports:
-      - "8080:8080"
-    environment:
-      "SMTP_HOST": "forms-fakesmtp"
-      "SMTP_PORT": "1025"
-      "LOG_EMAIL_FROM": "contact@fsfe.org"
-      "LOG_EMAIL_TO": "contact@fsfe.org"
+FROM fsfe/alpine-pipenv:latest
 
-  forms-fakesmtp:
-    image: forms-fakesmtp
-    build:
-      context: ./fake-smtp-server
-      dockerfile: Dockerfile-smtp
-    container_name: forms-fakesmtp
-    ports:
-      - "1025:1025"
-      - "1080:1080"
+EXPOSE 8080
+
+WORKDIR /root
+
+# Install Python packages
+COPY Pipfile Pipfile.lock ./
+RUN pipenv install --system --deploy
+
+# Install the actual application
+COPY . .
+RUN ./setup.py install
+
+# Switch to non-root user
+RUN adduser -g "FSFE" -s "/sbin/nologin" -D fsfe
+USER fsfe
+WORKDIR /home/fsfe
+
+# Run the WSGI server
+CMD gunicorn --bind 0.0.0.0:8080 "fsfe_forms:create_app()"

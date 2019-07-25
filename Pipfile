@@ -3,17 +3,18 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-bottle = "==0.12.13"
-gunicorn = "==19.7.1"
+filelock = "*"
+flask = "*"
+flask-limiter = "*"
+gunicorn = "*"
 redis = "*"
-filelock = "==2.0.12"
-Jinja2 = "==2.9.6"
+webargs = "*"
 
 [dev-packages]
 fakeredis = "*"
 pytest-cov = "*"
+pytest-flask = "*"
 pytest-mock = "*"
-webtest = "*"
 
 [requires]
 python_version = "3.6"

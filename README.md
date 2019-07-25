@@ -22,26 +22,7 @@ the API configuration, which is available in `fsfe_forms/configuration/applicati
 
 ## Install
 
-It is not expected that you install the forms API code yourself, but if you
-choose to do so, you will also need access to a Redis instance.
-
-To setup the environment:
-
-```
-$ export REDIS_HOST=redishostname
-$ export REDIS_PORT=redispost
-$ export REDIS_PASSWORD=redispassword  # if required
-$ pip install -r requirements.txt
-```
-
-You can then run the web app with:
-
-```
-$ gunicorn -b 0.0.0.0:8080 fsfe_forms.wsgi:application
-```
-
-This will run the web application on port 8080 on the default network
-interface.
+See the file `doc/install.md`.
 
 ## Usage
 
@@ -56,31 +37,21 @@ The application configuration could look like this:
 
 ```json
   "totick2": {
-    "ratelimit": 500,
+    "required_vars": ["country", "message", "participant_name"],
     "to": [ "contact@fsfe.org" ],
     "subject": "Registration of event from {{ participant_name }}",
-    "include_vars": true,
     "redirect": "http://fsfe.org",
-    "template": "totick2-template",
+    "template": {
+      "plain": {
+        "filename": "totick2-template.txt"
+      },
+    }
     "required_vars": ["participant_name"],
     "headers": {
       "X-OTRS-Queue": "Promo"
-    }
-  },
-```
-
-The template configuration could look like this:
-
-```json
-  "totick2-template": {
-    "plain": {
-      "filename": "totick2-template.txt"
-    },
-    "required_vars": ["country", "message", "participant_name"],
-    "headers": {
       "X-PARTICIPANT-NAME": "{{ participant_name }}"
     }
-  }
+  },
 ```
 
 The HTML form could look like this:
@@ -108,6 +79,7 @@ I'm from {{ country }} and would like you to know:
 ```
 
 ### Signing an open letter
+
 In this case, we're publishing an open letter which we invite people to
 sign. We want to store information about who has signed the open letter,
 and we want a double opt-in of their email address so we know we have
@@ -118,28 +90,20 @@ The configuration could look like this:
 
 ```json
   "tosign": {
-    "ratelimit": 500,
+    "required_vars": ["name", "confirm", "country"]
     "from": "admin@fsfe.org",
     "confirmation-from": "admin@fsfe.org",
     "to": [ "campaignowner@fsfe.org" ],
     "subject": "New signatory to open letter",
-    "include_vars": true,
     "redirect": "http://fsfe.org",
-    "template": "tosign-template",
+    "template": {
+      "plain": {
+        "filename": "tosign-template.txt",
+      },
+    }
     "store": "/store/campaign2.json",
     "confirm": true,
   },
-```
-
-The template configuration could look like this:
-
-```json
-  "tosign-template": {
-    "plain": {
-      "filename": "tosign-template.txt",
-    },
-    "required_vars": ["name", "confirm", "country"]
-  }
 ```
 
 The HTML form could look like this:
@@ -236,10 +200,10 @@ according to the configuration. The following parameters are supported:
 This will confirm an e-mail address if using double opt-in. The following
 parameters are supported:
 
- * confirm (required)
+ * id (required)
 
-The value for confirm is generated automatically by the forms system. You
-should never need to generate this URL yourself.
+The id is generated automatically by the forms system. You should never need to
+generate this URL yourself.
 
 ### Supported parameters for each registered application user
 
@@ -265,8 +229,6 @@ instead.
 
 The following parameters are available only in the API configuration file:
 
- * **ratelimit**: controls the number of emails allowed to be sent per hour
- * **include_vars**: if set to true, then any extra variables provided in a GET request will be made available to the template when rendering an email
  * **store**: if set to a filename, then information about emails sent will be stored in this file. This will not inclue emails which have not been confirmed (if double opt-in is in use).
  * **confirm**: if set to true, then no email is sent without an explicit confirmation of a suitable e-mail address. The email to confirm should be passed in the **confirm** parameter of the GET request (see later)
  * **redirect**: address to redirect the user to after having accepted and processed a request
@@ -281,24 +243,7 @@ The following parameters are available only in the API configuration file:
 
 ## Contribute
 
-### Testing in the git checkout directory
-
-The repository contains automatic functional tests which can be run from the
-git checkout directory, without installing anything.
-
-When you have checked out the git repository, you can use the command
-```bash
-make virtualenv
-```
-to set up a virtual environment for this project, where all dependencies will
-be contained. After you have done that, you can at any time run
-```bash
-make pytest
-```
-to run the automatic functional tests.
-
-All these tests work against simulated Redis and email servers, so there is no
-need for a real Redis instance or a connection to an email server.
+See the file `doc/hack.md`.
 
 ### Testing in a local docker container
 
@@ -328,4 +273,3 @@ On `http://localhost:1080` you can then see the sent emails.
 This software is copyright 2019 by the Free Software Foundation Europe e.V.
 and licensed under the GPLv3 license. For details see the "LICENSE" file in
 the top level directory of https://git.fsfe.org/fsfe-system-hackers/forms/
-
