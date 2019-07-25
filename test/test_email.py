@@ -41,14 +41,15 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
-    email = smtp_mock().__enter__().sendmail.call_args[0]
+    email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email[0] == 'EMAIL@example.com'
-    # recipients
-    assert email[1] == ['contact@fsfe.org']
-    # content
-    assert "EMAIL-SUBJECT" in email[2]
-    assert "EMAIL-CONTENT" in email[2]
+    assert email['From'] == 'EMAIL@example.com'
+    # recipient
+    assert 'contact@fsfe.org' in email['To']
+    # subject
+    assert email['Subject'] == "EMAIL-SUBJECT"
+    # body
+    assert "EMAIL-CONTENT" in email.as_string()
 
 
 def test_email_get_no_params(client):
@@ -81,13 +82,13 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     # FIXME: Writes an "empty" logfile, but this would not be necessary here.
     assert file_mock().write.call_args[0][0] == "[]"
     # Check email sent.
-    email = smtp_mock().__enter__().sendmail.call_args[0]
+    email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email[0] == 'no-reply@fsfe.org'
-    # recipients
-    assert email[1] == ['EMAIL@example.com']
-    # content
-    assert "Subject: Public Code: Please confirm your signature" in email[2]
+    assert 'no-reply@fsfe.org' in email['From']
+    # recipient
+    assert email['To'] == 'THE NAME <EMAIL@example.com>'
+    # subject
+    assert email['Subject'] == "Public Code: Please confirm your signature"
 
 
 def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up):
@@ -103,13 +104,13 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
     # FIXME: Writes an "empty" logfile, but this would not be necessary here.
     assert file_mock().write.call_args[0][0] == "[]"
     # Check email sent.
-    email = smtp_mock().__enter__().sendmail.call_args[0]
+    email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email[0] == 'no-reply@fsfe.org'
-    # recipients
-    assert email[1] == ['EMAIL@example.com']
-    # content
-    assert "Subject: Public Code: Please confirm your signature" in email[2]
+    assert 'no-reply@fsfe.org' in email['From']
+    # recipient
+    assert email['To'] == 'THE NAME <EMAIL@example.com>'
+    # subject
+    assert email['Subject'] == "Public Code: Please confirm your signature"
 
 
 # =============================================================================
@@ -136,14 +137,15 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
-    email = smtp_mock().__enter__().sendmail.call_args[0]
+    email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email[0] == 'EMAIL@example.com'
-    # recipients
-    assert email[1] == ['contact@fsfe.org']
+    assert email['From'] == 'EMAIL@example.com'
+    # recipient
+    assert 'contact@fsfe.org' in email['To']
+    # subject
+    assert email['Subject'] == "EMAIL-SUBJECT"
     # content
-    assert "EMAIL-SUBJECT" in email[2]
-    assert "EMAIL-CONTENT" in email[2]
+    assert "EMAIL-CONTENT" in email.as_string()
 
 
 def test_email_post_no_params(client):

@@ -1,3 +1,7 @@
+From: Free Software Foundation Europe <no-reply@fsfe.org>
+To: {{ format_email(name, confirm) }}
+Subject: Public Code: Please confirm your signature
+
 Dear {{ name }},
 
 Thank you for signing our open letter “Public Money, Public Code”, 

@@ -37,11 +37,7 @@ class SendData(Serializable):
         template = data.get('template', None)
         confirm = data.get('confirm', None)
         lang = data.get('lang', None)
-        request_data = dict()
-        for name in data:
-            if name in ['from', 'to', 'replyto', 'subject', 'template', 'appid']:
-                continue
-            request_data[name] = data[name]
+        request_data = dict(data)
         return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url, lang)
 
     def toJSON(self):

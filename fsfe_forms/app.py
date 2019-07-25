@@ -16,6 +16,8 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
+import json
+import os
 from logging import ERROR, INFO, Formatter, getLogger
 from logging.handlers import SMTPHandler
 
@@ -26,6 +28,7 @@ from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from fsfe_forms.common import config
+from fsfe_forms.email import init_email
 from fsfe_forms.views import email, confirm
 
 
@@ -73,6 +76,14 @@ def create_app(testing=False):
 
     # Initialize Flask-Limiter
     app.limiter = Limiter(app, key_func=get_remote_address)
+
+    # Initialize our own email module
+    init_email(app)
+
+    # Load application configurations
+    filename = os.path.join(os.path.dirname(__file__), 'applications.json')
+    with open(filename) as f:
+        app.app_configs = json.load(f)
 
     # Register views
     app.add_url_rule(rule="/email", view_func=email, methods=["GET", "POST"])

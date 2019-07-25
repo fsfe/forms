@@ -1,55 +1,66 @@
 import uuid
+from urllib.parse import urljoin
 
-from typing import Union
-from fsfe_forms.common.config import DEFAULT_SUBJECT_LANG
-from fsfe_forms.common.configurator import configuration, AppConfig
-from fsfe_forms.common.services import DeliveryService, SenderStorageService, TemplateService
+from fsfe_forms.common.services import DeliveryService, SenderStorageService
 from fsfe_forms.common.models import SendData
+from fsfe_forms.email import send_email
 
 
-def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: AppConfig):
+def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: dict):
     '''
     Send a confirmation email to a user
     A check is done on previous emails sent (in case of spam or email lost for example)
     If a confirmation email was sent, it's data are updates with new email data and a new confirmation email is sent again with the same url link
     '''
     user_email = data.request_data.get('confirm')
+
+    # Check for an unconfirmed previous registration, and if found, update and
+    # reuse that one and discard the new registration
     previous_task_id = _get_previous_task_id(id, data.appid, user_email)
     if previous_task_id:
         ttl = SenderStorageService.get_ttl(previous_task_id)
         SenderStorageService.update_data(previous_task_id, data, ttl)
         SenderStorageService.remove(id)
         id = previous_task_id
-    subject, content = _get_email_subject_and_content(current_config, user_email, data, id)
-    DeliveryService.send(current_config.confirmation_from, [data.confirm], subject, content, None, None)
+
+    # Optionally, check for a confirmed previous registration, and if found,
+    # refuse the duplicate
+    if 'duplicate' in current_config and _has_signed_open_letter(current_config['store'], user_email):
+        send_email(
+                template=current_config['duplicate']['email'],
+                **data.request_data)
+        return current_config['duplicate']['redirect']
+    else:
+        send_email(
+                template=current_config['register']['email'],
+                confirmation_url=urljoin(data.url, 'confirm?id=%s' % id),
+                **data.request_data)
+        return current_config['register']['redirect']
 
 
-def schedule_email(id: uuid.UUID, data: SendData, current_config: AppConfig):
+def schedule_email(id: uuid.UUID, data: SendData, current_config: dict):
     '''
     Generate a email from configuration and user data then send it
     When sent, email is log and user unique ID is remove
     '''
-    content = TemplateService.render_email(current_config, data)
-    subject = _get_subject(current_config.subject, data.lang)
-    DeliveryService.send(current_config.send_from, current_config.send_to, subject,
-                         content, current_config.reply_to, current_config.headers)
-    if current_config.store is not None:
-        DeliveryService.log(current_config.store, current_config.send_from, current_config.send_to,
-                            subject, content, current_config.reply_to, data.request_data)
-    SenderStorageService.remove(id)
-
-
-def _get_email_subject_and_content(current_config, user_email, data, task_id):
-    have_to_check_duplicates = current_config.confirmation_check_duplicates
-
-    if have_to_check_duplicates and _has_signed_open_letter(current_config.store, user_email):
-        config_subject = current_config.confirmation_duplicate_subject
-        content = TemplateService.render_confirmation_duplicate
+    if 'confirm' in current_config:
+        action = 'confirm'
     else:
-        config_subject = current_config.confirmation_subject
-        content = TemplateService.render_confirmation
-
-    return _get_subject(config_subject, data.lang), content(current_config, task_id, data)
+        action = 'register'
+    message = send_email(
+            template=current_config[action]['email'],
+            **data.request_data)
+    if 'store' in current_config:
+        DeliveryService.log(
+                current_config['store'],
+                message['From'],
+                [message['To']],
+                message['Subject'],
+                message.get_content(),
+                message['Reply-To'],
+                data.request_data)
+    SenderStorageService.remove(id)
+    return current_config[action]['redirect']
 
 
 def _has_signed_open_letter(storage: str, email: str) -> bool:
@@ -57,15 +68,6 @@ def _has_signed_open_letter(storage: str, email: str) -> bool:
     logs_with_same_email = filter(lambda l: l.get('include_vars', {}).get('confirm') == email, logs)
     exist = next(logs_with_same_email, None)
     return True if exist else False
-
-
-def _get_subject(subject: Union[str, dict], lang: Union[None, str], default_lang: Union[None, str] = DEFAULT_SUBJECT_LANG):
-    if isinstance(subject, str):
-        return subject
-    if isinstance(subject, dict):
-        _lang = lang if lang in subject else default_lang
-        return subject[_lang]
-    raise ValueError('Subject should be a string or a dict')
 
 
 def _get_previous_task_id(id: uuid.UUID, appid: str, email: str) -> uuid.UUID:

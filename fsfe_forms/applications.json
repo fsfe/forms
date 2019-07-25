@@ -1,0 +1,38 @@
+{
+  "contact": {
+    "required_vars": ["content"],
+    "store": "/store/contact/contact.json",
+    "register": {
+      "email": "contact-register",
+      "redirect": "https://fsfe.org/contact/"
+    }
+  },
+  "pmpc-sign": {
+    "required_vars": ["name"],
+    "store": "/store/pmpc/signatures.json",
+    "register": {
+      "email": "pmpc-sign-register",
+      "redirect": "https://publiccode.eu/openletter/confirm"
+    },
+    "confirm": {
+      "email": "pmpc-sign-confirm",
+      "redirect": "https://publiccode.eu/openletter/success"
+    },
+    "duplicate": {
+      "email": "pmpc-sign-duplicate",
+      "redirect": "https://publiccode.eu/openletter/confirm"
+    }
+  },
+  "ln-apply": {
+    "required_vars": ["name", "confirm", "activities"],
+    "store": "/store/ln/applications.json",
+    "register": {
+      "email": "ln-apply-register",
+      "redirect": "https://fsfe.org/activities/ftf/ln-application-confirm.html"
+    },
+    "confirm": {
+      "email": "ln-apply-confirm",
+      "redirect": "https://fsfe.org/activities/ftf/ln-application-success.html"
+    }
+  }
+}

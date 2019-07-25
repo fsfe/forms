@@ -35,8 +35,8 @@ email_parameters = {
 @use_kwargs(email_parameters)
 def email(appid):
     send_data = SendData.from_request(appid, request.values, request.url)
-    config = SenderService.validate_and_send_email(send_data)
-    return redirect(config.redirect)
+    target = SenderService.validate_and_send_email(send_data)
+    return redirect(target)
 
 
 # =============================================================================
@@ -49,5 +49,5 @@ confirm_parameters = {
 
 @use_kwargs(confirm_parameters)
 def confirm(id):
-    config = SenderService.confirm_email(id)
-    return redirect(config.redirect_confirmed or config.redirect)
+    target = SenderService.confirm_email(id)
+    return redirect(target)

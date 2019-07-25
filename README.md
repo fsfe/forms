@@ -10,7 +10,7 @@ in which you need to send emails from a web page, either with or without
 double opt-in.
 
 Each application which intends to use this service must be registered in
-the API configuration, which is available in `fsfe_forms/configuration/applications.json`.
+the API configuration, which is available in `fsfe_forms/applications.json`.
 
 ## Table of Contents
 
@@ -38,18 +38,9 @@ The application configuration could look like this:
 ```json
   "totick2": {
     "required_vars": ["country", "message", "participant_name"],
-    "to": [ "contact@fsfe.org" ],
-    "subject": "Registration of event from {{ participant_name }}",
-    "redirect": "http://fsfe.org",
-    "template": {
-      "plain": {
-        "filename": "totick2-template.txt"
-      },
-    }
-    "required_vars": ["participant_name"],
-    "headers": {
-      "X-OTRS-Queue": "Promo"
-      "X-PARTICIPANT-NAME": "{{ participant_name }}"
+    "register": {
+      "email": "totick2-template",
+      "redirect": "https://fsfe.org"
     }
   },
 ```
@@ -67,9 +58,15 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template (totick2-template.txt):
+And finally, the template (totick2-template.eml):
 
 ```
+From: {{ format_email(participant_name, from) }}
+To: contact@fsfe.org
+Subject: Registration of event from {{ participant_name }}
+X-OTRS-Queue: "Promo"
+X-PARTICIPANT-NAME: {{ participant_name }}
+
 Hi!
 
 My name is {{ participant_name }}.
@@ -91,18 +88,15 @@ The configuration could look like this:
 ```json
   "tosign": {
     "required_vars": ["name", "confirm", "country"]
-    "from": "admin@fsfe.org",
-    "confirmation-from": "admin@fsfe.org",
-    "to": [ "campaignowner@fsfe.org" ],
-    "subject": "New signatory to open letter",
-    "redirect": "http://fsfe.org",
-    "template": {
-      "plain": {
-        "filename": "tosign-template.txt",
-      },
-    }
     "store": "/store/campaign2.json",
-    "confirm": true,
+    "register": {
+      "email": "tosign-register",
+      "redirect": "http://fsfe.org"
+    }
+    "confirm": {
+      "email": "tosign-confirm",
+      "redirect": "http://fsfe.org"
+    }
   },
 ```
 
@@ -120,9 +114,33 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template (tosign-template.txt):
+Here, we have two email templates. The first one, tosign-register.eml, is used
+upon registration of a new sigature:
 
 ```
+From: no-reply@fsfe.org
+To: {{ format_email(name, confirm) }}
+Subject: Your signature for campaign X
+
+Dear {{ name }},
+
+Than you for supporting your work by signing our open letter about X!
+To confirm your signature, please click the following link:
+
+{{ confirmation_url }}
+
+Best regards,
+the FSFE
+```
+
+The second template, tosign-confirm.eml, is then used when the confirmation
+link has been clicked:
+
+```
+From: admin@fsfe.org
+To: campaignowner@fsfe.org
+Subject: New signatory to open letter
+
 Hi!
 
 I support your work and sign your open letter about X!
@@ -130,35 +148,26 @@ I support your work and sign your open letter about X!
   {{ name }} <{{ confirm }}> from {{ country }}.
 ```
 
-When someone submits the form, a mail will first be sent to the address
-given. The e-mail will have the following form:
-
-```
-You've requested the following e-mail to be sent on your behalf.
-
-"Hi!
-
-I support your work and sign your open letter about X!
-
-  John Doe <john@example.com> from Switzerland.
-"
-
-To confirm, please click the following link. If you do not click
-this link to confirm, your mail will not be sent.
-
-https://forms.fsfe.org/confirm?id=randomnumber
-```
-
-No information will be stored, and no email sent to the To address before
-the user clicks that URL. When the URL is clicked, the email will be sent
-to <campaignowner@fsfe.org> as given in the configuration, and a JSON
+No information will be stored, and no email sent to the To address before the
+user clicks the confirmation URL. When the URL is clicked, the email will be
+sent to <campaignowner@fsfe.org> as given in the configuration, and a JSON
 file `/store/campaign2.json` will be created with the following content:
 
 ```json
-{"from": "admin@fsfe.org", "to": ["campaignowner@fsfe.org"], "subject": "New signatory to open letter",
-"content": "Hi!\n\nI support your work and sign your open letter about X!\n\n  John Doe <john@example.com> from Switzerland.\n",
-"reply-to": null,
-"include_vars": {"name": "John Doe", "confirm": "john@example.com", "country": "Switzerland"}}
+[
+  {
+    "from": "admin@fsfe.org",
+    "to": ["campaignowner@fsfe.org"],
+    "subject": "New signatory to open letter",
+    "content": "Hi!\n\nI support your work and sign your open letter about X!\n\n  John Doe <john@example.com> from Switzerland.\n",
+    "reply-to": null,
+    "include_vars": {
+      "name": "John Doe",
+      "confirm": "john@example.com",
+      "country": "Switzerland"
+    }
+  }
+]
 ```
 
 ### Multi lang (optional)
@@ -166,34 +175,25 @@ file `/store/campaign2.json` will be created with the following content:
 If you want to send an email in a specific language you have to add an hidden field in your form:
 `<input type="hidden" name="lang" value="it">`
 
-Moreover you have to update the configuration fields:
-- `subject` and `confirmation-subject`: in a dict `
-  {"de": "....", "fr": "...", "en": "..."}
-`
-- `filename`: with the template `filename.{lang}.txt` (ex: `totick2-template.{lang}.txt`)
+Now, for example when looking for the template "tosign-register", the server
+will look for a file named "tosign-register.it.eml", and if that does not
+exist, it will fall back to "tosign-register.eml".
 
-Rules:
-- If a request provides the `lang` argument:
-  - The API searches the `subject` and `confirmation-subject` in the hash provided in the configuration file and returns it
-  - The API replaces the `{lang}` (in `filename.{lang}.txt`) with the language provided in the request
-- If no argument `lang` is received (or is not provide in conf):
-  The API returns missing elements (subject, confirmation-subject, file) in English (replace `{lang}` by 'en').
 
 ## API
 
 ### POST/GET https://forms.fsfe.org/email
 
 This will trigger the sending of an email, potentially with a double opt-in
-according to the configuration. The following parameters are supported:
+according to the configuration.
 
- * appid (required)
- * from
- * to
- * replyto
- * subject
- * content
- * template
- * confirm (required for some appid)
+The parameter "appid" is always required and will select the application from
+the configuration file applications.json. All other supported parameters depend
+on the selected application.
+
+Please note that for applications requiring double opt-in, the parameter for
+the user's email address *must* be called "confirm".
+
 
 ### GET https://forms.fsfe.org/confirm
 
@@ -205,41 +205,34 @@ parameters are supported:
 The id is generated automatically by the forms system. You should never need to
 generate this URL yourself.
 
-### Supported parameters for each registered application user
 
-Most of the parameters which are available for an application can be set
-*either* in the API configuration, or in the GET request when calling the
-API. If a parameter is specified in the API configuration, this takes
-precendence. So for instance, if the API configuration sets the To
-address as `nobody@example.com`, then even if the request includes
-`to=foo@example.com`, this will be ignored, and the To address set
-according to the API configuration.
+## Application configuration
 
-These are the available parameters for configuration or request:
+Configuration of the applications is done in the file `applications.json`. It
+contains an object where each key is an application id and the value is the
+matchin application configuration.
 
- * **from**: sets an explicit From address on emails sent. Could contain variables
- * **to**: one or more recipients, explicit To address. Could contain variables
- * **replyto**: sets an explicit Reply-To header on emails sent
- * **subject**: sets the Subject of an email. Could contain variables
- * **content**: sets the content (plain text) of an email. Could contain variables
- * **template**: defines which template configuration will be used to provide content. Could contain variables
+The application configuration is again an object with the following possible
+keys:
 
-If both **content** and **template** is set, then **template** will be used
-instead.
+ * **required_vars**: An array with parameter names that have to be present in
+   a request. Required.
+ * **store**: If set to a filename, then information about emails sent is
+   stored in this file. This does not inclue emails which have not been
+   confirmed (if double opt-in is in use). Optional.
+ * **register**: Defines what to do upon registration of a user. Required.
+ * **confirm**: If present, forces double opt-in, and defines what to do upon
+   confirmation of a registration. Optional.
+ * **duplicate**: If present, forces the check for duplicate registrations, and
+   defines what to do when one occurs. Optional.
 
-The following parameters are available only in the API configuration file:
+Each of "register", "confirm", and "duplicate" are again objects with the
+following keys:
 
- * **store**: if set to a filename, then information about emails sent will be stored in this file. This will not inclue emails which have not been confirmed (if double opt-in is in use).
- * **confirm**: if set to true, then no email is sent without an explicit confirmation of a suitable e-mail address. The email to confirm should be passed in the **confirm** parameter of the GET request (see later)
- * **redirect**: address to redirect the user to after having accepted and processed a request
- * **redirect-confirmed**: address to redirect the user to after the user has confirmed their email (if using confirm==true)
- * **required_vars**: an array with parameter names that has to be presented in request parameters
- * **headers**: a key-value dictionary that should be included to email as headers. Values could contain variables
- * **confirmation-template**: name of a template defined in templates config that will be used as confirmation email. For confirmation emails already provided 2 variables: "confirmation_url" and "content". Content is the rendered email that will be sent after confirmation
- * **confirmation-duplicate-template**: name of a template defined in templates config that will be used for user that want make multiples signatures
- * **confirmation-subject**: custom subject for confirmation email. Could contain variables
- * **confirmation-duplicate-subject**: custom subject for duplicate confirmation email. Could contain variables
- * **confirmation-check-duplicates**: set to `true` to the check whether the email already confirmed (duplicated). Disabled by default
+ * **email**: Template for the email to be sent.
+ * **redirect**: Address to redirect the user's browser to after having
+   accepted and processed a request
+
 
 ## Contribute
 
