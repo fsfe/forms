@@ -16,7 +16,7 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: dict):
 
     # Optionally, check for a confirmed previous registration, and if found,
     # refuse the duplicate
-    if 'duplicate' in current_config and _has_signed_open_letter(current_config['store'], user_email):
+    if 'duplicate' in current_config and DeliveryService.find(current_config['store'], user_email):
         send_email(
                 template=current_config['duplicate']['email'],
                 **data.request_data)
@@ -52,10 +52,3 @@ def schedule_email(id: uuid.UUID, data: SendData, current_config: dict):
                 data.request_data)
     SenderStorageService.remove(id)
     return current_config[action]['redirect']
-
-
-def _has_signed_open_letter(storage: str, email: str) -> bool:
-    logs = DeliveryService.read_log(storage)
-    logs_with_same_email = filter(lambda l: l.get('include_vars', {}).get('confirm') == email, logs)
-    exist = next(logs_with_same_email, None)
-    return True if exist else False

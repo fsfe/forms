@@ -18,13 +18,20 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
     }
 
     lock = filelock.FileLock(LOCK_FILENAME)
-    logs = read_log(storage, lock) + [add]
+    logs = _read_log(storage, lock) + [add]
     logs_in_json = json.dumps(logs)
     with lock, open(storage, "w") as file:
         file.write(logs_in_json)
 
 
-def read_log(storage, lock=filelock.FileLock(LOCK_FILENAME)):
+def find(storage: str, email: str) -> bool:
+    for entry in _read_log(storage):
+        if entry.get('include_vars', {}).get('confirm') == email:
+            return True
+    return False
+
+
+def _read_log(storage, lock=filelock.FileLock(LOCK_FILENAME)):
     _create_log_file_if_not_exist(storage, lock)
     with lock, open(storage, "r") as file:
         f = file.read()
