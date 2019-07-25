@@ -1,7 +1,7 @@
 import uuid
 from urllib.parse import urljoin
 
-from fsfe_forms.common.services import DeliveryService, SenderStorageService
+from fsfe_forms.common.services import DeliveryService
 from fsfe_forms.common.models import SendData
 from fsfe_forms.email import send_email
 
@@ -29,7 +29,7 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: dict):
         return current_config['register']['redirect']
 
 
-def schedule_email(id: uuid.UUID, data: SendData, current_config: dict):
+def schedule_email(data: SendData, current_config: dict):
     '''
     Generate a email from configuration and user data then send it
     When sent, email is log and user unique ID is remove
@@ -50,5 +50,4 @@ def schedule_email(id: uuid.UUID, data: SendData, current_config: dict):
                 message.get_content(),
                 message['Reply-To'],
                 data.request_data)
-    SenderStorageService.remove(id)
     return current_config[action]['redirect']
