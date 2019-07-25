@@ -34,7 +34,4 @@ def confirm_email(id: str) -> str:
     config = current_app.app_configs.get(data.appid)
     if config is None:
         abort(404, 'Configuration not found for this AppId')
-    if not data.confirmed:
-        data.confirmed = True
-        SenderStorageService.update_data(id, data)
     return schedule_email(id, data, config)
