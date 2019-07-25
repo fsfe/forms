@@ -45,13 +45,13 @@ The TCP port to listen on.
 
 ## Email settings
 
-### `SMTP_HOST` and `SMTP_PORT`
+### `MAIL_SERVER` and `MAIL_PORT`
 
 The SMTP server and port to use for sending out all kinds of emails. Defaults
 to `localhost` and `25`.
 
 
-### `SMTP_USERNAME` and `SMTP_PASSWORD`
+### `MAIL_USERNAME` and `MAIL_PASSWORD`
 
 The credentials for the SMTP server. Only needed if the SMTP server requires
 authentication.

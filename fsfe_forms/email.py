@@ -85,12 +85,12 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
     else:
         # Send out the message
         with smtplib.SMTP(
-                host=current_app.config['SMTP_HOST'],
-                port=current_app.config['SMTP_PORT']) as smtp:
-            if current_app.config['SMTP_USERNAME']:
+                host=current_app.config['MAIL_SERVER'],
+                port=current_app.config['MAIL_PORT']) as smtp:
+            if current_app.config['MAIL_USERNAME']:
                 smtp.login(
-                        user=current_app.config['SMTP_USERNAME'],
-                        password=current_app.config['SMTP_PASSWORD'])
+                        user=current_app.config['MAIL_USERNAME'],
+                        password=current_app.config['MAIL_PASSWORD'])
             smtp.send_message(message)
 
     return message

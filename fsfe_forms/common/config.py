@@ -2,10 +2,10 @@ import os
 
 RATELIMIT_DEFAULT = os.environ.get('RATELIMIT_DEFAULT')
 
-SMTP_HOST = os.environ.get('SMTP_HOST', 'localhost')
-SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
-SMTP_USERNAME = os.environ.get('SMTP_USERNAME')
-SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
+MAIL_SERVER = os.environ.get('MAIL_SERVER', 'localhost')
+MAIL_PORT = int(os.environ.get('MAIL_PORT', 25))
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
 LOG_EMAIL_FROM = os.environ.get('LOG_EMAIL_FROM')
 LOG_EMAIL_TO = os.environ.get('LOG_EMAIL_TO')

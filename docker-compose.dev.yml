@@ -22,8 +22,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      "SMTP_HOST": "forms-fakesmtp"
-      "SMTP_PORT": "1025"
+      "MAIL_SERVER": "forms-fakesmtp"
+      "MAIL_PORT": "1025"
       "LOG_EMAIL_FROM": "contact@fsfe.org"
       "LOG_EMAIL_TO": "contact@fsfe.org"
 

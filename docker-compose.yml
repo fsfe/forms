@@ -40,7 +40,7 @@ services:
       LETSENCRYPT_HOST: "forms.fsfe.org"
       LETSENCRYPT_EMAIL: "contact@fsfe.org"
       RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
-      SMTP_HOST: "mail.fsfe.org"
+      MAIL_SERVER: "mail.fsfe.org"
       LOG_EMAIL_FROM: "contact@fsfe.org"
       LOG_EMAIL_TO: "contact@fsfe.org"
       REDIS_HOST: "forms-redis"
