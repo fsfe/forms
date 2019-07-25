@@ -6,11 +6,16 @@ from fsfe_forms.config import SENDER_TABLE
 
 
 def store_data(data: SendData, expire: int = None) -> uuid.UUID:
-    return StorageService.create(SENDER_TABLE, data, expire)
-
-
-def update_data(id: uuid.UUID, data: SendData, expire: int = None):
-    StorageService.set(SENDER_TABLE, id, data, expire)
+    # Check for an unconfirmed previous registration, and if found, update and
+    # reuse that one and discard the new registration
+    for (key, old_data) in StorageService.get_all(SENDER_TABLE, SendData):
+        if old_data.request_data.get('confirm') == data.request_data.get('confirm') \
+                and old_data.request_data.get('appid') == data.request_data.get('appid'):
+            ttl = StorageService.get_ttl(SENDER_TABLE, key)
+            StorageService.set(SENDER_TABLE, key, data, ttl)
+        return uuid.UUID(key)
+    else:
+        return StorageService.create(SENDER_TABLE, data, expire)
 
 
 def resolve_data(id: uuid.UUID) -> SendData:
@@ -21,9 +26,3 @@ def remove(id: uuid.UUID):
     StorageService.remove(SENDER_TABLE, id)
 
 
-def get_all() -> Tuple[str, Iterator[SendData]]:
-    yield from StorageService.get_all(SENDER_TABLE, SendData)
-
-
-def get_ttl(id: uuid.UUID) -> int:
-    return StorageService.get_ttl(SENDER_TABLE, id)

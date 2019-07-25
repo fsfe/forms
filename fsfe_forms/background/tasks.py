@@ -14,15 +14,6 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: dict):
     '''
     user_email = data.request_data.get('confirm')
 
-    # Check for an unconfirmed previous registration, and if found, update and
-    # reuse that one and discard the new registration
-    previous_task_id = _get_previous_task_id(id, data.appid, user_email)
-    if previous_task_id:
-        ttl = SenderStorageService.get_ttl(previous_task_id)
-        SenderStorageService.update_data(previous_task_id, data, ttl)
-        SenderStorageService.remove(id)
-        id = previous_task_id
-
     # Optionally, check for a confirmed previous registration, and if found,
     # refuse the duplicate
     if 'duplicate' in current_config and _has_signed_open_letter(current_config['store'], user_email):
@@ -68,12 +59,3 @@ def _has_signed_open_letter(storage: str, email: str) -> bool:
     logs_with_same_email = filter(lambda l: l.get('include_vars', {}).get('confirm') == email, logs)
     exist = next(logs_with_same_email, None)
     return True if exist else False
-
-
-def _get_previous_task_id(id: uuid.UUID, appid: str, email: str) -> uuid.UUID:
-    previous_tasks = SenderStorageService.get_all()
-    previous_tasks_with_same_email = filter(lambda d: d[1].request_data.get('confirm') == email, previous_tasks)
-    previous_tasks_without_same_id = filter(lambda d: uuid.UUID(d[0]) != id, previous_tasks_with_same_email)
-    previous_tasks_with_same_appid = filter(lambda d: d[1].appid == appid, previous_tasks_without_same_id)
-    previous_tasks = next(previous_tasks_with_same_appid, None)
-    return uuid.UUID(previous_tasks[0]) if previous_tasks else None
