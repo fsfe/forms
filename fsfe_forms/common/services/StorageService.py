@@ -40,10 +40,6 @@ def remove(table: str, id: uuid.UUID):
     storage.delete(key)
 
 
-def get_queue_tasks_count(queue_name: str):
-    return int(storage.llen(queue_name))
-
-
 def get_all(table: str, type=None):
     key = storage.keys(_sanitize_key(table, '*'))
     for k in key:
