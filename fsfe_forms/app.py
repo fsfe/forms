@@ -27,7 +27,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from fsfe_forms.common import config
+from fsfe_forms import config
 from fsfe_forms.email import init_email
 from fsfe_forms.views import email, confirm
 

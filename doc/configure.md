@@ -43,6 +43,14 @@ The hostname to listen on.
 The TCP port to listen on.
 
 
+## Ratelimit settings
+
+### `RATELIMIT_DEFAULT`
+
+The default rate limit in the format described
+[here](https://flask-limiter.readthedocs.io/en/stable/#ratelimit-string)
+
+
 ## Email settings
 
 ### `MAIL_SERVER` and `MAIL_PORT`

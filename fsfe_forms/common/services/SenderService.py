@@ -3,9 +3,9 @@ import uuid
 from flask import abort, current_app
 
 from fsfe_forms.background.tasks import schedule_confirmation, schedule_email
-from fsfe_forms.common.config import CONFIRMATION_EXPIRATION_SECS
 from fsfe_forms.common.models import SendData
 from fsfe_forms.common.services import SenderStorageService
+from fsfe_forms.config import CONFIRMATION_EXPIRATION_SECS
 
 
 def validate_and_send_email(data: SendData) -> str:

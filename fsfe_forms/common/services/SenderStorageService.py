@@ -2,7 +2,7 @@ import uuid
 from typing import Iterator, Tuple
 from fsfe_forms.common.services import StorageService
 from fsfe_forms.common.models import SendData
-from fsfe_forms.common.config import SENDER_TABLE
+from fsfe_forms.config import SENDER_TABLE
 
 
 def store_data(data: SendData, expire: int = None) -> uuid.UUID:

@@ -3,7 +3,7 @@ import filelock
 import time
 import os
 
-from fsfe_forms.common.config import LOCK_FILENAME
+from fsfe_forms.config import LOCK_FILENAME
 
 
 def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
