@@ -1,6 +1,3 @@
-[submodule "fake-smtp-server-dockerfile"]
-	path = fake-smtp-server-dockerfile
-	url = https://git.fsfe.org/florian.vuillemot/fake-smtp-server-dockerfile
 [submodule "fake-smtp-server"]
 	path = fake-smtp-server
 	url = https://git.fsfe.org/florian.vuillemot/fake-smtp-server-dockerfile
