@@ -26,4 +26,6 @@ class SendData(Serializable):
     def fromJSON(cls, data):
         json_data = json.loads(data)
         request_data = json_data.get('request_data', None)
+        if not 'appid' in request_data:  # old entries
+            request_data['appid'] = json_data.get('appid')
         return cls(request_data)
