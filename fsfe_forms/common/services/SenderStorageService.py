@@ -13,7 +13,7 @@ def store_data(data: SendData) -> uuid.UUID:
                 and old_data.request_data.get('appid') == data.request_data.get('appid'):
             ttl = StorageService.get_ttl(SENDER_TABLE, key)
             StorageService.set(SENDER_TABLE, key, data, ttl)
-        return uuid.UUID(key)
+            return uuid.UUID(key)
     else:
         return StorageService.create(SENDER_TABLE, data, CONFIRMATION_EXPIRATION_SECS)
 
