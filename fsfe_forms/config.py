@@ -35,6 +35,7 @@ LOG_EMAIL_TO = environ.get('LOG_EMAIL_TO')
 REDIS_HOST = environ.get('REDIS_HOST', 'localhost')
 REDIS_PORT = int(environ.get('REDIS_PORT', 6379))
 REDIS_PASSWORD = environ.get('REDIS_PASSWORD', None)
+REDIS_QUEUE_DB = int(environ.get('REDIS_QUEUE_DB', 0))
 
 # Filename for a temporary lockfile
 LOCK_FILENAME = environ.get('LOCK_FILENAME', '/tmp/forms.lock')

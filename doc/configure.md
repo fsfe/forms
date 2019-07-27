@@ -78,6 +78,14 @@ emails.
 
 Hostname and TCP port of the Redis server.
 
+### `REDIS_PASSWORD`
+
+Optional password for the Redis connection.
+
+### `REDIS_QUEUE_DB`
+
+Redis database number for the double opt-in queue.
+
 
 [`docker-compose.yml`]: ../docker-compose.yml
 [`.env`]: ../.env

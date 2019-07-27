@@ -26,6 +26,7 @@ from webargs.flaskparser import parser, use_kwargs
 from fsfe_forms.common.models import SendData
 from fsfe_forms.common.services import DeliveryService, SenderStorageService
 from fsfe_forms.email import send_email
+from fsfe_forms.queue import queue_pop, queue_push
 
 
 # =============================================================================
@@ -86,7 +87,6 @@ def email(appid, lang):
 
     # Load dictionary of all request parameters
     params = dict(request.values)
-    print(params)
 
     # Validate required parameters
     for field in app_config['required_vars']:
@@ -108,6 +108,7 @@ def email(appid, lang):
                     params=params)
         else:
             id = SenderStorageService.store_data(SendData.from_request(params))
+            queue_push(id, params)
             return _process(
                     config=app_config['register'],
                     params=params,
@@ -129,6 +130,7 @@ confirm_parameters = {
 
 @use_kwargs(confirm_parameters)
 def confirm(id):
+    queue_pop(uuid.UUID(id))
     data = SenderStorageService.resolve_data(uuid.UUID(id))
     if data is None:
         abort(404, 'Confirmation ID is Not Found')

@@ -21,6 +21,7 @@ import os
 from logging import ERROR, INFO, Formatter, getLogger
 from logging.handlers import SMTPHandler
 
+import redis
 from flask import Flask
 from flask.logging import default_handler
 from flask_limiter import Limiter
@@ -81,6 +82,13 @@ def create_app(testing=False):
 
     # Initialize our own email module
     init_email(app)
+
+    # Initialize Redis store for double opt-in queue
+    app.queue_db = redis.Redis(
+            host=app.config['REDIS_HOST'],
+            port=app.config['REDIS_PORT'],
+            password=app.config['REDIS_PASSWORD'],
+            db=app.config['REDIS_QUEUE_DB'])
 
     # Load application configurations
     filename = os.path.join(os.path.dirname(__file__), 'applications.json')
