@@ -17,8 +17,9 @@
 # =============================================================================
 
 from flask import redirect, request
+from marshmallow.validate import Regexp
 from webargs.fields import String
-from webargs.flaskparser import use_kwargs
+from webargs.flaskparser import parser, use_kwargs
 
 from fsfe_forms.common.models import SendData
 from fsfe_forms.common.services import SenderService
@@ -29,12 +30,13 @@ from fsfe_forms.common.services import SenderService
 # =============================================================================
 
 email_parameters = {
-        "appid": String(required=True)}
+        "appid": String(required=True),
+        "lang": String(validate=Regexp('^[a-z]{2}$'))}
 
 
-@use_kwargs(email_parameters)
-def email(appid):
-    send_data = SendData.from_request(appid, request.values)
+def email():
+    parser.parse(email_parameters)      # Validate parameters
+    send_data = SendData.from_request(request.values)
     target = SenderService.validate_and_send_email(send_data)
     return redirect(target)
 
