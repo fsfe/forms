@@ -29,7 +29,8 @@ from flask import abort, current_app
 def _get(id: uuid.UUID) -> dict:
     data = current_app.queue_db.get(id.hex)
     if data is None:
-        abort(404, "No such pending confirmation ID")
+        # abort(404, "No such pending confirmation ID")
+        return
     return json.loads(data.decode('utf-8'))
 
 
