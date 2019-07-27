@@ -34,7 +34,7 @@ email_parameters = {
 
 @use_kwargs(email_parameters)
 def email(appid):
-    send_data = SendData.from_request(appid, request.values, request.url)
+    send_data = SendData.from_request(appid, request.values)
     target = SenderService.validate_and_send_email(send_data)
     return redirect(target)
 

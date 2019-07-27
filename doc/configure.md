@@ -48,7 +48,7 @@ The TCP port to listen on.
 ### `RATELIMIT_DEFAULT`
 
 The default rate limit in the format described
-[here](https://flask-limiter.readthedocs.io/en/stable/#ratelimit-string)
+[here](https://flask-limiter.readthedocs.io/en/stable/#ratelimit-string).
 
 
 ## Email settings

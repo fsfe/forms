@@ -1,5 +1,6 @@
 import uuid
-from urllib.parse import urljoin
+
+from flask import url_for
 
 from fsfe_forms.common.services import DeliveryService
 from fsfe_forms.common.models import SendData
@@ -24,7 +25,7 @@ def schedule_confirmation(id: uuid.UUID, data: SendData, current_config: dict):
     else:
         send_email(
                 template=current_config['register']['email'],
-                confirmation_url=urljoin(data.url, 'confirm?id=%s' % id),
+                confirmation_url=url_for('confirm', _external=True, id=id),
                 **data.request_data)
         return current_config['register']['redirect']
 

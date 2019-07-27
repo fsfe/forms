@@ -13,8 +13,7 @@ class Serializable:
 
 class SendData(Serializable):
     def __init__(self, appid, send_from, send_to, reply_to, subject, template, confirm, confirmed,
-                 request_data, url, lang):
-        self.url = url
+                 request_data, lang):
         self.request_data = request_data
         self.confirmed = confirmed
         self.appid = appid
@@ -27,7 +26,7 @@ class SendData(Serializable):
         self.lang = get_secure_lang(lang)
 
     @classmethod
-    def from_request(cls, appid: str, data: dict, url: str):
+    def from_request(cls, appid: str, data: dict):
         send_from = data.get('from', None)
         send_to = data.get('to', None)
         if send_to is not None:
@@ -38,7 +37,7 @@ class SendData(Serializable):
         confirm = data.get('confirm', None)
         lang = data.get('lang', None)
         request_data = dict(data)
-        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url, lang)
+        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, lang)
 
     def toJSON(self):
         return json.dumps(self.__dict__)
@@ -55,9 +54,8 @@ class SendData(Serializable):
         confirm = json_data.get('confirm', None)
         delivered = json_data.get('delivered', False)
         request_data = json_data.get('request_data', None)
-        url = json_data.get('url', None)
         lang = json_data.get('lang', None)
-        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, delivered, request_data, url, lang)
+        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, delivered, request_data, lang)
 
 def get_secure_lang(lang):
     if lang and re.match('[a-z]{2}$', lang):
