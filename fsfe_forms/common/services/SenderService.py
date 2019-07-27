@@ -8,7 +8,7 @@ from fsfe_forms.common.services import SenderStorageService
 
 
 def validate_and_send_email(data: SendData) -> str:
-    config = current_app.app_configs.get(data.appid)
+    config = current_app.app_configs.get(data.request_data['appid'])
     if config is None:
         abort(404, 'Configuration not found for this AppId')
     for field in config['required_vars']:
@@ -16,7 +16,7 @@ def validate_and_send_email(data: SendData) -> str:
             raise abort(400, '\"%s\" is required' % field)
 
     if 'confirm' in config:
-        if data.confirm is None:
+        if data.request_data.get('confirm') is None:
             abort(400, '\"Confirm\" address is required')
         id = SenderStorageService.store_data(data)
         return schedule_confirmation(id, data, config)
@@ -28,7 +28,7 @@ def confirm_email(id: str) -> str:
     data = SenderStorageService.resolve_data(uuid.UUID(id))
     if data is None:
         abort(404, 'Confirmation ID is Not Found')
-    config = current_app.app_configs.get(data.appid)
+    config = current_app.app_configs.get(data.request_data['appid'])
     if config is None:
         abort(404, 'Configuration not found for this AppId')
     return schedule_email(data, config)
