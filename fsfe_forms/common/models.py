@@ -17,7 +17,7 @@ class SendData(Serializable):
 
     @classmethod
     def from_request(cls, data: dict):
-        return cls(dict(data))
+        return cls(data)
 
     def toJSON(self):
         return json.dumps(self.__dict__)
