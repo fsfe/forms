@@ -41,7 +41,7 @@ def _find_app_config(appid):
     try:
         return current_app.app_configs[appid]
     except KeyError:
-        abort(404, 'No application configuration for "{}"'.format(appid))
+        abort(404, f'No application configuration for "{appid}"')
 
 
 # -----------------------------------------------------------------------------
@@ -91,11 +91,11 @@ def email(appid, lang):
     # Validate required parameters
     for field in app_config['required_vars']:
         if field not in params:
-            raise abort(400, '\"%s\" is required' % field)
+            raise abort(400, f'"{field}" is required')
 
     if 'confirm' in app_config:         # With double opt-in
         if params.get('confirm') is None:
-            abort(400, '\"Confirm\" address is required')
+            abort(400, '"Confirm" address is required')
 
         # Optionally, check for a confirmed previous registration, and if
         # found, refuse the duplicate

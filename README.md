@@ -210,7 +210,7 @@ generate this URL yourself.
 
 Configuration of the applications is done in the file `applications.json`. It
 contains an object where each key is an application id and the value is the
-matchin application configuration.
+matching application configuration.
 
 The application configuration is again an object with the following possible
 keys:
