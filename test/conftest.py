@@ -20,6 +20,8 @@ import pytest
 from fakeredis import FakeRedis
 from flask import url_for
 
+from fsfe_forms import config, create_app
+
 
 # -----------------------------------------------------------------------------
 # Mocked SMTP connection
@@ -57,10 +59,8 @@ def file_mock(mocker):
 
 @pytest.fixture
 def app(redis_mock):
-    # Redis must be patched before we import the app, since the connection is
-    # created in module init code.
-    from fsfe_forms import create_app
-    return create_app(testing=True)
+    config.TESTING = True
+    return create_app()
 
 
 # -----------------------------------------------------------------------------
