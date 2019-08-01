@@ -34,5 +34,17 @@
       "email": "ln-apply-confirm",
       "redirect": "https://fsfe.org/activities/ftf/ln-application-success.html"
     }
+  },
+  "reuse-api": {
+    "required_vars": ["name", "confirm", "project", "obligatory"],
+    "store": "/store/reuse-api/repos.json",
+    "register": {
+      "email": "reuse-api-register",
+      "redirect": "https://api.reuse.software/"
+    },
+    "confirm": {
+      "email": "reuse-api-confirm",
+      "redirect": "https://api.reuse.software/"
+    }
   }
 }
