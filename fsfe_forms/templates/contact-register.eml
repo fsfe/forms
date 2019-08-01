@@ -1,0 +1,5 @@
+From: <{{ from }}>
+To: Free Software Foundation Europe <contact@fsfe.org>
+Subject: {{ subject }}
+
+{{ content }}

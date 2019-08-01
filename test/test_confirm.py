@@ -28,14 +28,15 @@ def test_confirm(client, smtp_mock, redis_mock, file_mock, signed_up):
     assert 'EMAIL@example.com' in logfile
     assert "THE NAME" in logfile
     # Check email sent.
-    email = smtp_mock().__enter__().sendmail.call_args[0]
+    email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email[0] == 'admin@fsfe.org'
+    assert email['From'] == 'THE NAME <EMAIL@example.com>'
     # recipients
-    assert email[1] == ['contact@fsfe.org']
+    assert 'contact@fsfe.org' in email['To']
+    # subject
+    assert email['Subject'] == "New signature to PMPC"
     # content
-    assert "Subject: New signature to PMPC" in email[2]
-    assert "THE NAME" in email[2]
+    assert "THE NAME" in email.as_string()
 
 
 def test_confirm_no_id(client):

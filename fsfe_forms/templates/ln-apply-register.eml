@@ -1,3 +1,7 @@
+From: Free Software Foundation Europe <no-reply@fsfe.org>
+To: {{ format_email(name, confirm) }}
+Subject: Legal Network: Please confirm your membership request
+
 Dear {{ name }},
 
 Thank you for your interest in joining the Legal Network.

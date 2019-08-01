@@ -3,8 +3,8 @@ import uuid
 
 import redis
 
-from fsfe_forms.common.config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from fsfe_forms.common.models import Serializable
+from fsfe_forms.config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 
 storage = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, password=REDIS_PASSWORD)
 
@@ -38,10 +38,6 @@ def get(table: str, id: uuid.UUID, type=None):
 def remove(table: str, id: uuid.UUID):
     key = _sanitize_key(table, id)
     storage.delete(key)
-
-
-def get_queue_tasks_count(queue_name: str):
-    return int(storage.llen(queue_name))
 
 
 def get_all(table: str, type=None):

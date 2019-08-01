@@ -43,15 +43,23 @@ The hostname to listen on.
 The TCP port to listen on.
 
 
+## Ratelimit settings
+
+### `RATELIMIT_DEFAULT`
+
+The default rate limit in the format described
+[here](https://flask-limiter.readthedocs.io/en/stable/#ratelimit-string).
+
+
 ## Email settings
 
-### `SMTP_HOST` and `SMTP_PORT`
+### `MAIL_SERVER` and `MAIL_PORT`
 
 The SMTP server and port to use for sending out all kinds of emails. Defaults
 to `localhost` and `25`.
 
 
-### `SMTP_USERNAME` and `SMTP_PASSWORD`
+### `MAIL_USERNAME` and `MAIL_PASSWORD`
 
 The credentials for the SMTP server. Only needed if the SMTP server requires
 authentication.
@@ -69,6 +77,14 @@ emails.
 ### `REDIS_HOST` and `REDIS_PORT`
 
 Hostname and TCP port of the Redis server.
+
+### `REDIS_PASSWORD`
+
+Optional password for the Redis connection.
+
+### `REDIS_QUEUE_DB`
+
+Redis database number for the double opt-in queue.
 
 
 [`docker-compose.yml`]: ../docker-compose.yml

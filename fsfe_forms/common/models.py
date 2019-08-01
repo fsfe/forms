@@ -12,37 +12,12 @@ class Serializable:
 
 
 class SendData(Serializable):
-    def __init__(self, appid, send_from, send_to, reply_to, subject, template, confirm, confirmed,
-                 request_data, url, lang):
-        self.url = url
+    def __init__(self, request_data):
         self.request_data = request_data
-        self.confirmed = confirmed
-        self.appid = appid
-        self.send_from = send_from
-        self.send_to = send_to
-        self.reply_to = reply_to
-        self.subject = subject
-        self.template = template
-        self.confirm = confirm
-        self.lang = get_secure_lang(lang)
 
     @classmethod
-    def from_request(cls, appid: str, data: dict, url: str):
-        send_from = data.get('from', None)
-        send_to = data.get('to', None)
-        if send_to is not None:
-            send_to = send_to.split(',')
-        reply_to = data.get('replyto', None)
-        subject = data.get('subject', None)
-        template = data.get('template', None)
-        confirm = data.get('confirm', None)
-        lang = data.get('lang', None)
-        request_data = dict()
-        for name in data:
-            if name in ['from', 'to', 'replyto', 'subject', 'template', 'appid']:
-                continue
-            request_data[name] = data[name]
-        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, False, request_data, url, lang)
+    def from_request(cls, data: dict):
+        return cls(data)
 
     def toJSON(self):
         return json.dumps(self.__dict__)
@@ -50,20 +25,7 @@ class SendData(Serializable):
     @classmethod
     def fromJSON(cls, data):
         json_data = json.loads(data)
-        appid = json_data.get('appid', None)
-        send_from = json_data.get('send_from', None)
-        send_to = json_data.get('send_to', None)
-        reply_to = json_data.get('reply_to', None)
-        subject = json_data.get('subject', None)
-        template = json_data.get('template', None)
-        confirm = json_data.get('confirm', None)
-        delivered = json_data.get('delivered', False)
         request_data = json_data.get('request_data', None)
-        url = json_data.get('url', None)
-        lang = json_data.get('lang', None)
-        return cls(appid, send_from, send_to, reply_to, subject, template, confirm, delivered, request_data, url, lang)
-
-def get_secure_lang(lang):
-    if lang and re.match('[a-z]{2}$', lang):
-        return lang
-    return None
+        if not 'appid' in request_data:  # old entries
+            request_data['appid'] = json_data.get('appid')
+        return cls(request_data)

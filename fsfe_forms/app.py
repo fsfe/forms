@@ -16,16 +16,20 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
+import json
+import os
 from logging import ERROR, INFO, Formatter, getLogger
 from logging.handlers import SMTPHandler
 
+import redis
 from flask import Flask
 from flask.logging import default_handler
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from fsfe_forms.common import config
+from fsfe_forms import config
+from fsfe_forms.email import init_email
 from fsfe_forms.views import email, confirm
 
 
@@ -56,14 +60,16 @@ def create_app(testing=False):
 
     # Add a log handler which forwards errors by email
     if not (app.debug or app.testing):  # pragma: no cover
-        if app.config['SMTP_USERNAME'] is not None:
+        if app.config['MAIL_USERNAME'] is not None:
             credentials = (
-                    app.config['SMTP_USERNAME'],
-                    app.config['SMTP_PASSWORD'])
+                    app.config['MAIL_USERNAME'],
+                    app.config['MAIL_PASSWORD'])
         else:
             credentials = None
         handler = SMTPHandler(
-                mailhost=app.config['SMTP_HOST'],
+                mailhost=(
+                    app.config['MAIL_SERVER'],
+                    app.config['MAIL_PORT']),
                 fromaddr=app.config['LOG_EMAIL_FROM'],
                 toaddrs=[app.config['LOG_EMAIL_TO']],
                 subject="Log message from fsfe-forms",
@@ -73,6 +79,21 @@ def create_app(testing=False):
 
     # Initialize Flask-Limiter
     app.limiter = Limiter(app, key_func=get_remote_address)
+
+    # Initialize our own email module
+    init_email(app)
+
+    # Initialize Redis store for double opt-in queue
+    app.queue_db = redis.Redis(
+            host=app.config['REDIS_HOST'],
+            port=app.config['REDIS_PORT'],
+            password=app.config['REDIS_PASSWORD'],
+            db=app.config['REDIS_QUEUE_DB'])
+
+    # Load application configurations
+    filename = os.path.join(os.path.dirname(__file__), 'applications.json')
+    with open(filename) as f:
+        app.app_configs = json.load(f)
 
     # Register views
     app.add_url_rule(rule="/email", view_func=email, methods=["GET", "POST"])

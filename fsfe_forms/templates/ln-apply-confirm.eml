@@ -1,3 +1,8 @@
+From: {{ format_email(name, confirm) }}
+To: Free Software Foundation Europe <contact@fsfe.org>
+Subject: Application for Legal Network membership by {{ name }}
+X-OTRS-Queue: Legal Network
+
 We have received a new application for the Legal Network.
 
 Name: {{ name }}

@@ -1,1 +1,2 @@
-recursive-include fsfe_forms/configuration *
+include fsfe_forms/applications.json
+recursive-include fsfe_forms/templates *

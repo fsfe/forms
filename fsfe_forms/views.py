@@ -16,12 +16,59 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-from flask import redirect, request
+import uuid
+
+from flask import abort, current_app, redirect, request, url_for
+from marshmallow.validate import Regexp
 from webargs.fields import String
-from webargs.flaskparser import use_kwargs
+from webargs.flaskparser import parser, use_kwargs
 
 from fsfe_forms.common.models import SendData
-from fsfe_forms.common.services import SenderService
+from fsfe_forms.common.services import DeliveryService, SenderStorageService
+from fsfe_forms.email import send_email
+from fsfe_forms.queue import queue_pop, queue_push
+
+
+# =============================================================================
+# Helper functions
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Find application config or issue 404 error
+# -----------------------------------------------------------------------------
+
+def _find_app_config(appid):
+    try:
+        return current_app.app_configs[appid]
+    except KeyError:
+        abort(404, f'No application configuration for "{appid}"')
+
+
+# -----------------------------------------------------------------------------
+# Send email, store data, and redirect
+# -----------------------------------------------------------------------------
+
+def _process(config, params, id=None, store=None):
+
+    # Send out email
+    message = send_email(
+            template=config['email'],
+            confirmation_url=url_for('confirm', _external=True, id=id),
+            **params)
+
+    # Store data in JSON log
+    if store:
+        DeliveryService.log(
+                store,
+                message['From'],
+                [message['To']],
+                message['Subject'],
+                message.get_content(),
+                message['Reply-To'],
+                params)
+
+    # Redirect the user's browser
+    return redirect(config['redirect'])
 
 
 # =============================================================================
@@ -29,14 +76,48 @@ from fsfe_forms.common.services import SenderService
 # =============================================================================
 
 email_parameters = {
-        "appid": String(required=True)}
+        "appid": String(required=True),
+        "lang": String(validate=Regexp('^[a-z]{2}$'), missing=None)}
 
 
 @use_kwargs(email_parameters)
-def email(appid):
-    send_data = SendData.from_request(appid, request.values, request.url)
-    config = SenderService.validate_and_send_email(send_data)
-    return redirect(config.redirect)
+def email(appid, lang):
+    # Load application configuration
+    app_config = _find_app_config(appid)
+
+    # Load dictionary of all request parameters
+    params = dict(request.values)
+
+    # Validate required parameters
+    for field in app_config['required_vars']:
+        if field not in params:
+            raise abort(400, f'"{field}" is required')
+
+    if 'confirm' in app_config:         # With double opt-in
+        if params.get('confirm') is None:
+            abort(400, '"Confirm" address is required')
+
+        # Optionally, check for a confirmed previous registration, and if
+        # found, refuse the duplicate
+        if 'duplicate' in app_config \
+                and DeliveryService.find(
+                        app_config['store'],
+                        params['confirm']):
+            return _process(
+                    config=app_config['duplicate'],
+                    params=params)
+        else:
+            id = SenderStorageService.store_data(SendData.from_request(params))
+            queue_push(id, params)
+            return _process(
+                    config=app_config['register'],
+                    params=params,
+                    id=id)
+    else:                               # Without double opt-in
+        return _process(
+                config=app_config['register'],
+                params=params,
+                store=app_config.get('store'))
 
 
 # =============================================================================
@@ -49,5 +130,15 @@ confirm_parameters = {
 
 @use_kwargs(confirm_parameters)
 def confirm(id):
-    config = SenderService.confirm_email(id)
-    return redirect(config.redirect_confirmed or config.redirect)
+    queue_pop(uuid.UUID(id))
+    data = SenderStorageService.resolve_data(uuid.UUID(id))
+    if data is None:
+        abort(404, 'Confirmation ID is Not Found')
+    params = data.request_data
+
+    app_config = _find_app_config(params['appid'])
+
+    return _process(
+            config=app_config['confirm'],
+            params=params,
+            store=app_config['store'])
