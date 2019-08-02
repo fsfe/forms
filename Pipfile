@@ -7,7 +7,7 @@ filelock = "*"
 flask = "*"
 flask-limiter = "*"
 gunicorn = "*"
-redis = "*"
+redis = "==3.2"  # for compatibility with fakeredis
 webargs = "*"
 
 [dev-packages]
