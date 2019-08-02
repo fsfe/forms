@@ -91,7 +91,8 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     assert email['Subject'] == "Public Code: Please confirm your signature"
 
 
-def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up):
+def test_email_get_duplicate(
+        client, smtp_mock, redis_mock, file_mock, signed_up):
     response = client.get(
             path='/email',
             data={
