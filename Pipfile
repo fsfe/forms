@@ -12,6 +12,9 @@ webargs = "*"
 
 [dev-packages]
 fakeredis = "*"
+isort = "*"
+pylama = "*"
+pytest = "*"
 pytest-cov = "*"
 pytest-flask = "*"
 pytest-mock = "*"
