@@ -17,7 +17,8 @@
 # =============================================================================
 
 from flask import (
-        abort, current_app, redirect, render_template, request, url_for)
+        abort, current_app, redirect, render_template, render_template_string,
+        request, url_for)
 from marshmallow.validate import Regexp
 from webargs.fields import String, UUID
 from webargs.flaskparser import parser, use_kwargs
@@ -49,10 +50,11 @@ def _find_app_config(appid):
 def _process(config, params, id=None, store=None):
 
     # Send out email
-    message = send_email(
-            template=config['email'],
-            confirmation_url=url_for('confirm', _external=True, id=id),
-            **params)
+    if 'email' in config:
+        message = send_email(
+                template=config['email'],
+                confirmation_url=url_for('confirm', _external=True, id=id),
+                **params)
 
     # Store data in JSON log
     if store:
@@ -66,7 +68,7 @@ def _process(config, params, id=None, store=None):
                 params)
 
     # Redirect the user's browser
-    return redirect(config['redirect'])
+    return redirect(render_template_string(config['redirect'], **params))
 
 
 # =============================================================================

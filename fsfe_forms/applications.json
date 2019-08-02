@@ -43,7 +43,6 @@
       "redirect": "https://api.reuse.software/"
     },
     "confirm": {
-      "email": "reuse-api-confirm",
       "redirect": "https://api.reuse.software/"
     }
   }
