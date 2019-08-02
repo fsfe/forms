@@ -54,11 +54,13 @@ def queue_push(data: dict) -> uuid.UUID:
         if old_data['appid'] == data['appid'] \
                 and old_data['confirm'] == data['confirm']:
             _set(id, data, current_app.queue_db.ttl(id.hex))
+            current_app.logger.info(f"UUID {id} reused")
             return id
 
     # None found, so generate a new id
     id = uuid.uuid4()
     _set(id, data, current_app.config['CONFIRMATION_EXPIRATION_SECS'])
+    current_app.logger.info(f"UUID {id} created")
     return id
 
 
@@ -69,4 +71,5 @@ def queue_push(data: dict) -> uuid.UUID:
 def queue_pop(id: uuid.UUID) -> dict:
     result = _get(id)
     current_app.queue_db.delete(id.hex)
+    current_app.logger.info(f"UUID {id} deleted")
     return result
