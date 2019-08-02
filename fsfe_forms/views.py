@@ -21,7 +21,7 @@ from flask import (
     request, url_for)
 from marshmallow.validate import Regexp
 from webargs.fields import UUID, String
-from webargs.flaskparser import parser, use_kwargs
+from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
 from fsfe_forms.email import send_email
