@@ -16,10 +16,11 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-import filelock
 import json
 import os
 import time
+
+import filelock
 
 from fsfe_forms.config import LOCK_FILENAME
 

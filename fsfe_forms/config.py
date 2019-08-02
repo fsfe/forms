@@ -18,6 +18,7 @@
 
 from os import environ
 
+
 # Parameters for Flask-Limiter
 RATELIMIT_DEFAULT = environ.get('RATELIMIT_DEFAULT')
 

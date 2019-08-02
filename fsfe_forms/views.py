@@ -17,10 +17,10 @@
 # =============================================================================
 
 from flask import (
-        abort, current_app, redirect, render_template, render_template_string,
-        request, url_for)
+    abort, current_app, redirect, render_template, render_template_string,
+    request, url_for)
 from marshmallow.validate import Regexp
-from webargs.fields import String, UUID
+from webargs.fields import UUID, String
 from webargs.flaskparser import parser, use_kwargs
 
 from fsfe_forms import json_store
