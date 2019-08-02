@@ -23,7 +23,7 @@ from marshmallow.validate import Regexp
 from webargs.fields import String, UUID
 from webargs.flaskparser import parser, use_kwargs
 
-from fsfe_forms.common.services import DeliveryService
+from fsfe_forms import json_store
 from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
 
@@ -58,7 +58,7 @@ def _process(config, params, id=None, store=None):
 
     # Store data in JSON log
     if store:
-        DeliveryService.log(
+        json_store.log(
                 store,
                 message['From'],
                 [message['To']],
@@ -108,7 +108,7 @@ def email(appid, lang):
         # Optionally, check for a confirmed previous registration, and if
         # found, refuse the duplicate
         if 'duplicate' in app_config \
-                and DeliveryService.find(
+                and json_store.find(
                         app_config['store'],
                         params['confirm']):
             return _process(

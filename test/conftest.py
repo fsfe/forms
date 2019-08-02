@@ -49,7 +49,7 @@ def redis_mock(mocker):
 def file_mock(mocker):
     mocker.patch('os.makedirs')
     return mocker.patch(
-            'fsfe_forms.common.services.DeliveryService.open',
+            'fsfe_forms.json_store.open',
             mocker.mock_open(read_data="[\n]"))
 
 
