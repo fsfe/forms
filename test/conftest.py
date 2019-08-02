@@ -18,6 +18,9 @@
 
 import pytest
 from fakeredis import FakeRedis
+from flask import url_for
+
+from fsfe_forms import config, create_app
 
 
 # -----------------------------------------------------------------------------
@@ -56,10 +59,8 @@ def file_mock(mocker):
 
 @pytest.fixture
 def app(redis_mock):
-    # Redis must be patched before we import the app, since the connection is
-    # created in module init code.
-    from fsfe_forms import create_app
-    return create_app(testing=True)
+    config.TESTING = True
+    return create_app()
 
 
 # -----------------------------------------------------------------------------
@@ -67,7 +68,7 @@ def app(redis_mock):
 # -----------------------------------------------------------------------------
 
 @pytest.fixture
-def signed_up(client):
+def signed_up(client, smtp_mock):
     client.get(
             path='/email',
             data={
@@ -75,5 +76,7 @@ def signed_up(client):
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})
     # Return the confirmation ID
-    from fsfe_forms.common.services.StorageService import storage
-    return storage.keys()[0].split(b':')[-1]
+    email = smtp_mock().__enter__().send_message.call_args[0][0]
+    for line in email.as_string().splitlines():
+        if url_for('confirm') in line:
+            return line.split('=3D')[-1]

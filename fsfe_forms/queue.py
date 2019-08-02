@@ -29,8 +29,7 @@ from flask import abort, current_app
 def _get(id: uuid.UUID) -> dict:
     data = current_app.queue_db.get(id.hex)
     if data is None:
-        # abort(404, "No such pending confirmation ID")
-        return
+        abort(404, "No such pending confirmation ID")
     return json.loads(data.decode('utf-8'))
 
 
@@ -42,7 +41,7 @@ def _set(id: uuid.UUID, data: dict, ttl: int):
 # Push a new registration to the queue
 # =============================================================================
 
-def queue_push(the_id: uuid.UUID, data: dict) -> uuid.UUID:
+def queue_push(data: dict) -> uuid.UUID:
 
     # Check for an unconfirmed previous registration, and if found, update and
     # reuse that one
@@ -58,8 +57,7 @@ def queue_push(the_id: uuid.UUID, data: dict) -> uuid.UUID:
             return id
 
     # None found, so generate a new id
-    # id = uuid.uuid4()
-    id = the_id
+    id = uuid.uuid4()
     _set(id, data, current_app.config['CONFIRMATION_EXPIRATION_SECS'])
     return id
 

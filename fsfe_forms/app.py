@@ -37,7 +37,7 @@ from fsfe_forms.views import email, confirm
 # Main application factory
 # =============================================================================
 
-def create_app(testing=False):
+def create_app():
     app = Flask(__name__.split('.')[0])
 
     # This enables Flask-Limiter to detect the real remote address even though
@@ -46,8 +46,6 @@ def create_app(testing=False):
 
     # Read configuration
     app.config.from_object(config)
-    if testing:
-        app.config['TESTING'] = True
 
     # Configure the root logger
     root_logger = getLogger()

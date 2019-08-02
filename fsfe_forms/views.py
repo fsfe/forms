@@ -23,8 +23,7 @@ from marshmallow.validate import Regexp
 from webargs.fields import String
 from webargs.flaskparser import parser, use_kwargs
 
-from fsfe_forms.common.models import SendData
-from fsfe_forms.common.services import DeliveryService, SenderStorageService
+from fsfe_forms.common.services import DeliveryService
 from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
 
@@ -107,8 +106,7 @@ def email(appid, lang):
                     config=app_config['duplicate'],
                     params=params)
         else:
-            id = SenderStorageService.store_data(SendData.from_request(params))
-            queue_push(id, params)
+            id = queue_push(params)
             return _process(
                     config=app_config['register'],
                     params=params,
@@ -130,11 +128,7 @@ confirm_parameters = {
 
 @use_kwargs(confirm_parameters)
 def confirm(id):
-    queue_pop(uuid.UUID(id))
-    data = SenderStorageService.resolve_data(uuid.UUID(id))
-    if data is None:
-        abort(404, 'Confirmation ID is Not Found')
-    params = data.request_data
+    params = queue_pop(uuid.UUID(id))
 
     app_config = _find_app_config(params['appid'])
 
