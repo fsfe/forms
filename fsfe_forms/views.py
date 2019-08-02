@@ -16,11 +16,9 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-import uuid
-
 from flask import abort, current_app, redirect, request, url_for
 from marshmallow.validate import Regexp
-from webargs.fields import String
+from webargs.fields import String, UUID
 from webargs.flaskparser import parser, use_kwargs
 
 from fsfe_forms.common.services import DeliveryService
@@ -123,12 +121,12 @@ def email(appid, lang):
 # =============================================================================
 
 confirm_parameters = {
-        "id": String(required=True)}
+        "id": UUID(required=True)}
 
 
 @use_kwargs(confirm_parameters)
 def confirm(id):
-    params = queue_pop(uuid.UUID(id))
+    params = queue_pop(id)
 
     app_config = _find_app_config(params['appid'])
 

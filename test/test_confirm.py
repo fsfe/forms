@@ -45,9 +45,8 @@ def test_confirm_no_id(client):
     assert response.status_code == 422
 
 
-# FIXME: not well handled yet.
-#def test_confirm_bad_id(client):
-#    response = client.get(
-#            path='/confirm',
-#            data={'id': 'BAD-ID'},
-#    assert response.status_code == 404
+def test_confirm_bad_id(client):
+    response = client.get(
+            path='/confirm',
+            data={'id': 'BAD-ID'})
+    assert response.status_code == 422
