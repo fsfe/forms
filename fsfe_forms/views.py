@@ -16,7 +16,8 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-from flask import abort, current_app, redirect, request, url_for
+from flask import (
+        abort, current_app, redirect, render_template, request, url_for)
 from marshmallow.validate import Regexp
 from webargs.fields import String, UUID
 from webargs.flaskparser import parser, use_kwargs
@@ -66,6 +67,14 @@ def _process(config, params, id=None, store=None):
 
     # Redirect the user's browser
     return redirect(config['redirect'])
+
+
+# =============================================================================
+# Index endpoint (shows static information page)
+# =============================================================================
+
+def index():
+    return render_template("index.html")
 
 
 # =============================================================================
