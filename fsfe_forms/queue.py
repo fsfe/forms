@@ -45,11 +45,7 @@ def queue_push(data: dict) -> uuid.UUID:
 
     # Check for an unconfirmed previous registration, and if found, update and
     # reuse that one
-    for key in current_app.queue_db.keys():
-        try:
-            id = uuid.UUID(key.decode())
-        except ValueError:  # Keys in old format
-            continue
+    for id in [uuid.UUID(key.decode()) for key in current_app.queue_db.keys()]:
         old_data = _get(id)
         if old_data['appid'] == data['appid'] \
                 and old_data['confirm'] == data['confirm']:

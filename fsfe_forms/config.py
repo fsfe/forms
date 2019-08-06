@@ -44,6 +44,3 @@ LOCK_FILENAME = environ.get('LOCK_FILENAME', '/tmp/forms.lock')
 # Expiration time for double opt-in confirmation
 # (None means no expiration)
 CONFIRMATION_EXPIRATION_SECS = 86400
-
-# Prefix for REDIS keys
-SENDER_TABLE = 'sender'
