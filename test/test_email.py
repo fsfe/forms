@@ -79,8 +79,7 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     assert response.status_code == 302
     assert response.location == 'https://publiccode.eu/openletter/confirm'
     # Check no logfile written (yet).
-    # FIXME: Writes an "empty" logfile, but this would not be necessary here.
-    assert file_mock().write.call_args[0][0] == "[]"
+    assert not file_mock().write.called
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
@@ -102,8 +101,7 @@ def test_email_get_duplicate(
     assert response.status_code == 302
     assert response.location == 'https://publiccode.eu/openletter/confirm'
     # Check no logfile written (yet).
-    # FIXME: Writes an "empty" logfile, but this would not be necessary here.
-    assert file_mock().write.call_args[0][0] == "[]"
+    assert not file_mock().write.called
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
