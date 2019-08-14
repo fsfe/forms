@@ -17,13 +17,12 @@
 # =============================================================================
 
 import json
+import logging
+import logging.handlers
 import os
-from logging import ERROR, INFO, Formatter, getLogger
-from logging.handlers import SMTPHandler
 
 import redis
 from flask import Flask
-from flask.logging import default_handler
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -48,13 +47,9 @@ def create_app():
     app.config.from_object(config)
 
     # Configure the root logger
-    root_logger = getLogger()
-    root_logger.setLevel(INFO)
-
-    # Add the flask default log handler
-    default_handler.setFormatter(Formatter(
-        '[%(asctime)s] (%(name)s) %(levelname)s: %(message)s'))
-    root_logger.addHandler(default_handler)
+    logging.basicConfig(
+            format='[%(asctime)s] (%(name)s) %(levelname)s: %(message)s',
+            level=(logging.DEBUG if app.debug else logging.INFO))
 
     # Add a log handler which forwards errors by email
     if not (app.debug or app.testing):  # pragma: no cover
@@ -64,7 +59,7 @@ def create_app():
                     app.config['MAIL_PASSWORD'])
         else:
             credentials = None
-        handler = SMTPHandler(
+        handler = logging.handlers.SMTPHandler(
                 mailhost=(
                     app.config['MAIL_SERVER'],
                     app.config['MAIL_PORT']),
@@ -72,8 +67,8 @@ def create_app():
                 toaddrs=[app.config['LOG_EMAIL_TO']],
                 subject="Log message from fsfe-forms",
                 credentials=credentials)
-        handler.setLevel(ERROR)
-        root_logger.addHandler(handler)
+        handler.setLevel(logging.ERROR)
+        logging.getLogger().addHandler(handler)
 
     # Initialize Flask-Limiter
     app.limiter = Limiter(app, key_func=get_remote_address)
