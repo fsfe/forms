@@ -17,7 +17,7 @@
 # details <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 setup(
@@ -27,7 +27,7 @@ setup(
     author="Free Software Foundation Europe",
     author_email="contact@fsfe.org",
     license="GPL",
-    packages=find_packages(exclude=["tests"]),
+    packages="fsfe_forms",
     include_package_data=True,
     zip_safe=False
 )
