@@ -27,7 +27,6 @@ pipeline:
   quality:
     image: fsfe-forms-quality
     commands:
-      - export $(grep -v "#" .env)
       - isort --check-only --diff
       - pylama
       - pytest

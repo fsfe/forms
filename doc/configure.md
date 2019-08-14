@@ -1,46 +1,15 @@
 # How to configure fsfe-forms
 
-Configuration parameters for fsfe-forms must be set through environment
+Configuration parameters for fsfe-forms can be set through environment
 variables.
 
+For testing and debugging, the default configuration should be suitable for
+many use cases. If you need to explicity set any of the parameters, you can
+create a `.env` file in the project root directory, which will automatically be
+read whenever the "pipenv" virtual environment is entered.
+
 The configuration for the production instance of fsfe-forms is set in
-[`docker-compose.yml`]. On the other hand, the file [`.env`], which is read
-automatically when entering the “pipenv” virtual environment, contains settings
-suitable for testing and debugging.
-
-
-## Flask server settings
-
-These settings are only relevant for the Flask builtin web server, which is
-very nice for testing and debugging, but not recommended for production.
-
-
-### `FLASK_SKIP_DOTENV`
-
-In the virtual environment setup used for the development of fsfe-forms, the
-.env file is parsed by `pipenv`, so we always set this to `1`.
-
-
-### `FLASK_APP`
-
-This tells the Flask server where to find the application object. Always set to
-`fsfe_cd_front`.
-
-
-### `FLASK_ENV`
-
-Since we don't use the Flask server for production, this is always set to
-`development`.
-
-
-### `FLASK_RUN_HOST`
-
-The hostname to listen on.
-
-
-### `FLASK_RUN_PORT`
-
-The TCP port to listen on.
+[`docker-compose.yml`].
 
 
 ## Ratelimit settings
@@ -49,6 +18,7 @@ The TCP port to listen on.
 
 The default rate limit in the format described
 [here](https://flask-limiter.readthedocs.io/en/stable/#ratelimit-string).
+Defaults to no rate limit.
 
 
 ## Email settings
@@ -62,30 +32,29 @@ to `localhost` and `25`.
 ### `MAIL_USERNAME` and `MAIL_PASSWORD`
 
 The credentials for the SMTP server. Only needed if the SMTP server requires
-authentication.
+authentication. Defaults to no authentication.
 
 
 ### `LOG_EMAIL_FROM` and `LOG_EMAIL_TO`
 
 In a production environment, fsfe-forms sends log messages of severity
 “ERROR” or worse by email. These are the “From” and “To“ address for these
-emails.
+emails. No default.
 
 
 ## Parameters for the connection to the Redis server
 
 ### `REDIS_HOST` and `REDIS_PORT`
 
-Hostname and TCP port of the Redis server.
+Hostname and TCP port of the Redis server. Defaults to `localhost` and `6379`.
 
 ### `REDIS_PASSWORD`
 
-Optional password for the Redis connection.
+Optional password for the Redis connection. Defaults to no password.
 
 ### `REDIS_QUEUE_DB`
 
-Redis database number for the double opt-in queue.
+Redis database number for the double opt-in queue. Defaults to `0`.
 
 
 [`docker-compose.yml`]: ../docker-compose.yml
-[`.env`]: ../.env

@@ -1,3 +1,6 @@
+# Local configuration
+.env
+
 # Created by Python running locally
 __pycache__/
 
