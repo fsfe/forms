@@ -32,11 +32,6 @@ with Flask's built-in web server in debug mode. Alternatively, you can run
 `make gunicorn` to use the gunicorn web server, which is the variant used in
 production.
 
-For all the above commands, the [configuration variables](configure.md) defined
-in the file [`.env`](../.env) are used. They should work for most development
-setups, but if you need to do any modification, make sure that you don't
-accidentally commit your changes.
-
 
 ## Automatic quality checks
 
@@ -45,8 +40,7 @@ The following commands are available for automatic quality checks:
 * `make isort` to verify the correct sorting of imports.
 * `make lint` to verify the compliance with coding standards.
 * `make pytest` to run the functional tests defined in the [tests](../tests)
-  directory, again using the [configuration variables](configure.md) defined in
-  the file [`.env`](../.env).
+  directory.
 * `make quality` to run all of the above tests.
 
 All these tests are also run during the deployment process, and updating the
