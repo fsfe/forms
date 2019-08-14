@@ -27,7 +27,7 @@ setup(
     author="Free Software Foundation Europe",
     author_email="contact@fsfe.org",
     license="GPL",
-    packages="fsfe_forms",
+    packages=["fsfe_forms"],
     include_package_data=True,
     zip_safe=False
 )
