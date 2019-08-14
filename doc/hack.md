@@ -44,7 +44,7 @@ The following commands are available for automatic quality checks:
 
 * `make isort` to verify the correct sorting of imports.
 * `make lint` to verify the compliance with coding standards.
-* `make pytest` to run the functional tests defined in the [test](../test)
+* `make pytest` to run the functional tests defined in the [tests](../tests)
   directory, again using the [configuration variables](configure.md) defined in
   the file [`.env`](../.env).
 * `make quality` to run all of the above tests.
