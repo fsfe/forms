@@ -49,23 +49,27 @@ def _find_app_config(appid):
 
 def _process(config, params, id=None, store=None):
 
-    # Send out email
     if 'email' in config:
+        # Send out email
         message = send_email(
                 template=config['email'],
                 confirmation_url=url_for('confirm', _external=True, id=id),
                 **params)
 
-    # Store data in JSON log
-    if store:
-        json_store.log(
-                store,
-                message['From'],
-                [message['To']],
-                message['Subject'],
-                message.get_content(),
-                message['Reply-To'],
-                params)
+        # Store data in JSON log
+        if store:
+            json_store.log(
+                    store,
+                    message['From'],
+                    [message['To']],
+                    message['Subject'],
+                    message.get_content(),
+                    message['Reply-To'],
+                    params)
+    else:
+        # Store data in JSON log without having sent an email
+        if store:
+            json_store.log(store, "", [""], "", "", "", params)
 
     # Redirect the user's browser
     return redirect(render_template_string(config['redirect'], **params))
