@@ -36,7 +36,7 @@
     }
   },
   "reuse-api": {
-    "required_vars": ["name", "confirm", "project", "obligatory"],
+    "required_vars": ["name", "confirm", "project"],
     "store": "/store/reuse-api/repos.json",
     "register": {
       "email": "reuse-api-register",
