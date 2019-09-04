@@ -43,7 +43,7 @@
       "redirect": "https://api.reuse.software/"
     },
     "confirm": {
-      "redirect": "https://api.reuse.software/"
+      "redirect": "https://api.reuse.software/info/{{project}}"
     }
   }
 }
