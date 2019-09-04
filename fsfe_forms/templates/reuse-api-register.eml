@@ -1,20 +1,24 @@
-From: Free Software Foundation Europe <no-reply@fsfe.org>
+From: REUSE API <no-reply@fsfe.org>
 To: {{ format_email(name, confirm) }}
 Subject: REUSE API - confirm your project
 
 Dear {{ name }},
 
-Thank you for your interest in making your project REUSE compliant!
+Thank you for your interest in making your project {{ project }}
+REUSE compliant!
 
 Please confirm your request by clicking on the link below:
 
   {{ confirmation_url }}
 
 The link is valid for the next 24 hours. If you do not confirm your 
-email, your project will not be checked for REUSE compliance.
+email address, your project will not be checked for REUSE compliance.
+
+After successful confirmation, you will be able to see the REUSE status
+on https://api.reuse.software/info/{{ project }}.
 
 Best regards,
-The REUSE Initiative
+The FSFE's REUSE team
 
 -- 
 You received this email because a registration form has been submitted 
