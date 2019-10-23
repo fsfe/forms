@@ -91,6 +91,10 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
                 smtp.login(
                         user=current_app.config['MAIL_USERNAME'],
                         password=current_app.config['MAIL_PASSWORD'])
-            smtp.send_message(message)
+            try:
+                smtp.send_message(message)
+            except smtplib.SMTPRecipientsRefused:
+                # Ignore errors from invalid email addresses entered
+                pass
 
     return message
