@@ -22,6 +22,11 @@ pipeline:
       - pylama
       - pytest
 
+  reuse:
+    image: fsfe/reuse:latest
+    commands:
+      - reuse lint
+
   deploy:
     image: tmaier/docker-compose
     volumes:
