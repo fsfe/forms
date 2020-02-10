@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020 Free Software Foundation Europe <contact@fsfe.org>
+
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # How to hack on fsfe-forms
 
 ## Development environment setup

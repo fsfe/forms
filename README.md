@@ -1,6 +1,14 @@
+<!--
+SPDX-FileCopyrightText: 2020 Free Software Foundation Europe <contact@fsfe.org>
+SPDX-FileCopyrightText: 2019 Florian Vuillemot <florian.vuillemot@fsfe.org>
+
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # forms API
 
 [![Build Status](https://drone.fsfe.org/api/badges/fsfe-system-hackers/forms/status.svg)](https://drone.fsfe.org/fsfe-system-hackers/forms)
+[![REUSE status](https://api.reuse.software/badge/git.fsfe.org/fsfe-system-hackers/forms)](https://api.reuse.software/info/git.fsfe.org/fsfe-system-hackers/forms)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
 The forms API, available under <https://forms.fsfe.org> can be used to send
@@ -263,6 +271,7 @@ On `http://localhost:1080` you can then see the sent emails.
 
 ## License
 
-This software is copyright 2019 by the Free Software Foundation Europe e.V.
-and licensed under the GPLv3 license. For details see the "LICENSE" file in
-the top level directory of https://git.fsfe.org/fsfe-system-hackers/forms/
+This project is mainly licensed under GPL-3.0-or-later, but also
+contains components under CC-BY-SA-4.0 and CC0-1.0. It is fully [REUSE
+compliant](https://reuse.software) so it contains licensing and
+copyright information for every file.
