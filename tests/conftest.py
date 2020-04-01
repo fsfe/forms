@@ -62,7 +62,7 @@ def app(redis_mock):
 def signed_up(client, smtp_mock):
     client.get(
             path='/email',
-            data={
+            query_string={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})

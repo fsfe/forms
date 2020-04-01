@@ -19,7 +19,7 @@
 def test_email_get(client, smtp_mock, redis_mock, file_mock):
     response = client.get(
             path='/email',
-            data={
+            query_string={
                 'appid': 'contact',
                 'from': 'EMAIL@example.com',
                 'subject': "EMAIL-SUBJECT",
@@ -52,7 +52,7 @@ def test_email_get_no_params(client):
 def test_email_get_bad_appid(client):
     response = client.get(
             path='/email',
-            data={'appid': 'BAD-APPID'})
+            query_string={'appid': 'BAD-APPID'})
     assert response.status_code == 404
 
 
@@ -63,7 +63,7 @@ def test_email_get_bad_appid(client):
 def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     response = client.get(
             path='/email',
-            data={
+            query_string={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})
@@ -85,7 +85,7 @@ def test_email_get_duplicate(
         client, smtp_mock, redis_mock, file_mock, signed_up):
     response = client.get(
             path='/email',
-            data={
+            query_string={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com'})

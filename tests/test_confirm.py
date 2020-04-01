@@ -11,7 +11,7 @@
 def test_confirm(client, smtp_mock, redis_mock, file_mock, signed_up):
     response = client.get(
             path='/confirm',
-            data={'id': signed_up})
+            query_string={'id': signed_up})
     assert response.status_code == 302
     assert response.location == 'https://publiccode.eu/openletter/success'
     # Check logfile written.
@@ -39,5 +39,5 @@ def test_confirm_no_id(client):
 def test_confirm_bad_id(client):
     response = client.get(
             path='/confirm',
-            data={'id': 'BAD-ID'})
+            query_string={'id': 'BAD-ID'})
     assert response.status_code == 422
