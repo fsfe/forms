@@ -11,13 +11,23 @@
 from flask import (
     abort, current_app, redirect, render_template, render_template_string,
     request, url_for)
-from marshmallow.validate import Regexp
-from webargs.fields import UUID, String
+from marshmallow import Schema
+from marshmallow.fields import UUID, Boolean, Email, String
+from marshmallow.validate import Equal, Length, Regexp
 from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
 from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
+
+
+# =============================================================================
+# Exception classes
+# =============================================================================
+
+class AppConfigError(Exception):
+    def __init__(self, message):
+        self.message = f"Error in application configuration: {message}"
 
 
 # =============================================================================
@@ -33,6 +43,55 @@ def _find_app_config(appid):
         return current_app.app_configs[appid]
     except KeyError:
         abort(404, f'No application configuration for "{appid}"')
+
+
+# -----------------------------------------------------------------------------
+# Validate parameters
+# -----------------------------------------------------------------------------
+
+def _validate(config: dict, params: dict, confirm: bool):  # noqa
+
+    # Build Marshmallow Schema from configuration
+    fields = {
+            "appid": String(required=True),
+            "lang": String(validate=Regexp(r"^[a-z]{2}$"), missing=None),
+    }
+    if confirm:
+        fields["confirm"] = Email(required=True)
+    for name, options in config.items():
+        field_class = String
+        validate = []
+        required = False
+        for opt in options:
+            if opt == "boolean":
+                field_class = Boolean
+            elif opt == "email":
+                field_class = Email
+            elif opt == "forbidden":
+                validate.append(Length(equal=0))
+            elif opt == "mandatory":
+                field_class = Boolean
+                required = True
+                validate.append(Equal(True, error="Mandatory."))
+            elif opt == "required":
+                required = True
+            elif opt == "single-line":
+                validate.append(Regexp(r"^[^\r\n]*$"))
+            else:
+                raise AppConfigError(
+                        "Invalid option {opt} for parameter {name}")
+        kwargs = {"required": required, "validate": validate}
+        if not required:
+            kwargs["missing"] = None
+        fields[name] = field_class(**kwargs)
+    schema = Schema.from_dict(fields)()
+
+    # Do the actual validation; don't use the deserialized values because we
+    # want for example "yes" to remain "yes" and not change to True
+    errors = schema.validate(params)
+    if errors:
+        messages = [k + ": " + " ".join(v) for k, v in errors.items()]
+        abort(422, "\n".join(messages))
 
 
 # -----------------------------------------------------------------------------
@@ -79,28 +138,17 @@ def index():
 # Registration endpoint
 # =============================================================================
 
-email_parameters = {
-        "appid": String(required=True),
-        "lang": String(validate=Regexp('^[a-z]{2}$'), missing=None)}
+def email():
+    # Remove all empty parameters
+    params = {k: v for k, v in request.values.items() if v != ""}
 
-
-@use_kwargs(email_parameters)
-def email(appid, lang):
     # Load application configuration
-    app_config = _find_app_config(appid)
-
-    # Load dictionary of all request parameters
-    params = dict(request.values)
+    app_config = _find_app_config(params.get("appid"))
 
     # Validate required parameters
-    for field in app_config['required_vars']:
-        if field not in params:
-            raise abort(400, f'"{field}" is required')
+    _validate(app_config["parameters"], params, "confirm" in app_config)
 
     if 'confirm' in app_config:         # With double opt-in
-        if params.get('confirm') is None:
-            abort(400, '"Confirm" address is required')
-
         # Optionally, check for a confirmed previous registration, and if
         # found, refuse the duplicate
         if 'duplicate' in app_config \
@@ -131,7 +179,7 @@ confirm_parameters = {
         "id": UUID(required=True)}
 
 
-@use_kwargs(confirm_parameters)
+@use_kwargs(confirm_parameters, location="query")
 def confirm(id):
     params = queue_pop(id)
 

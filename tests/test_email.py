@@ -46,7 +46,7 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
 def test_email_get_no_params(client):
     response = client.get(
             path='/email')
-    assert response.status_code == 422
+    assert response.status_code == 404
 
 
 def test_email_get_bad_appid(client):
@@ -66,7 +66,8 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
             query_string={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
-                'confirm': 'EMAIL@example.com'})
+                'confirm': 'EMAIL@example.com',
+                'permissionPriv': 'yes'})
     assert response.status_code == 302
     assert response.location == 'https://publiccode.eu/openletter/confirm'
     # Check no logfile written (yet).
@@ -88,7 +89,8 @@ def test_email_get_duplicate(
             query_string={
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
-                'confirm': 'EMAIL@example.com'})
+                'confirm': 'EMAIL@example.com',
+                'permissionPriv': 'yes'})
     assert response.status_code == 302
     assert response.location == 'https://publiccode.eu/openletter/confirm'
     # Check no logfile written (yet).
@@ -141,7 +143,7 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
 def test_email_post_no_params(client):
     response = client.post(
             path='/email')
-    assert response.status_code == 422
+    assert response.status_code == 404
 
 
 def test_email_post_bad_appid(client):

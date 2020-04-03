@@ -1,6 +1,10 @@
 {
   "contact": {
-    "required_vars": ["content"],
+    "parameters": {
+      "from": ["required", "email"],
+      "subject": ["required", "single-line"],
+      "content": ["required"]
+    },
     "store": "/store/contact/contact.json",
     "register": {
       "email": "contact-register",
@@ -8,7 +12,16 @@
     }
   },
   "pmpc-sign": {
-    "required_vars": ["name"],
+    "parameters": {
+      "name": ["required", "single-line"],
+      "country": [],
+      "zip": [],
+      "comment": [],
+      "permissionPriv": ["mandatory"],
+      "permissionPub": ["boolean"],
+      "permissionNews": ["boolean"],
+      "url": ["forbidden"]
+    },
     "store": "/store/pmpc/signatures.json",
     "register": {
       "email": "pmpc-sign-register",
@@ -24,7 +37,14 @@
     }
   },
   "ln-apply": {
-    "required_vars": ["name", "confirm", "activities"],
+    "parameters": {
+      "name": ["required", "single-line"],
+      "activities": ["required"],
+      "profiles": [],
+      "references": [],
+      "sponsors": [],
+      "obligatory": ["mandatory"]
+    },
     "store": "/store/ln/applications.json",
     "register": {
       "email": "ln-apply-register",
@@ -37,6 +57,11 @@
   },
   "reuse-api": {
     "required_vars": ["name", "confirm", "project"],
+    "parameters": {
+      "name": ["required", "single-line"],
+      "project": ["required"],
+      "wantupdates": ["boolean"]
+    },
     "store": "/store/reuse-api/repos.json",
     "register": {
       "email": "reuse-api-register",
