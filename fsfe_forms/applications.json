@@ -56,7 +56,6 @@
     }
   },
   "reuse-api": {
-    "required_vars": ["name", "confirm", "project"],
     "parameters": {
       "name": ["required", "single-line"],
       "project": ["required"],

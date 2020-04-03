@@ -45,7 +45,12 @@ The application configuration could look like this:
 
 ```json
   "totick2": {
-    "required_vars": ["country", "message", "participant_name"],
+    "parameters": {
+      "participant_name": ["required", "single-line"],
+      "from": ["email"],
+      "country": [],
+      "message": ["required"]
+    }
     "register": {
       "email": "totick2-template",
       "redirect": "https://fsfe.org"
@@ -95,7 +100,10 @@ The configuration could look like this:
 
 ```json
   "tosign": {
-    "required_vars": ["name", "confirm", "country"]
+    "parameters": {
+      "name": ["required", "single-line"],
+      "country": []
+    }
     "store": "/store/campaign2.json",
     "register": {
       "email": "tosign-register",
@@ -107,6 +115,9 @@ The configuration could look like this:
     }
   },
 ```
+
+Please note that whenever there's a "confirm" option, a parameter named
+"confirm" is implicitly added to the list of parameters.
 
 The HTML form could look like this:
 
@@ -223,23 +234,39 @@ matching application configuration.
 The application configuration is again an object with the following possible
 keys:
 
- * **required_vars**: An array with parameter names that have to be present in
-   a request. Required.
- * **store**: If set to a filename, then information about emails sent is
-   stored in this file. This does not inclue emails which have not been
-   confirmed (if double opt-in is in use). Optional.
- * **register**: Defines what to do upon registration of a user. Required.
- * **confirm**: If present, forces double opt-in, and defines what to do upon
-   confirmation of a registration. Optional.
- * **duplicate**: If present, forces the check for duplicate registrations, and
-   defines what to do when one occurs. Optional.
+* **parameters**: An object defining the parameters to be included in a
+  request. Required.
+* **store**: If set to a filename, then information about emails sent is
+  stored in this file. This does not inclue emails which have not been
+  confirmed (if double opt-in is in use). Optional.
+* **register**: Defines what to do upon registration of a user. Required.
+* **confirm**: If present, forces double opt-in, and defines what to do upon
+  confirmation of a registration. Optional.
+* **duplicate**: If present, forces the check for duplicate registrations, and
+  defines what to do when one occurs. Optional.
+
+In the "parameters" object, each key defines a parameter name, where the value
+is a list of zero or more validations to apply to this parameter, with the
+following being avaliable:
+
+* **required**: must be included and non-empty.
+* **single-line**: must not contain line breaks. Use this for all fields that
+  are included in email headers to avoid header injection attacks.
+* **email**: must look like a valid email address. The actual existence of the
+  address is not checked, though.
+* **boolean**: must be something that can be understood as a boolean value
+  (true/false, t/f, yes/no, y/n, on/off, 1/0).
+* **mandatory**: must be a true-ish boolean value. Use this for fields like "I
+  agree to the privacy statement".
+* **forbidden**: must be empty or not included at all. Use this for honeypot
+  entries to catch spam bots.
 
 Each of "register", "confirm", and "duplicate" are again objects with the
 following keys:
 
- * **email**: Template for the email to be sent.
- * **redirect**: Address to redirect the user's browser to after having
-   accepted and processed a request
+* **email**: Template for the email to be sent.
+* **redirect**: Address to redirect the user's browser to after having
+  accepted and processed a request
 
 
 ## Contribute
