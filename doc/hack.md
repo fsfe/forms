@@ -31,7 +31,8 @@ fsfe-forms can be run from the git checkout directory for testing and
 debugging.
 
 Please note that fsfe-forms requires access to a number of external systems
-to run properly, most notably a mail server and a redis server.
+to run properly, most notably a mail server, a redis server, and for some
+functions the FSFE Community Database Frontend.
 
 When you have set up all that, you can run `make flask` to run fsfe-forms
 with Flask's built-in web server in debug mode. Alternatively, you can run

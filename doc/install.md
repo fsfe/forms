@@ -14,7 +14,8 @@ dependencies recommended for use. You can use `pipenv install --system` to
 download and install all these dependencies on your computer.
 
 Please note that fsfe-forms requires access to a number of external systems
-to run properly, most notably a mail server and a redis server.
+to run properly, most notably a mail server, a redis server, and for some
+functions the FSFE Community Database Frontend.
 
 
 ## Local install
@@ -61,6 +62,26 @@ steps defined in [`.drone.yml`]:
    docker image and start the corresponding container. The file
    [`docker-compose.yml`] defines the parameters for this step, referring to
    the [`Dockerfile`] described in the previous section.
+
+
+### Secrets
+
+The following secrets are [managed in drone](http://docs.drone.io/manage-secrets/):
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Requirement</th>
+  </tr>
+  <tr>
+    <th>fsfe_cd_passphrase</th>
+    <td>
+      Passphrase to verify URL-based commands to the FSFE Community Database
+    </td>
+    <td>Must match the “cmd_passphrase” secret of fsfe-cd-back.</td>
+  </tr>
+</table>
 
 
 [`Pipfile`]: ../Pipfile

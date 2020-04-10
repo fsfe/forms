@@ -13,6 +13,7 @@ flask = "*"
 flask-limiter = "*"
 gunicorn = "*"
 redis = "*"
+requests = "*"
 webargs = "*"
 
 [dev-packages]

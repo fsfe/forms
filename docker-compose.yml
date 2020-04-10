@@ -37,6 +37,9 @@ services:
       LOG_EMAIL_TO: "contact@fsfe.org"
       REDIS_HOST: "forms-redis"
       REDIS_PORT: "6379"
+      FSFE_CD_URL: "https://my.fsfe.org/"
+      FSFE_CD_TIMEOUT: 3
+      FSFE_CD_PASSPHRASE: "${FSFE_CD_PASSPHRASE}"
     volumes:
       - "/srv/forms:/store:rw"
     restart: always

@@ -24,11 +24,16 @@ MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
 LOG_EMAIL_FROM = environ.get('LOG_EMAIL_FROM')
 LOG_EMAIL_TO = environ.get('LOG_EMAIL_TO')
 
-# Parameters for the connection to the redis server
+# Parameters for the connection to the Redis server
 REDIS_HOST = environ.get('REDIS_HOST', 'localhost')
 REDIS_PORT = int(environ.get('REDIS_PORT', 6379))
 REDIS_PASSWORD = environ.get('REDIS_PASSWORD', None)
 REDIS_QUEUE_DB = int(environ.get('REDIS_QUEUE_DB', 0))
+
+# Parameters for the connection to the FSFE Community Database
+FSFE_CD_URL = environ.get('FSFE_CD_URL', 'http://localhost:8089/')
+FSFE_CD_TIMEOUT = int(environ.get('FSFE_CD_TIMEOUT', 3))
+FSFE_CD_PASSPHRASE = environ.get("FSFE_CD_PASSPHRASE", "cmd_passphrase")
 
 # Filename for a temporary lockfile
 LOCK_FILENAME = environ.get('LOCK_FILENAME', '/tmp/forms.lock')

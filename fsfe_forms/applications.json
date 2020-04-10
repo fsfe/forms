@@ -22,6 +22,11 @@
       "permissionNews": ["boolean"],
       "url": ["forbidden"]
     },
+    "cd": {
+      "name": "name",
+      "signed_pmpc_on": "<date>",
+      "wants_pmpc_info": "permissionNews"
+    },
     "store": "/store/pmpc/signatures.json",
     "register": {
       "email": "pmpc-sign-register",
@@ -60,6 +65,10 @@
       "name": ["required", "single-line"],
       "project": ["required"],
       "wantupdates": ["boolean"]
+    },
+    "cd": {
+      "name": "name",
+      "wants_reuse_info": "wantupdates"
     },
     "store": "/store/reuse-api/repos.json",
     "register": {

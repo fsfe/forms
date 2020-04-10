@@ -236,6 +236,9 @@ keys:
 
 * **parameters**: An object defining the parameters to be included in a
   request. Required.
+* **cd**: An object defining the parameters to be sent to the FSFE Community
+  Database, where names are the properties in fsfe-cd and values are the
+  matching parameter names in the form. Optional.
 * **store**: If set to a filename, then information about emails sent is
   stored in this file. This does not inclue emails which have not been
   confirmed (if double opt-in is in use). Optional.

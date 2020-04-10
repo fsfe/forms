@@ -63,4 +63,22 @@ Optional password for the Redis connection. Defaults to no password.
 Redis database number for the double opt-in queue. Defaults to `0`.
 
 
+## Parameters for the connection to the FSFE Community Database
+
+### `FSFE_CD_URL`
+
+URL of the FSFE Community Database Frontend. Defaults to
+`https://localhost:8089`, which is where a locally running test instance of
+fsfe-cd-back can be found.
+
+### `FSFE_CD_TIMEOUT`
+
+Timeout, in seconds, for connecting to the FSFE Community Database Frontend.
+Defaults to 3.
+
+### `FSFE_CD_PASSPHRASE`
+
+Passphrase for sending commands to the FSFE Community Database Frontend.
+
+
 [`docker-compose.yml`]: ../docker-compose.yml

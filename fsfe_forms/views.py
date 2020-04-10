@@ -17,6 +17,7 @@ from marshmallow.validate import Equal, Length, Regexp
 from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
+from fsfe_forms.cd import subscribe
 from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
 
@@ -184,6 +185,13 @@ def confirm(id):
     params = queue_pop(id)
 
     app_config = _find_app_config(params['appid'])
+
+    if "cd" in app_config:
+        response = subscribe(app_config["cd"], params)
+        # If the FSFE Community Database has yielded an error message, display
+        # it unchanged.
+        if response:
+            return response
 
     return _process(
             config=app_config['confirm'],
