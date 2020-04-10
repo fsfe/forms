@@ -8,7 +8,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
-def test_confirm(client, smtp_mock, redis_mock, file_mock, signed_up):
+def test_confirm(
+        client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_up):
     response = client.get(
             path='/confirm',
             query_string={'id': signed_up})

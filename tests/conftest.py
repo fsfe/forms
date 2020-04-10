@@ -10,6 +10,7 @@
 import pytest
 from fakeredis import FakeRedis
 from flask import url_for
+from requests import Response
 
 from fsfe_forms import config, create_app
 
@@ -42,6 +43,18 @@ def file_mock(mocker):
     return mocker.patch(
             'fsfe_forms.json_store.open',
             mocker.mock_open(read_data="[\n]"))
+
+
+# -----------------------------------------------------------------------------
+# Mocked backend connection
+# -----------------------------------------------------------------------------
+
+@pytest.fixture
+def fsfe_cd_mock(mocker):
+    response = Response()
+    response.status_code = 200
+    response._content = b'{"id": "FSFE_CD_ID"}'
+    return mocker.patch(target="fsfe_forms.cd.post", return_value=response)
 
 
 # -----------------------------------------------------------------------------
