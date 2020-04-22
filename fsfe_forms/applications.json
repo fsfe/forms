@@ -24,6 +24,8 @@
     },
     "cd": {
       "name": "name",
+      "zip": "zip",
+      "country": "country",
       "signed_pmpc_on": "<date>",
       "wants_pmpc_info": "permissionNews"
     },
