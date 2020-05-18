@@ -47,7 +47,7 @@ def subscribe(config, params):
     # First step: POST registration data to FSFE Community Database.
 
     response = post(
-            url=current_app.config["FSFE_CD_URL"] + "subscribe",
+            url=current_app.config["FSFE_CD_URL"] + "subscribe-api",
             timeout=current_app.config["FSFE_CD_TIMEOUT"],
             data=subscribe_params,
     )
