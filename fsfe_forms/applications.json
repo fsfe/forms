@@ -17,6 +17,7 @@
       "country": [],
       "zip": [],
       "comment": [],
+      "lang": ["required"],
       "permissionPriv": ["mandatory"],
       "permissionPub": ["boolean"],
       "permissionNews": ["boolean"],
@@ -32,15 +33,15 @@
     "store": "/store/pmpc/signatures.json",
     "register": {
       "email": "pmpc-sign-register",
-      "redirect": "https://publiccode.eu/openletter/confirm"
+      "redirect": "https://publiccode.eu/{{lang}}/openletter/confirm"
     },
     "confirm": {
       "email": "pmpc-sign-confirm",
-      "redirect": "https://publiccode.eu/openletter/success"
+      "redirect": "https://publiccode.eu/{{lang}}/openletter/success"
     },
     "duplicate": {
       "email": "pmpc-sign-duplicate",
-      "redirect": "https://publiccode.eu/openletter/confirm"
+      "redirect": "https://publiccode.eu/{{lang}}/openletter/confirm"
     }
   },
   "ln-apply": {
