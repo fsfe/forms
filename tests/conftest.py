@@ -79,6 +79,7 @@ def signed_up(client, smtp_mock):
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com',
+                'lang': 'en',
                 'permissionPriv': 'yes'})
     # Return the confirmation ID
     email = smtp_mock().__enter__().send_message.call_args[0][0]

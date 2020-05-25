@@ -67,9 +67,10 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com',
+                'lang': 'en',
                 'permissionPriv': 'yes'})
     assert response.status_code == 302
-    assert response.location == 'https://publiccode.eu/openletter/confirm'
+    assert response.location == 'https://publiccode.eu/en/openletter/confirm'
     # Check no logfile written (yet).
     assert not file_mock().write.called
     # Check email sent.
@@ -90,9 +91,10 @@ def test_email_get_duplicate(
                 'appid': 'pmpc-sign',
                 'name': "THE NAME",
                 'confirm': 'EMAIL@example.com',
+                'lang': 'en',
                 'permissionPriv': 'yes'})
     assert response.status_code == 302
-    assert response.location == 'https://publiccode.eu/openletter/confirm'
+    assert response.location == 'https://publiccode.eu/en/openletter/confirm'
     # Check no logfile written (yet).
     assert not file_mock().write.called
     # Check email sent.

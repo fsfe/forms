@@ -14,7 +14,7 @@ def test_confirm(
             path='/confirm',
             query_string={'id': signed_up})
     assert response.status_code == 302
-    assert response.location == 'https://publiccode.eu/openletter/success'
+    assert response.location == 'https://publiccode.eu/en/openletter/success'
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
     assert 'EMAIL@example.com' in logfile
