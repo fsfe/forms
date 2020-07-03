@@ -56,11 +56,11 @@
     "store": "/store/ln/applications.json",
     "register": {
       "email": "ln-apply-register",
-      "redirect": "https://fsfe.org/activities/ftf/ln-application-confirm.html"
+      "redirect": "https://fsfe.org/activities/ln/application-confirm.html"
     },
     "confirm": {
       "email": "ln-apply-confirm",
-      "redirect": "https://fsfe.org/activities/ftf/ln-application-success.html"
+      "redirect": "https://fsfe.org/activities/ln/application-success.html"
     }
   },
   "reuse-api": {
