@@ -77,11 +77,11 @@
     "store": "/store/group-projects/applications.json",
     "register": {
       "email": "group-projects-register",
-      "redirect": "https://fsfe.org/activities/ln/application-confirm.html"
+      "redirect": "https://fsfe.org/community/group-projects/submission-confirm.html"
     },
     "confirm": {
       "email": "group-projects-confirm",
-      "redirect": "https://fsfe.org/activities/ln/application-success.html"
+      "redirect": "https://fsfe.org/community/group-projects/submission-success.html"
     }
   },
   "reuse-api": {
