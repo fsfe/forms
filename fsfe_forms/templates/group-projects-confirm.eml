@@ -1,0 +1,25 @@
+From: FSFE Forms <no-reply@fsfe.org>
+To: FSFE Council <council@lists.fsfe.org>
+Subject: FSFE Local Group Project Submission by {{ name }}
+
+We have received a new submission for a Local Groups Project.
+
+Name: {{ name }}
+Email: {{ confirm }}
+
+Local Group: {{ localgroup }}
+Project Start: {{ date_start }}
+Project End: {{ date_end }}
+Total Costs: {{ cost_total }}
+
+  # Deliverables (optional)
+
+{{ deliverables }}
+
+  # Team (optional)
+
+{{ team }}
+
+  # List of External Costs (optional)
+
+{{ cost_list }}

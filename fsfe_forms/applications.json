@@ -63,6 +63,27 @@
       "redirect": "https://fsfe.org/activities/ln/application-success.html"
     }
   },
+  "group-projects": {
+    "parameters": {
+      "name": ["required", "single-line"],
+      "localgroup": ["required"],
+      "deliverables": [],
+      "team": [],
+      "date_start": ["required"],
+      "date_end": ["required"],
+      "cost_list": [],
+      "cost_total": ["required"]
+    },
+    "store": "/store/group-projects/applications.json",
+    "register": {
+      "email": "group-projects-register",
+      "redirect": "https://fsfe.org/activities/ln/application-confirm.html"
+    },
+    "confirm": {
+      "email": "group-projects-confirm",
+      "redirect": "https://fsfe.org/activities/ln/application-success.html"
+    }
+  },
   "reuse-api": {
     "parameters": {
       "name": ["required", "single-line"],

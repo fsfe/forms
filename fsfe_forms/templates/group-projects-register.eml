@@ -1,0 +1,31 @@
+From: Free Software Foundation Europe <no-reply@fsfe.org>
+To: {{ format_email(name, confirm) }}
+Subject: Local Groups Project Call: Please confirm your submission
+
+Dear {{ name }},
+
+Thank you for your submission for a FSFE Local Group Project!
+
+In order to proceed, please confirm your submission by clicking the link below:
+
+  {{ confirmation_url }}
+
+The link is valid for the next 24 hours. If you do not confirm your 
+email, your submission cannot be evaluated.
+
+Best regards,
+Matthias Kirschner, President FSFE
+
+
+-- 
+You received this email because an application form has been submitted 
+with your email address.
+
+If you didn't request a FSFE Local Group Project support, you can ignore 
+this message. If you receive too many of these messages, please write 
+to contact@fsfe.org
+
+FSFE respects your privacy. Your data will only be stored on our own 
+infrastructure: https://fsfe.org/about/legal/imprint.html
+
+Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany
