@@ -67,11 +67,11 @@
     "parameters": {
       "name": ["required", "single-line"],
       "localgroup": ["required"],
-      "deliverables": [],
-      "team": [],
+      "deliverables": ["required"],
+      "team": ["required"],
       "date_start": ["required"],
       "date_end": ["required"],
-      "cost_list": [],
+      "cost_list": ["required"],
       "cost_total": ["required"]
     },
     "store": "/store/group-projects/applications.json",
