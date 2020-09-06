@@ -66,7 +66,7 @@
   "group-projects": {
     "parameters": {
       "name": ["required", "single-line"],
-      "localgroup": ["required"],
+      "localgroup": [],
       "deliverables": ["required"],
       "team": ["required"],
       "date_start": ["required"],
