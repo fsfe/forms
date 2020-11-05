@@ -1,0 +1,9 @@
+FROM python:3.6
+
+RUN pip install mock-server
+
+EXPOSE 8888
+
+COPY ./config /config
+
+CMD mock-server --dir=/config -address=0.0.0.0
