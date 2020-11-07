@@ -18,6 +18,7 @@ services:
       "MAIL_PORT": "1025"
       "LOG_EMAIL_FROM": "contact@fsfe.org"
       "LOG_EMAIL_TO": "contact@fsfe.org"
+      "FSFE_CD_URL": "http://forms-fake-fsfe-cd-front:8888/"
 
   forms-fakesmtp:
     image: forms-fakesmtp
@@ -28,3 +29,12 @@ services:
     ports:
       - "1025:1025"
       - "1080:1080"
+
+  forms-fake-fsfe-cd-front:
+    image: forms-fake-fsfe-cd-front
+    build:
+      context: ./forms-fake-fsfe-cd-front
+      dockerfile: Dockerfile-fake-fsfe-cd-front
+    container_name: forms-fake-fsfe-cd-front
+    ports:
+      - "8888:8888"
