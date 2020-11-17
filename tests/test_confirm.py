@@ -14,7 +14,8 @@ def test_confirm(
             path='/confirm',
             query_string={'id': signed_up})
     assert response.status_code == 302
-    assert response.location == 'https://publiccode.eu/en/openletter/success'
+    assert response.location == 'https://fsfe.org/activities/ln/' \
+                                'application-success.html'
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
     assert 'EMAIL@example.com' in logfile
@@ -26,9 +27,10 @@ def test_confirm(
     # recipients
     assert 'contact@fsfe.org' in email['To']
     # subject
-    assert email['Subject'] == "New signature to PMPC"
+    assert email['Subject'] == "Application for Legal Network membership by " \
+                               "THE NAME"
     # content
-    assert "THE NAME" in email.as_string()
+    assert "MY ACTIVITIES" in email.as_string()
 
 
 def test_confirm_no_id(client):
