@@ -36,7 +36,6 @@
       "redirect": "https://publiccode.eu/{{lang}}/openletter/confirm"
     },
     "confirm": {
-      "email": "pmpc-sign-confirm",
       "redirect": "https://publiccode.eu/{{lang}}/openletter/success"
     },
     "duplicate": {
