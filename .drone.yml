@@ -7,6 +7,63 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: build-quality
+  pull: if-not-exists
+  image: docker/compose:1.29.0
+  commands:
+  - docker-compose --file docker-compose-quality.yml build
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+
+- name: quality
+  pull: if-not-exists
+  image: fsfe-forms-quality
+  commands:
+  - isort --check-only --diff
+  - pylama
+  - pytest
+
+- name: reuse
+  pull: if-not-exists
+  image: fsfe/reuse:latest
+  commands:
+  - reuse lint
+
+- name: deploy
+  pull: if-not-exists
+  image: docker/compose:1.29.0
+  commands:
+  - docker-compose build
+  - docker-compose up -d
+  environment:
+    FSFE_CD_PASSPHRASE:
+      from_secret: fsfe_cd_passphrase
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  when:
+    branch:
+    - master
+    event:
+    - push
+    - tag
+    - deployment
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock
+
+...
 pipeline:
   build-quality:
     image: tmaier/docker-compose
