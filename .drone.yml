@@ -64,38 +64,3 @@ volumes:
     path: /var/run/docker.sock
 
 ...
-pipeline:
-  build-quality:
-    image: tmaier/docker-compose
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker-compose --file docker-compose-quality.yml build
-
-  quality:
-    image: fsfe-forms-quality
-    commands:
-      - isort --check-only --diff
-      - pylama
-      - pytest
-
-  reuse:
-    image: fsfe/reuse:latest
-    commands:
-      - reuse lint
-
-  deploy:
-    image: tmaier/docker-compose
-    secrets:
-      - fsfe_cd_passphrase
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker-compose build
-      - docker-compose up -d
-    when:
-       event:
-         - push
-         - tag
-         - deployment
-       branch: master
