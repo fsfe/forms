@@ -1,0 +1,72 @@
+From: Free Software Foundation Europe <no-reply@fsfe.org>
+To: {{ format_email(name, confirm) }}
+Subject: REUSE Booster: Please confirm your registration
+
+Dear {{ name }},
+
+Thank you for registering your project for REUSE Booster!
+
+In order to proceed, please confirm your submission by clicking the link below:
+
+  {{ confirmation_url }}
+
+The link is valid for the next 24 hours. If you do not confirm your email, your
+registration cannot be evaluated.
+
+Below you will find all information you've provided to us. In case you spot an
+error, please do not click the confirmation link above but fill in the form
+again on <https://reuse.software/booster>
+
+## Name of the project that wants to adopt REUSE
+
+{{ project-name }}
+
+## URL of the project's repository
+
+{{ url }}
+
+## Description of the project
+
+{{ description }}
+
+## Other repositories, in case they exist
+
+{{ repos }}
+
+## 1-2 additional contact persons who will be main contact persons besides you
+
+{{ contacts }}
+
+## Free Software licenses used by your project
+
+{{ licenses }}
+
+## Potential proprietary components
+
+{{ proprietary }}
+
+## Brief summary of the project's history
+
+{{ history }}
+
+## Why you want to make your project REUSE compliant
+
+{{ reason }}
+
+
+Best regards,
+The FSFE's REUSE team
+
+
+--
+You received this email because a registration form has been submitted
+with your email address.
+
+If you didn't request support to become REUSE compliant, you can ignore
+this message. If you receive too many of these messages, please write
+to contact@fsfe.org
+
+FSFE respects your privacy. Your data will only be stored on our own
+infrastructure: https://fsfe.org/about/legal/imprint.html
+
+Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany

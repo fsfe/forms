@@ -101,5 +101,30 @@
     "confirm": {
       "redirect": "https://api.reuse.software/info/{{project}}"
     }
+  },
+  "reuse-booster": {
+    "parameters": {
+      "name": ["required", "single-line"],
+      "project-name": ["required", "single-line"],
+      "url": ["required", "single-line"],
+      "description": ["required"],
+      "repos": [],
+      "contacts": ["required"],
+      "licenses": ["required"],
+      "proprietary": [],
+      "history": ["required"],
+      "reason": ["required"],
+      "privacy": ["mandatory"],
+      "obligatory": ["mandatory"]
+    },
+    "store": "/store/reuse-booster/applications.json",
+    "register": {
+      "email": "reuse-booster-register",
+      "redirect": "https://reuse.software/booster/confirm"
+    },
+    "confirm": {
+      "email": "reuse-booster-confirm",
+      "redirect": "https://reuse.software/booster/success"
+    }
   }
 }
