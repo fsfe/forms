@@ -105,7 +105,7 @@
   "reuse-booster": {
     "parameters": {
       "name": ["required", "single-line"],
-      "project-name": ["required", "single-line"],
+      "project_name": ["required", "single-line"],
       "url": ["required", "single-line"],
       "description": ["required"],
       "repos": [],

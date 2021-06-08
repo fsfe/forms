@@ -1,6 +1,6 @@
 From: {{ format_email(name, confirm) }}
 To: Free Software Foundation Europe <contact@fsfe.org>
-Subject: REUSE Booster registration for {{ project-name }}
+Subject: REUSE Booster registration for {{ project_name }}
 X-OTRS-Queue: REUSE Booster
 
 We have received a new registration for the REUSE Booster project. Below all data:
@@ -10,7 +10,7 @@ Email: {{ confirm }}
 
 ## Name of the project that wants to adopt REUSE
 
-{{ project-name }}
+{{ project_name }}
 
 ## URL of the project's repository
 

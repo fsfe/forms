@@ -19,7 +19,7 @@ again on <https://reuse.software/booster>
 
 ## Name of the project that wants to adopt REUSE
 
-{{ project-name }}
+{{ project_name }}
 
 ## URL of the project's repository
 
