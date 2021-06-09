@@ -120,11 +120,11 @@
     "store": "/store/reuse-booster/applications.json",
     "register": {
       "email": "reuse-booster-register",
-      "redirect": "https://reuse.software/booster/confirm"
+      "redirect": "https://reuse.software/booster-confirm/"
     },
     "confirm": {
       "email": "reuse-booster-confirm",
-      "redirect": "https://reuse.software/booster/success"
+      "redirect": "https://reuse.software/booster-success/"
     }
   }
 }
