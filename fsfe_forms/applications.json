@@ -109,7 +109,7 @@
       "url": ["required", "single-line"],
       "description": ["required"],
       "repos": [],
-      "contacts": ["required"],
+      "contacts": [],
       "licenses": ["required"],
       "proprietary": [],
       "history": ["required"],
