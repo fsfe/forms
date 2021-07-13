@@ -1,0 +1,16 @@
+From: {{ confirm }}
+To: Free Software Foundation Europe <contact@fsfe.org>
+Subject: Youth Hacking 4 Freedom registration by {{ first_name }} {{ last_name }}
+X-OTRS-Queue: YH4F
+
+We have received a new registration for Youth Hacking 4 Freedom. Below all data:
+
+First name: {{ first_name }}
+Last name:  {{ last_name }}
+Email:      {{ confirm }}
+Country:    {{ country }}
+Birthday:   {{ birthdate }}
+
+## Self-description
+
+{{ self_description }}

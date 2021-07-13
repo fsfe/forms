@@ -126,5 +126,23 @@
       "email": "reuse-booster-confirm",
       "redirect": "https://reuse.software/booster-success/"
     }
+  },
+  "yh4f": {
+    "parameters": {
+      "first_name": ["required", "single-line"],
+      "last_name": ["required", "single-line"],
+      "country": ["required", "single-line"],
+      "birthdate": ["required", "single-line"],
+      "self_description": ["required"]
+    },
+    "store": "/store/yh4f/registrations.json",
+    "register": {
+      "email": "yh4f-register",
+      "redirect": "https://fsfe.org/activities/yh4f/register-confirm.html"
+    },
+    "confirm": {
+      "email": "yh4f-confirm",
+      "redirect": "https://fsfe.org/activities/yh4f/register-success.html"
+    }
   }
 }
