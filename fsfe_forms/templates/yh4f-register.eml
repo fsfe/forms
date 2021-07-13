@@ -21,6 +21,7 @@ again on <https://fsfe.org/activities/yh4f/>
 
 Name:  {{ first_name }} {{ last_name }}
 Email: {{ confirm }}
+Gender: {{ gender }}
 living in {{ country }}
 and born on {{ birthdate }}
 
