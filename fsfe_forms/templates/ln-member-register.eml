@@ -1,0 +1,30 @@
+From: Free Software Foundation Europe <no-reply@fsfe.org>
+To: {{ format_email(name, confirm) }}
+Subject: Legal Network: Please confirm your membership information update
+
+Dear {{ name }},
+
+Thank you for updating your Legal Network membership information.
+
+Please confirm your request by clicking on the link below:
+
+  {{ confirmation_url }}
+
+The link is valid for the next 24 hours. If you do not confirm your
+email, your membership info update will not be integrated.
+
+Best regards,
+Your Legal Network coordinator
+
+--
+You received this email because an information update form has been
+submitted with your email address.
+
+If you didn't request an information update, you can ignore
+this message. If you receive too many of these messages, please write
+to contact@fsfe.org
+
+FSFE respects your privacy. Your data will only be stored on our own
+infrastructure: https://fsfe.org/about/legal/imprint.html
+
+Free Software Foundation Europe e.V., Schönhauser Allee 6/7, 10119 Berlin, Germany

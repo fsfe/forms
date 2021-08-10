@@ -62,6 +62,24 @@
       "redirect": "https://fsfe.org/activities/ln/application-success.html"
     }
   },
+  "ln-memberlist": {
+    "parameters": {
+      "name": ["required", "single-line"],
+      "description": ["single-line"],
+      "countries": ["single-line"],
+      "link": ["single-line"],
+      "obligatory": ["mandatory"]
+    },
+    "store": "/store/ln/memberlist.json",
+    "register": {
+      "email": "ln-member-register",
+      "redirect": "https://fsfe.org/activities/ln/memberlist-confirm.html"
+    },
+    "confirm": {
+      "email": "ln-member-confirm",
+      "redirect": "https://fsfe.org/activities/ln/memberlist-success.html"
+    }
+  },
   "group-projects": {
     "parameters": {
       "name": ["required", "single-line"],

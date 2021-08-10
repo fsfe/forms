@@ -1,0 +1,25 @@
+From: {{ name }} <no-reply@fsfe.org>
+To: Free Software Foundation Europe <contact@fsfe.org>
+Subject: LN Membership information update by {{ name }}
+X-OTRS-Queue: Legal Network
+
+There is a request to update the information of a LN member.
+
+**Name**:
+{{ name }}
+
+**Email**:
+{{ confirm }}
+
+**Description**:
+{{ description }}
+
+**Countries**:
+{{ countries }}
+
+**Link**:
+{{ link }}
+
+
+Please check whether the email matches the person's email in the ln@ mailing
+list, and add/update the information in the spreadsheet accordingly.
