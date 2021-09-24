@@ -152,7 +152,9 @@
       "gender": ["required", "single-line"],
       "country": ["required", "single-line"],
       "birthdate": ["required", "single-line"],
-      "self_description": ["required"]
+      "self_description": ["required"],
+      "check_age": ["mandatory"],
+      "check_privacy": ["mandatory"]
     },
     "store": "/store/yh4f/registrations.json",
     "register": {
