@@ -7,7 +7,6 @@ We have received a new registration for Youth Hacking 4 Freedom. Below all data:
 
 First name: {{ first_name }}
 Last name:  {{ last_name }}
-Gender:     {{ gender }}
 Email:      {{ confirm }}
 Country:    {{ country }}
 Birthday:   {{ birthdate }}
