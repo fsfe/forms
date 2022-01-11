@@ -17,9 +17,9 @@ platform:
 steps:
 - name: build-quality
   pull: if-not-exists
-  image: docker/compose:1.29.0
+  image: docker/compose:1.29.2
   commands:
-  - docker-compose --file docker-compose-quality.yml build
+  - docker-compose -p forms -f docker-compose-quality.yml build
   volumes:
   - name: dockersock
     path: /var/run/docker.sock
@@ -40,10 +40,9 @@ steps:
 
 - name: deploy
   pull: if-not-exists
-  image: docker/compose:1.29.0
+  image: docker/compose:1.29.2
   commands:
-  - docker-compose build
-  - docker-compose up -d
+  - docker-compose -p forms up --build -d
   environment:
     FSFE_CD_PASSPHRASE:
       from_secret: fsfe_cd_passphrase
