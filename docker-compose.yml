@@ -8,13 +8,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-version: '3'
+version: "3"
 services:
   forms-redis:
     image: redis:3.2
     container_name: forms-redis
-    labels:
-      fsfe-monitoring: "true"
     expose:
       - 6379
     restart: always
@@ -26,7 +24,8 @@ services:
     build: .
     container_name: forms
     labels:
-      fsfe-monitoring: "true"
+      proxy.host: "forms.fsfe.org"
+      proxy.port: "870"
     environment:
       VIRTUAL_HOST: "forms.fsfe.org"
       LETSENCRYPT_HOST: "forms.fsfe.org"
@@ -49,5 +48,5 @@ services:
       - forms
     image: docker:dind
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/user/1001/docker.sock:/var/run/docker.sock
     command: docker network connect bridge forms

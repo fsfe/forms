@@ -15,54 +15,57 @@ platform:
   arch: amd64
 
 steps:
-- name: build-quality
-  pull: if-not-exists
-  image: docker/compose:1.29.2
-  commands:
-  - docker-compose -p forms -f docker-compose-quality.yml build
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
+  - name: build-quality
+    pull: if-not-exists
+    image: docker/compose:1.29.2
+    environment:
+      XDG_RUNTIME_DIR: "/run/user/1001"
+      DOCKER_HOST: "unix:///run/user/1001/docker.sock"
+    commands:
+      - docker-compose -p forms -f docker-compose-quality.yml build
+    volumes:
+      - name: dockersock
+        path: /run/user/1001/docker.sock
 
-- name: quality
-  pull: if-not-exists
-  image: fsfe-forms-quality
-  commands:
-  - isort --check-only --diff
-  - pylama
-  - pytest
+  - name: quality
+    pull: if-not-exists
+    image: fsfe-forms-quality
+    commands:
+      - isort --check-only --diff
+      - pylama
+      - pytest
 
-- name: reuse
-  pull: if-not-exists
-  image: fsfe/reuse:latest
-  commands:
-  - reuse lint
+  - name: reuse
+    pull: if-not-exists
+    image: fsfe/reuse:latest
+    commands:
+      - reuse lint
 
-- name: deploy
-  pull: if-not-exists
-  image: docker/compose:1.29.2
-  commands:
-  - docker-compose -p forms up --build -d
-  environment:
-    FSFE_CD_PASSPHRASE:
-      from_secret: fsfe_cd_passphrase
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
-  when:
-    branch:
-    - master
-    event:
-    - push
-    - tag
-    - deployment
+  - name: deploy
+    pull: if-not-exists
+    image: docker/compose:1.29.2
+    commands:
+      - docker-compose -p forms up --build -d
+    environment:
+      XDG_RUNTIME_DIR: "/run/user/1001"
+      DOCKER_HOST: "unix:///run/user/1001/docker.sock"
+      FSFE_CD_PASSPHRASE:
+        from_secret: fsfe_cd_passphrase
+    volumes:
+      - name: dockersock
+        path: /run/user/1001/docker.sock
+    when:
+      branch:
+        - master
+      event:
+        - push
+        - tag
+        - deployment
 
 node:
-  cont: lund
+  cont2: noris
 
 volumes:
-- name: dockersock
-  host:
-    path: /var/run/docker.sock
-
-...
+  - name: dockersock
+    host:
+      path: /run/user/1001/docker.sock
