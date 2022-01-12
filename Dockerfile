@@ -22,7 +22,7 @@ COPY . .
 RUN ./setup.py install
 
 # Switch to non-root user
-RUN adduser -g "FSFE" -s "/sbin/nologin" -D fsfe
+RUN adduser -u 1000 -g "FSFE" -s "/sbin/nologin" -D fsfe
 USER fsfe
 WORKDIR /home/fsfe
 
