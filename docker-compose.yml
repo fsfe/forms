@@ -24,9 +24,6 @@ services:
     build: .
     container_name: forms
     environment:
-      VIRTUAL_HOST: "forms.fsfe.org"
-      LETSENCRYPT_HOST: "forms.fsfe.org"
-      LETSENCRYPT_EMAIL: "contact@fsfe.org"
       RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
       MAIL_SERVER: "mail.fsfe.org"
       LOG_EMAIL_FROM: "contact@fsfe.org"
@@ -45,11 +42,3 @@ services:
       proxy.port: "870"
     ports:
       - "870:8080"
-
-  connect-bridge:
-    depends_on:
-      - forms
-    image: docker:dind
-    volumes:
-      - /run/user/1001/docker.sock:/var/run/docker.sock
-    command: docker network connect bridge forms
