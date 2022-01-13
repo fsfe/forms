@@ -23,9 +23,6 @@ services:
     image: forms
     build: .
     container_name: forms
-    labels:
-      proxy.host: "forms.fsfe.org"
-      proxy.port: "870"
     environment:
       VIRTUAL_HOST: "forms.fsfe.org"
       LETSENCRYPT_HOST: "forms.fsfe.org"
@@ -42,6 +39,12 @@ services:
     volumes:
       - "/srv/forms:/store:rw"
     restart: always
+    # Reverse Proxy
+    labels:
+      proxy.host: "forms.fsfe.org"
+      proxy.port: "870"
+    ports:
+      - "870:8080"
 
   connect-bridge:
     depends_on:
