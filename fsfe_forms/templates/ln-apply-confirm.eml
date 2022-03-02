@@ -1,14 +1,15 @@
-From: {{ format_email(name, confirm) }}
+From: {{ name }} <no-reply@fsfe.org>
+Reply-To: {{ format_email(name, confirm) }}
 To: Free Software Foundation Europe <contact@fsfe.org>
 Subject: Application for Legal Network membership by {{ name }}
-X-OTRS-Queue: Legal Network
+X-OTRS-Queue: Legal Network::Applications
 
 We have received a new application for the Legal Network.
 
 Name: {{ name }}
 Email: {{ confirm }}
 
-  # Background and current activities related to Free Software legal 
+  # Background and current activities related to Free Software legal
     and licensing questions:
 
 {{ activities }}
@@ -17,16 +18,16 @@ Email: {{ confirm }}
 
 {{ profiles }}
 
-  # References to articles, presentations, or other examples of work 
+  # References to articles, presentations, or other examples of work
     in the Free Software area (optional):
 
 {{ references }}
 
-  # Name of existing member(s) sponsoring your addition. Welcome to 
+  # Name of existing member(s) sponsoring your addition. Welcome to
     include their short recommendations (a few sentences) (optional):
 
 {{ sponsors }}
 
-  # LN rules and privacy policy accepted? 
+  # LN rules and privacy policy accepted?
 
 {{ obligatory }}
