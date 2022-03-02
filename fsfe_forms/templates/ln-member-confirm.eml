@@ -1,4 +1,5 @@
 From: {{ name }} <no-reply@fsfe.org>
+Reply-To: {{ name }} <{{ confirm }}>
 To: Free Software Foundation Europe <contact@fsfe.org>
 Subject: LN Membership information update by {{ name }}
 X-OTRS-Queue: Legal Network
