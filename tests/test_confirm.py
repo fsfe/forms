@@ -23,7 +23,7 @@ def test_confirm(
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email['Reply-To'] == 'THE NAME <EMAIL@example.com>'
+    assert email['From'] == 'THE NAME <EMAIL@example.com>'
     # recipients
     assert 'contact@fsfe.org' in email['To']
     # subject

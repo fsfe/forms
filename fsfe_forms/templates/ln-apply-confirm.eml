@@ -1,5 +1,4 @@
-From: {{ name }} <no-reply@fsfe.org>
-Reply-To: {{ format_email(name, confirm) }}
+From: {{ format_email(name, confirm) }}
 To: Free Software Foundation Europe <contact@fsfe.org>
 Subject: Application for Legal Network membership by {{ name }}
 X-OTRS-Queue: Legal Network::Applications
