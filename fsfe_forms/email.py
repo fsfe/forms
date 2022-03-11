@@ -64,7 +64,9 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
     else:
         message["From"] = "Free Software Foundation Europe <contact@fsfe.org>"
     message["Date"] = email.utils.localtime()
-    message["Message-ID"] = email.utils.make_msgid()
+    message["Message-ID"] = email.utils.make_msgid(
+        domain=current_app.config["MAIL_HELO_HOST"]
+    )
     # message['Auto-Submitted'] = 'auto-generated'  # OTRS doesn't like this
 
     # Tell the library which character set to use on serialization
