@@ -18,11 +18,12 @@ from requests import post
 # Subscribe an email address in the FSFE Community Database
 # =============================================================================
 
+
 def subscribe(config, params):
 
     subscribe_params = {
-            "referrer": "campaign:" + params["appid"],
-            "email1": params["confirm"],
+        "referrer": "campaign:" + params["appid"],
+        "email1": params["confirm"],
     }
     if "lang" in params:
         subscribe_params["language"] = params["lang"]
@@ -38,8 +39,12 @@ def subscribe(config, params):
             value = params.get(value)
         if not value:
             continue
-        if key.startswith("signed_") and key.endswith("_on") or \
-                key.startswith("wants_") and key.endswith("_info"):
+        if (
+            key.startswith("signed_")
+            and key.endswith("_on")
+            or key.startswith("wants_")
+            and key.endswith("_info")
+        ):
             confirm_params[key] = value
         else:
             subscribe_params[key] = value
@@ -47,9 +52,9 @@ def subscribe(config, params):
     # First step: POST registration data to FSFE Community Database.
 
     response = post(
-            url=current_app.config["FSFE_CD_URL"] + "subscribe-api",
-            timeout=current_app.config["FSFE_CD_TIMEOUT"],
-            data=subscribe_params,
+        url=current_app.config["FSFE_CD_URL"] + "subscribe-api",
+        timeout=current_app.config["FSFE_CD_TIMEOUT"],
+        data=subscribe_params,
     )
     if not response.ok:
         # In case of an error, fsfe-cd returns a HTML page with a
@@ -72,10 +77,10 @@ def subscribe(config, params):
     confirm_params["person"] = person_id
     confirm_params["signature"] = signature
     response = post(
-            url=current_app.config["FSFE_CD_URL"] + "command/confirm",
-            timeout=current_app.config["FSFE_CD_TIMEOUT"],
-            params=confirm_params,
-            data={"go": "1"},
+        url=current_app.config["FSFE_CD_URL"] + "command/confirm",
+        timeout=current_app.config["FSFE_CD_TIMEOUT"],
+        params=confirm_params,
+        data={"go": "1"},
     )
     if not response.ok:
         # In case of an error, fsfe-cd returns a HTML page with a

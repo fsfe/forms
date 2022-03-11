@@ -18,41 +18,40 @@
 
 def test_email_get(client, smtp_mock, redis_mock, file_mock):
     response = client.get(
-            path='/email',
-            query_string={
-                'appid': 'contact',
-                'from': 'EMAIL@example.com',
-                'subject': "EMAIL-SUBJECT",
-                'content': "EMAIL-CONTENT"})
+        path="/email",
+        query_string={
+            "appid": "contact",
+            "from": "EMAIL@example.com",
+            "subject": "EMAIL-SUBJECT",
+            "content": "EMAIL-CONTENT",
+        },
+    )
     assert response.status_code == 302
-    assert response.location == 'https://fsfe.org/contact/'
+    assert response.location == "https://fsfe.org/contact/"
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
-    assert 'EMAIL@example.com' in logfile
+    assert "EMAIL@example.com" in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email['From'] == 'EMAIL@example.com'
+    assert email["From"] == "EMAIL@example.com"
     # recipient
-    assert 'contact@fsfe.org' in email['To']
+    assert "contact@fsfe.org" in email["To"]
     # subject
-    assert email['Subject'] == "EMAIL-SUBJECT"
+    assert email["Subject"] == "EMAIL-SUBJECT"
     # body
     assert "EMAIL-CONTENT" in email.as_string()
 
 
 def test_email_get_no_params(client):
-    response = client.get(
-            path='/email')
+    response = client.get(path="/email")
     assert response.status_code == 404
 
 
 def test_email_get_bad_appid(client):
-    response = client.get(
-            path='/email',
-            query_string={'appid': 'BAD-APPID'})
+    response = client.get(path="/email", query_string={"appid": "BAD-APPID"})
     assert response.status_code == 404
 
 
@@ -60,51 +59,55 @@ def test_email_get_bad_appid(client):
 # With confirmation
 # -----------------------------------------------------------------------------
 
+
 def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     response = client.get(
-            path='/email',
-            query_string={
-                'appid': 'pmpc-sign',
-                'name': "THE NAME",
-                'confirm': 'EMAIL@example.com',
-                'lang': 'en',
-                'permissionPriv': 'yes'})
+        path="/email",
+        query_string={
+            "appid": "pmpc-sign",
+            "name": "THE NAME",
+            "confirm": "EMAIL@example.com",
+            "lang": "en",
+            "permissionPriv": "yes",
+        },
+    )
     assert response.status_code == 302
-    assert response.location == 'https://publiccode.eu/en/openletter/confirm'
+    assert response.location == "https://publiccode.eu/en/openletter/confirm"
     # Check no logfile written (yet).
     assert not file_mock().write.called
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert 'no-reply@fsfe.org' in email['From']
+    assert "no-reply@fsfe.org" in email["From"]
     # recipient
-    assert email['To'] == 'THE NAME <EMAIL@example.com>'
+    assert email["To"] == "THE NAME <EMAIL@example.com>"
     # subject
-    assert email['Subject'] == "Public Code: Please confirm your signature"
+    assert email["Subject"] == "Public Code: Please confirm your signature"
 
 
-def test_email_get_duplicate(
-        client, smtp_mock, redis_mock, file_mock, signed_up):
+def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up):
     response = client.get(
-            path='/email',
-            query_string={
-                'appid': 'pmpc-sign',
-                'name': "THE NAME",
-                'confirm': 'EMAIL@example.com',
-                'lang': 'en',
-                'permissionPriv': 'yes'})
+        path="/email",
+        query_string={
+            "appid": "pmpc-sign",
+            "name": "THE NAME",
+            "confirm": "EMAIL@example.com",
+            "lang": "en",
+            "permissionPriv": "yes",
+        },
+    )
     assert response.status_code == 302
-    assert response.location == 'https://publiccode.eu/en/openletter/confirm'
+    assert response.location == "https://publiccode.eu/en/openletter/confirm"
     # Check no logfile written (yet).
     assert not file_mock().write.called
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert 'no-reply@fsfe.org' in email['From']
+    assert "no-reply@fsfe.org" in email["From"]
     # recipient
-    assert email['To'] == 'THE NAME <EMAIL@example.com>'
+    assert email["To"] == "THE NAME <EMAIL@example.com>"
     # subject
-    assert email['Subject'] == "Public Code: Please confirm your signature"
+    assert email["Subject"] == "Public Code: Please confirm your signature"
 
 
 # =============================================================================
@@ -115,41 +118,41 @@ def test_email_get_duplicate(
 # Without confirmation
 # -----------------------------------------------------------------------------
 
+
 def test_email_post(client, smtp_mock, redis_mock, file_mock):
     response = client.post(
-            path='/email',
-            data={
-                'appid': 'contact',
-                'from': 'EMAIL@example.com',
-                'subject': "EMAIL-SUBJECT",
-                'content': "EMAIL-CONTENT"})
+        path="/email",
+        data={
+            "appid": "contact",
+            "from": "EMAIL@example.com",
+            "subject": "EMAIL-SUBJECT",
+            "content": "EMAIL-CONTENT",
+        },
+    )
     assert response.status_code == 302
-    assert response.location == 'https://fsfe.org/contact/'
+    assert response.location == "https://fsfe.org/contact/"
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
-    assert 'EMAIL@example.com' in logfile
+    assert "EMAIL@example.com" in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email['From'] == 'EMAIL@example.com'
+    assert email["From"] == "EMAIL@example.com"
     # recipient
-    assert 'contact@fsfe.org' in email['To']
+    assert "contact@fsfe.org" in email["To"]
     # subject
-    assert email['Subject'] == "EMAIL-SUBJECT"
+    assert email["Subject"] == "EMAIL-SUBJECT"
     # content
     assert "EMAIL-CONTENT" in email.as_string()
 
 
 def test_email_post_no_params(client):
-    response = client.post(
-            path='/email')
+    response = client.post(path="/email")
     assert response.status_code == 404
 
 
 def test_email_post_bad_appid(client):
-    response = client.post(
-            path='/email',
-            data={'appid': 'BAD-APPID'})
+    response = client.post(path="/email", data={"appid": "BAD-APPID"})
     assert response.status_code == 404
