@@ -80,7 +80,9 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
     else:
         # Send out the message
         with smtplib.SMTP(
-            host=current_app.config["MAIL_SERVER"], port=current_app.config["MAIL_PORT"]
+            host=current_app.config["MAIL_SERVER"],
+            port=current_app.config["MAIL_PORT"],
+            local_hostname=current_app.config["MAIL_HELO_HOST"],
         ) as smtp:
             if current_app.config["MAIL_USERNAME"]:
                 smtp.login(

@@ -16,6 +16,7 @@ RATELIMIT_DEFAULT = environ.get("RATELIMIT_DEFAULT")
 
 # Parameters for sending out all kinds of emails
 MAIL_SERVER = environ.get("MAIL_SERVER", "localhost")
+MAIL_HELO_HOST = environ.get("MAIL_HELO_HOST")  # None = let smtplib decide
 MAIL_PORT = int(environ.get("MAIL_PORT", 25))
 MAIL_USERNAME = environ.get("MAIL_USERNAME")
 MAIL_PASSWORD = environ.get("MAIL_PASSWORD")
