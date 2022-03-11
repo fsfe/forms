@@ -28,8 +28,9 @@ from fsfe_forms.views import confirm, email, index
 # Main application factory
 # =============================================================================
 
+
 def create_app():
-    app = Flask(__name__.split('.')[0])
+    app = Flask(__name__.split(".")[0])
 
     # This enables Flask-Limiter to detect the real remote address even though
     # fsfe-forms runs behind a proxy.
@@ -40,25 +41,23 @@ def create_app():
 
     # Configure the root logger
     logging.basicConfig(
-            format='[%(asctime)s] (%(name)s) %(levelname)s: %(message)s',
-            level=(logging.DEBUG if app.debug else logging.INFO))
+        format="[%(asctime)s] (%(name)s) %(levelname)s: %(message)s",
+        level=(logging.DEBUG if app.debug else logging.INFO),
+    )
 
     # Add a log handler which forwards errors by email
     if not (app.debug or app.testing):  # pragma: no cover
-        if app.config['MAIL_USERNAME'] is not None:
-            credentials = (
-                    app.config['MAIL_USERNAME'],
-                    app.config['MAIL_PASSWORD'])
+        if app.config["MAIL_USERNAME"] is not None:
+            credentials = (app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
         else:
             credentials = None
         handler = logging.handlers.SMTPHandler(
-                mailhost=(
-                    app.config['MAIL_SERVER'],
-                    app.config['MAIL_PORT']),
-                fromaddr=app.config['LOG_EMAIL_FROM'],
-                toaddrs=[app.config['LOG_EMAIL_TO']],
-                subject="Log message from fsfe-forms",
-                credentials=credentials)
+            mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]),
+            fromaddr=app.config["LOG_EMAIL_FROM"],
+            toaddrs=[app.config["LOG_EMAIL_TO"]],
+            subject="Log message from fsfe-forms",
+            credentials=credentials,
+        )
         handler.setLevel(logging.ERROR)
         logging.getLogger().addHandler(handler)
 
@@ -70,13 +69,14 @@ def create_app():
 
     # Initialize Redis store for double opt-in queue
     app.queue_db = redis.Redis(
-            host=app.config['REDIS_HOST'],
-            port=app.config['REDIS_PORT'],
-            password=app.config['REDIS_PASSWORD'],
-            db=app.config['REDIS_QUEUE_DB'])
+        host=app.config["REDIS_HOST"],
+        port=app.config["REDIS_PORT"],
+        password=app.config["REDIS_PASSWORD"],
+        db=app.config["REDIS_QUEUE_DB"],
+    )
 
     # Load application configurations
-    filename = os.path.join(os.path.dirname(__file__), 'applications.json')
+    filename = os.path.join(os.path.dirname(__file__), "applications.json")
     with open(filename) as f:
         app.app_configs = json.load(f)
 

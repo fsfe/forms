@@ -11,8 +11,13 @@ kind: pipeline
 name: default
 
 steps:
-  - name: build-quality
+  - name: reuse
     pull: if-not-exists
+    image: fsfe/reuse:latest
+    commands:
+      - reuse lint
+
+  - name: quality-image
     image: docker/compose:1.29.2
     environment:
       XDG_RUNTIME_DIR: "/run/user/1001"
@@ -24,18 +29,13 @@ steps:
         path: /run/user/1001/docker.sock
 
   - name: quality
-    pull: if-not-exists
+    pull: never
     image: fsfe-forms-quality
     commands:
-      - isort --check-only --diff
-      - pylama
-      - pytest
-
-  - name: reuse
-    pull: if-not-exists
-    image: fsfe/reuse:latest
-    commands:
-      - reuse lint
+      - make quality
+      - pipenv --rm
+    depends_on:
+      - quality-image
 
   - name: deploy
     pull: if-not-exists

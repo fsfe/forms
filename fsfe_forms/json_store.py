@@ -24,7 +24,7 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
         "subject": subject,
         "content": content,
         "reply-to": reply_to,
-        "include_vars": include_vars
+        "include_vars": include_vars,
     }
 
     if not os.path.exists(os.path.dirname(storage)):
@@ -39,7 +39,7 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
 def find(storage: str, email: str) -> bool:
     with filelock.FileLock(current_app.config["LOCK_FILENAME"]):
         for entry in _read_log(storage):
-            if entry.get('include_vars', {}).get('confirm') == email:
+            if entry.get("include_vars", {}).get("confirm") == email:
                 return True
         return False
 

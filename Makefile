@@ -8,6 +8,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 SOURCE_DIR = fsfe_forms
+# Files/dirs to be checked by pylama/isort
+QUALITY_TARGETS = $(SOURCE_DIR) tests/* *.py
 
 export FLASK_SKIP_DOTENV = 1
 export FLASK_APP = ${SOURCE_DIR}
@@ -54,17 +56,16 @@ gunicorn:  ##@development Run the Gunicorn based web server.
 .PHONY: gunicorn
 
 isort:  ##@quality Check the Python source code for import sorting.
-	@pipenv run isort --check-only --diff
+	@pipenv run isort --check --diff $(QUALITY_TARGETS)
 .PHONY: isort
 
-lint:  ##@quality Check the Python source code for coding standards compliance.
+pylama:  ##@quality Check the Python source code for coding standards compliance.
 	@pipenv run pylama
-.PHONY: lint
+.PHONY: pylama
 
 pytest:  ##@quality Run the functional tests.
-	@pipenv run pytest --cov=$(SOURCE_DIR)
-	@pipenv run coverage html
+	@pipenv run pytest --cov=$(SOURCE_DIR) tests
 .PHONY: pytest
 
-quality: isort lint pytest  ##@quality Run all quality checks.
+quality: isort pylama pytest  ##@quality Run all quality checks.
 .PHONY: quality
