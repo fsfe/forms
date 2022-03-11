@@ -7,7 +7,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-FROM fsfe/alpine-pipenv:latest
+FROM bitnami/python:3.9
+
+RUN pip3 install --no-cache-dir -U pip
+RUN pip3 install --no-cache-dir -U pipenv
 
 EXPOSE 8080
 
@@ -22,7 +25,7 @@ COPY . .
 RUN ./setup.py install
 
 # Switch to non-root user
-RUN adduser -u 1000 -g "FSFE" -s "/sbin/nologin" -D fsfe
+RUN adduser --uid 1000 --gecos "FSFE" --shell "/sbin/nologin" --disabled-password fsfe
 USER fsfe
 WORKDIR /home/fsfe
 
