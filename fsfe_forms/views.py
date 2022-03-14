@@ -138,7 +138,7 @@ def _process(config, params, id=None, store=None):
 
 
 def index():
-    return render_template("index.html")
+    return render_template("pages/index.html")
 
 
 # =============================================================================
@@ -182,7 +182,7 @@ confirm_parameters = {"id": UUID(required=True)}
 @use_kwargs(confirm_parameters, location="query")
 def confirm(id):
     """A landing page to confirm the ID via a click. Hands over to redeem()"""
-    return render_template("confirm.html", id=id)
+    return render_template("pages/confirm.html", id=id)
 
 
 @use_kwargs(confirm_parameters, location="query")
