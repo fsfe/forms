@@ -181,6 +181,13 @@ confirm_parameters = {"id": UUID(required=True)}
 
 @use_kwargs(confirm_parameters, location="query")
 def confirm(id):
+    """A landing page to confirm the ID via a click. Hands over to redeem()"""
+    return render_template("confirm.html", id=id)
+
+
+@use_kwargs(confirm_parameters, location="query")
+def redeem(id):
+    """Redeems an ID after checking its validity, refers to further actions then"""
     params = queue_pop(id)
 
     app_config = _find_app_config(params["appid"])
