@@ -1,0 +1,40 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+  <link rel="stylesheet" href="/static/css/pico.min.css" />
+  <link rel="stylesheet" href="/static/css/custom.css" />
+  <link rel="icon" href="/static/img/fsfe.ico" type="image/x-icon" />
+  <title>{% block title %}FSFE{% endblock %}</title>
+</head>
+<body>
+  <main class="container">
+    <div id="header">
+      <div id="logo"><img alt="FSFE Logo" src="/static/img/fsfe_logo.png" class="logo" /></div>
+      <p id="statement">
+        The Free Software Foundation Europe is a non-profit organisation
+        dedicated to promoting <a href=
+        "https://fsfe.org/freesoftware/">Free Software</a>,
+        working to build a free digital society. <a
+        href="https://fsfe.org/about/">Learn more</a> and <a
+        href="https://my.fsfe.org/donate?referrer=forms">support us</a>.
+      </p>
+    </div>
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <footer>
+      <hr />
+      <small>
+        <p>
+          A service of the Free Software Foundation Europe. The code of this
+          service is Free Software (<a
+          href="https://git.fsfe.org/fsfe-system-hackers/forms">Code</a>). <a href="https://fsfe.org/about/legal/imprint.html">Imprint and privacy policy</a>.
+        </p>
+      </small>
+    </footer>
+  </main>
+</body>
+</html>

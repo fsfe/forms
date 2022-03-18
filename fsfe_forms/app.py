@@ -21,7 +21,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from fsfe_forms import config
 from fsfe_forms.email import init_email
-from fsfe_forms.views import confirm, email, index
+from fsfe_forms.views import confirm, email, index, redeem
 
 
 # =============================================================================
@@ -84,5 +84,6 @@ def create_app():
     app.add_url_rule(rule="/", view_func=index)
     app.add_url_rule(rule="/email", view_func=email, methods=["GET", "POST"])
     app.add_url_rule(rule="/confirm", view_func=confirm)
+    app.add_url_rule(rule="/redeem", view_func=redeem)
 
     return app
