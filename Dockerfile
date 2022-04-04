@@ -9,8 +9,7 @@
 
 FROM bitnami/python:3.9
 
-RUN pip3 install --no-cache-dir -U pip
-RUN pip3 install --no-cache-dir -U pipenv
+RUN install_packages pipenv
 
 EXPOSE 8080
 
