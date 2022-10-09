@@ -14,8 +14,15 @@ is to set up an isolated Python environment, called a *virtual environment* or
 version of the required Python libraries. To make this as easy as possible,
 fsfe-forms uses [Pipenv](https://docs.pipenv.org/en/latest/).
 
-After cloning the git repository, just run `make virtualenv` in the git
-checkout directory and the virtual environment will be completely set up.
+After cloning the git repository and its submodule, just run `make virtualenv`
+in the git checkout directory and the virtual environment will be completely set
+up.
+
+Then you build a development environment with the command:
+
+```bash
+docker compose -f docker-compose.dev.yml build
+```
 
 
 ## Coding style
