@@ -32,7 +32,9 @@ steps:
     pull: never
     image: fsfe-forms-quality
     commands:
-      - make quality
+      - isort --check --diff fsfe_forms tests/* *.py
+      - pylama
+      - pytest --cov=fsfe_forms tests
     depends_on:
       - quality-image
 
