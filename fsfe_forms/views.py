@@ -11,7 +11,7 @@
 from flask import (
     abort, current_app, redirect, render_template, render_template_string,
     request, url_for)
-from marshmallow import Schema, ValidationError, validates_schema
+from marshmallow import Schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
 from validate_email import validate_email
@@ -75,14 +75,13 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             current_app.logger.info(
                 "Caught invalid email address '{}'".format(params["confirm"])
             )
-            abort(422, f"This email address does not exist.")
+            abort(422, "This email address does not exist.")
 
         elif result is None:
             current_app.logger.warning(
                 "Could not verify email address '{}'".format(params["confirm"])
             )
-            abort(422, f"We could not validate this email address.")
-
+            abort(422, "We could not validate this email address.")
 
     for name, options in config.items():
         field_class = String
