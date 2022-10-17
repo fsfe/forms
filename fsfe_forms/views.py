@@ -84,7 +84,6 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                 current_app.logger.warning(
                     "Could not verify email address '{}'".format(params["confirm"])
                 )
-                abort(422, "We could not validate this email address.")
 
     for name, options in config.items():
         field_class = String
