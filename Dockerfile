@@ -35,7 +35,7 @@ WORKDIR /home/fsfe
 # Production installation
 # =============================================================================
 
-FROM staging as production
+FROM development as production
 
 # Install the actual application
 COPY . .
