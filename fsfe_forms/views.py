@@ -8,9 +8,16 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import validate_email.exceptions
 from flask import (
-    abort, current_app, redirect, render_template, render_template_string,
-    request, url_for)
+    abort,
+    current_app,
+    redirect,
+    render_template,
+    render_template_string,
+    request,
+    url_for,
+)
 from marshmallow import Schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
@@ -106,11 +113,14 @@ def _process(config, params, id=None, store=None):
 
     if "email" in config:
         # Send out email
-        message = send_email(
-            template=config["email"],
-            confirmation_url=url_for("confirm", _external=True, id=id),
-            **params,
-        )
+        try:
+            message = send_email(
+                template=config["email"],
+                confirmation_url=url_for("confirm", _external=True, id=id),
+                **params,
+            )
+        except validate_email.exceptions.EmailValidationError:
+            abort(422, "Provided email address could not be verified.")
 
         # Store data in JSON log
         if store:
