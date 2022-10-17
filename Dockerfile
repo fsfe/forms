@@ -20,6 +20,10 @@ COPY requirements.txt ./
 RUN pip install --ignore-installed setuptools pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install the actual application
+COPY . .
+RUN ./setup.py install
+
 # =============================================================================
 # Development installation
 # =============================================================================
@@ -36,10 +40,6 @@ WORKDIR /home/fsfe
 # =============================================================================
 
 FROM development as production
-
-# Install the actual application
-COPY . .
-RUN ./setup.py install
 
 # Run the WSGI server
 CMD gunicorn --bind 0.0.0.0:8080 "fsfe_forms:create_app()"
