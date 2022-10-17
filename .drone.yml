@@ -33,7 +33,6 @@ steps:
     image: fsfe-forms-quality
     commands:
       - make quality
-      - pipenv --rm
     depends_on:
       - quality-image
 
