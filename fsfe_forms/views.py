@@ -65,7 +65,10 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
         "lang": String(validate=Regexp(r"^[a-z]{2}$"), missing=None),
     }
     if confirm:
+        blacklisted_email_domains = ["mail.ru"]
         fields["confirm"] = Email(required=True)
+        if params["confirm"].split("@")[1] in blacklisted_email_domains:
+            abort(422, "Your email domain is temporarily blocked.")
         if current_app.testing or current_app.debug:
             result = True
         else:
