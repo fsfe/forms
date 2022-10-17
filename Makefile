@@ -67,5 +67,9 @@ pytest:  ##@quality Run the functional tests.
 	@pipenv run pytest --cov=$(SOURCE_DIR) tests
 .PHONY: pytest
 
+reqs: ##@quality Ensure requirements.txt files are in sync with Pipfiles
+	@pipenv requirements --dev > requirements_all.txt && pipenv requirements > requirements.txt
+.PHONY: reqs
+
 quality: isort pylama pytest  ##@quality Run all quality checks.
 .PHONY: quality

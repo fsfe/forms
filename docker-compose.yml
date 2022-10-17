@@ -21,13 +21,17 @@ services:
     depends_on:
       - forms-redis
     image: forms
-    build: .
+    build:
+      target: production
+      context: .
     container_name: forms
     environment:
       RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
       MAIL_SERVER: "mail.fsfe.org"
       MAIL_HELO_HOST: "cont2.noris.fsfeurope.org"
       LOG_EMAIL_FROM: "contact@fsfe.org"
+      VALIDATE_EMAIL_HELO: "cont2.noris.fsfeurope.org"
+      VALIDATE_EMAIL_FROM: "contact@fsfe.org"
       LOG_EMAIL_TO: "contact@fsfe.org"
       REDIS_HOST: "forms-redis"
       REDIS_PORT: "6379"

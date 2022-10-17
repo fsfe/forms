@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 [[source]]
+name = "PyPi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
@@ -15,6 +16,7 @@ gunicorn = "*"
 redis = "*"
 requests = "*"
 webargs = "*"
+py3-validate-email = "*"
 
 [dev-packages]
 fakeredis = "*"

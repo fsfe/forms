@@ -9,10 +9,9 @@
 
 FROM bitnami/python:3.9
 
-RUN install_packages pipenv
-
 WORKDIR /root
 
 # Install Python packages
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy --dev
+COPY requirements_all.txt ./
+RUN pip install --ignore-installed setuptools pip
+RUN pip install --no-cache-dir -r requirements_all.txt

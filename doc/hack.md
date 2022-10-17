@@ -17,6 +17,12 @@ fsfe-forms uses [Pipenv](https://docs.pipenv.org/en/latest/).
 After cloning the git repository, just run `make virtualenv` in the git
 checkout directory and the virtual environment will be completely set up.
 
+Then you build a development environment with the command:
+
+```bash
+docker compose -f docker-compose.dev.yml build
+```
+
 
 ## Coding style
 
