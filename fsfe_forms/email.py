@@ -95,7 +95,7 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
             try:
                 # Don't validate email in tests
                 if current_app.testing or current_app.debug:
-                    email_is_valid = True
+                    smtp.send_message(message)
 
                 # Check whether email exists
                 else:
@@ -104,7 +104,7 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
                         smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
                         smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
                     )
-                smtp.send_message(message)
+                    smtp.send_message(message)
 
             except smtplib.SMTPRecipientsRefused:
                 # Ignore errors from invalid email addresses entered
