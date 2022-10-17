@@ -8,13 +8,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import validate_email.exceptions
 from flask import (
     abort, current_app, redirect, render_template, render_template_string,
     request, url_for)
-from marshmallow import Schema
+from marshmallow import Schema, ValidationError, validates_schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
+from validate_email import validate_email
 from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
@@ -56,6 +56,9 @@ def _find_app_config(appid):
 
 def _validate(config: dict, params: dict, confirm: bool):  # noqa
 
+    current_app.logger.info(f"config: {config}")
+    current_app.logger.info(f"params: {params}")
+    current_app.logger.info(f"confirm: {confirm}")
     # Build Marshmallow Schema from configuration
     fields = {
         "appid": String(required=True),
@@ -63,6 +66,24 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
     }
     if confirm:
         fields["confirm"] = Email(required=True)
+        result = validate_email(
+            email_address=params["confirm"],
+            smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
+            smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
+        )
+        if result is False:
+            current_app.logger.info(
+                "Caught invalid email address '{}'".format(params["confirm"])
+            )
+            abort(422, f"This email address does not exist.")
+
+        elif result is None:
+            current_app.logger.warning(
+                "Could not verify email address '{}'".format(params["confirm"])
+            )
+            abort(422, f"We could not validate this email address.")
+
+
     for name, options in config.items():
         field_class = String
         validate = []
@@ -107,14 +128,11 @@ def _process(config, params, id=None, store=None):
 
     if "email" in config:
         # Send out email
-        try:
-            message = send_email(
-                template=config["email"],
-                confirmation_url=url_for("confirm", _external=True, id=id),
-                **params,
-            )
-        except validate_email.exceptions.EmailValidationError:
-            abort(422, "Provided email address could not be verified.")
+        message = send_email(
+            template=config["email"],
+            confirmation_url=url_for("confirm", _external=True, id=id),
+            **params,
+        )
 
         # Store data in JSON log
         if store:

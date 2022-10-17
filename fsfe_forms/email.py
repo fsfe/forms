@@ -16,7 +16,6 @@ import smtplib
 from typing import Optional
 
 from flask import current_app, render_template
-from validate_email import validate_email_or_fail
 
 
 # =============================================================================
@@ -93,19 +92,7 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
                     password=current_app.config["MAIL_PASSWORD"],
                 )
             try:
-                # Don't validate email in tests
-                if current_app.testing or current_app.debug:
-                    smtp.send_message(message)
-
-                # Check whether email exists
-                else:
-                    validate_email_or_fail(
-                        email_address=kwargs["confirm"],
-                        smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
-                        smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
-                    )
-                    smtp.send_message(message)
-
+                smtp.send_message(message)
             except smtplib.SMTPRecipientsRefused:
                 # Ignore errors from invalid email addresses entered
                 pass
