@@ -26,7 +26,7 @@ LOG_EMAIL_FROM = environ.get("LOG_EMAIL_FROM")
 LOG_EMAIL_TO = environ.get("LOG_EMAIL_TO")
 
 # Parameters for the connection to the Redis server
-REDIS_HOST = environ.get("REDIS_HOST", "localhost")
+REDIS_HOST = environ.get("REDIS_HOST", "forms-redis")
 REDIS_PORT = int(environ.get("REDIS_PORT", 6379))
 REDIS_PASSWORD = environ.get("REDIS_PASSWORD", None)
 REDIS_QUEUE_DB = int(environ.get("REDIS_QUEUE_DB", 0))
@@ -42,3 +42,7 @@ LOCK_FILENAME = environ.get("LOCK_FILENAME", "/tmp/forms.lock")
 # Expiration time for double opt-in confirmation
 # (None means no expiration)
 CONFIRMATION_EXPIRATION_SECS = 86400
+
+# Parameters for email address validation
+VALIDATE_EMAIL_HELO = environ.get("VALIDATE_EMAIL_HELO", "localhost")
+VALIDATE_EMAIL_FROM = environ.get("VALIDATE_EMAIL_FROM")
