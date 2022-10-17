@@ -12,15 +12,25 @@ version: '3'
 services:
   forms:
     image: forms
-    build: .
+    build:
+      target: development
+      context: .
     ports:
       - "8080:8080"
+    volumes:
+      - ".:/home/fsfe/src"
     environment:
-      "MAIL_SERVER": "forms-fakesmtp"
-      "MAIL_PORT": "1025"
-      "LOG_EMAIL_FROM": "contact@fsfe.org"
-      "LOG_EMAIL_TO": "contact@fsfe.org"
-      "FSFE_CD_URL": "http://forms-fake-fsfe-cd-front:8888/"
+      FLASK_APP: "/home/fsfe/src/fsfe_forms"
+      FLASK_DEBUG: "True"
+      FLASK_RUN_PORT: 8080
+      FLASK_RUN_HOST: "0.0.0.0"
+      MAIL_SERVER: "forms-fakesmtp"
+      MAIL_PORT: "1025"
+      LOG_EMAIL_FROM: "contact@fsfe.org"
+      LOG_EMAIL_TO: "contact@fsfe.org"
+      VALIDATE_EMAIL_FROM: "contact@fsfe.org"
+      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
+    command: /bin/sh -c "flask run"
 
   forms-fakesmtp:
     image: forms-fakesmtp
@@ -31,6 +41,15 @@ services:
     ports:
       - "1025:1025"
       - "1080:1080"
+
+  forms-redis:
+    image: bitnami/redis:6.2
+    container_name: forms-redis
+    expose:
+      - "6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    restart: always
 
   forms-fake-fsfe-cd-front:
     image: forms-fake-fsfe-cd-front
