@@ -9,15 +9,13 @@
 
 FROM bitnami/python:3.9
 
-RUN install_packages pipenv
-
 EXPOSE 8080
 
 WORKDIR /root
 
-# Install Python packages
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
+COPY requirements.txt ./
+RUN pip install --ignore-installed setuptools pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Install the actual application
 COPY . .
