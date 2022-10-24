@@ -7,7 +7,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-FROM bitnami/python:3.9
+FROM bitnami/python:3.10
 
 WORKDIR /root
 

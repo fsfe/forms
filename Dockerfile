@@ -10,7 +10,7 @@
 # =============================================================================
 # Install dependencies
 # =============================================================================
-FROM bitnami/python:3.9 as dependencies
+FROM bitnami/python:3.10 as dependencies
 
 EXPOSE 8080
 
