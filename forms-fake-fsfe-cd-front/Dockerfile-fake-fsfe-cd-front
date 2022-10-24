@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-FROM python:3.6
+FROM python:3.10
 
 RUN pip install mock-server
 
