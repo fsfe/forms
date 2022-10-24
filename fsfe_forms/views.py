@@ -65,13 +65,22 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
         "lang": String(validate=Regexp(r"^[a-z]{2}$"), missing=None),
     }
     if confirm:
-        blacklisted_email_domains = ["mail.ru", "inbox.ru", "list.ru"]
         fields["confirm"] = Email(required=True)
-        if params["confirm"].split("@")[1] in blacklisted_email_domains:
-            abort(422, "Your email domain is temporarily blocked.")
+
+        # Don't do expensive validation during
         if current_app.testing or current_app.debug:
             result = True
+
         else:
+            # Abort immediately on blacklisted domains
+            blacklisted_email_domains = ["mail.ru", "inbox.ru", "list.ru"]
+            try:
+                if params["confirm"].split("@")[1] in blacklisted_email_domains:
+                    abort(422, "Your email domain is temporarily blocked.")
+            except IndexError:
+                abort(422, "Your email address didn't pass initial validation.")
+
+            # Do expensive validation
             result = validate_email(
                 email_address=params["confirm"],
                 smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
@@ -82,7 +91,6 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                     "Caught invalid email address '{}'".format(params["confirm"])
                 )
                 abort(422, "This email address does not exist.")
-
             elif result is None:
                 current_app.logger.warning(
                     "Could not verify email address '{}'".format(params["confirm"])
