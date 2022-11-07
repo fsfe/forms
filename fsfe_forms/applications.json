@@ -43,6 +43,40 @@
       "redirect": "https://publiccode.eu/{{lang}}/openletter/confirm"
     }
   },
+  "upa-sign": {
+    "parameters": {
+      "name": ["required", "single-line"],
+      "country": [],
+      "zip": [],
+      "comment": [],
+      "lang": ["required"],
+      "permissionPriv": ["mandatory"],
+      "permissionPub": ["boolean"],
+      "permissionNews": ["boolean"],
+      "permissionNewsFSFE": ["boolean"],
+      "url": ["forbidden"]
+    },
+    "cd": {
+      "name": "name",
+      "zip": "zip",
+      "country": "country",
+      "signed_upa_on": "<date>",
+      "wants_upa_info": "permissionNews",
+      "wants_info": "permissionNewsFSFE"
+    },
+    "store": "/store/upa/signatures.json",
+    "register": {
+      "email": "upa-sign-register",
+      "redirect": "https://upcyclingandroid.org/openletter/confirm"
+    },
+    "confirm": {
+      "redirect": "https://upcyclingandroid.org/openletter/success"
+    },
+    "duplicate": {
+      "email": "upa-sign-duplicate",
+      "redirect": "https://upcyclingandroid.org/openletter/confirm"
+    }
+  },
   "ln-apply": {
     "parameters": {
       "name": ["required", "single-line"],

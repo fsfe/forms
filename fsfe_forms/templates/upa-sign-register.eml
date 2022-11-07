@@ -1,0 +1,37 @@
+From: Free Software Foundation Europe <no-reply@fsfe.org>
+To: {{ format_email(name, confirm) }}
+Subject: Open Letter: Please confirm your signature
+
+Dear {{ name }},
+
+Thank you for signing our Open Letter about the universal
+right to install any software on any device.
+
+Please confirm your signature by clicking on the link below:
+
+  {{ confirmation_url }}
+
+The link is valid for the next 24 hours. If you do not confirm your 
+email, your signature will not be counted.
+
+With your help we can achieve our goal of making devices more sustainable
+by installing Free Software! Don't forget to tell your friends and colleagues
+
+Spread the word: https://fsfe.org/activities/upcyclingandroid/openletter.html
+
+
+Thank you for your support,
+Matthias Kirschner, President FSFE
+
+
+-- 
+You received this email because the Open Letter about the universal 
+right to install any software on any device has been signed with your
+address: https://upcyclingandroid.org/
+
+FSFE respects your privacy. Your data will only be stored on our own 
+infrastructure: https://fsfe.org/activities/upcyclingandroid/privacy/
+
+If you didn't request to sign our open letter, you can ignore this 
+message. If you receive too many of these messages, please write to 
+contact@fsfe.org
