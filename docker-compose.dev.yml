@@ -24,7 +24,7 @@ services:
       FLASK_DEBUG: "True"
       FLASK_RUN_PORT: 8080
       FLASK_RUN_HOST: "0.0.0.0"
-      MAIL_SERVER: "forms-fakesmtp"
+      MAIL_SERVER: "forms-maildev"
       MAIL_PORT: "1025"
       LOG_EMAIL_FROM: "contact@fsfe.org"
       LOG_EMAIL_TO: "contact@fsfe.org"
@@ -32,12 +32,9 @@ services:
       FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
     command: /bin/sh -c "flask run"
 
-  forms-fakesmtp:
-    image: forms-fakesmtp
-    build:
-      context: ./fake-smtp-server
-      dockerfile: Dockerfile-smtp
-    container_name: forms-fakesmtp
+  forms-maildev:
+    image: maildev/maildev:2.0.5
+    container_name: forms-maildev
     ports:
       - "1025:1025"
       - "1080:1080"
