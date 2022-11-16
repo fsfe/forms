@@ -56,9 +56,9 @@ def _find_app_config(appid):
 
 def _validate(config: dict, params: dict, confirm: bool):  # noqa
 
-    current_app.logger.info(f"config: {config}")
-    current_app.logger.info(f"params: {params}")
-    current_app.logger.info(f"confirm: {confirm}")
+    current_app.logger.debug(f"config: {config}")
+    current_app.logger.debug(f"params: {params}")
+    current_app.logger.debug(f"confirm: {confirm}")
     # Build Marshmallow Schema from configuration
     fields = {
         "appid": String(required=True),
@@ -76,7 +76,9 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             blacklisted_email_domains = ["mail.ru", "inbox.ru", "list.ru"]
             try:
                 if params["confirm"].split("@")[1] in blacklisted_email_domains:
-                    abort(422, "Your email domain is temporarily blocked.")
+                    abort(422, "Your email provider is temporarily blocked.")
+            except KeyError:
+                abort(422, "Your email address didn't pass initial validation.")
             except IndexError:
                 abort(422, "Your email address didn't pass initial validation.")
 
