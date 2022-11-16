@@ -76,7 +76,9 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             blacklisted_email_domains = ["mail.ru", "inbox.ru", "list.ru"]
             try:
                 if params["confirm"].split("@")[1] in blacklisted_email_domains:
-                    abort(422, "Your email domain is temporarily blocked.")
+                    abort(422, "Your email provider is temporarily blocked.")
+            except KeyError:
+                abort(422, "Your email address didn't pass initial validation.")
             except IndexError:
                 abort(422, "Your email address didn't pass initial validation.")
 
