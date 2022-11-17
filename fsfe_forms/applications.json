@@ -67,14 +67,14 @@
     "store": "/store/upa/signatures.json",
     "register": {
       "email": "upa-sign-register",
-      "redirect": "https://upcyclingandroid.org/openletter/confirm"
+      "redirect": "https://fsfe.org/activities/upcyclingandroid/application-confirm"
     },
     "confirm": {
-      "redirect": "https://upcyclingandroid.org/openletter/success"
+      "redirect": "https://fsfe.org/activities/upcyclingandroid/application-success"
     },
     "duplicate": {
       "email": "upa-sign-duplicate",
-      "redirect": "https://upcyclingandroid.org/openletter/confirm"
+      "redirect": "https://fsfe.org/activities/upcyclingandroid/application-confirm"
     }
   },
   "ln-apply": {
