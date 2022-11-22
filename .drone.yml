@@ -18,12 +18,12 @@ steps:
       - reuse lint
 
   - name: quality-image
-    image: docker/compose:1.29.2
+    image: docker:20
     environment:
       XDG_RUNTIME_DIR: "/run/user/1001"
       DOCKER_HOST: "unix:///run/user/1001/docker.sock"
     commands:
-      - docker-compose -p forms -f docker-compose-quality.yml build
+      - docker compose -p forms -f docker-compose-quality.yml build
     volumes:
       - name: dockersock
         path: /run/user/1001/docker.sock
