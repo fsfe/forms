@@ -18,7 +18,7 @@ limits==2.7.0 ; python_version >= '3.7'
 markupsafe==2.1.1 ; python_version >= '3.7'
 marshmallow==3.18.0 ; python_version >= '3.7'
 packaging==21.3 ; python_version >= '3.6'
-py3-validate-email==1.0.7
+git+https://gitea.ksol.io/karolyi/py3-validate-email@32c8f4cdfaba4c7e7fc81405a023c849a9268859#egg=py3-validate-email
 pygments==2.13.0 ; python_version >= '3.6'
 pyparsing==3.0.9 ; python_full_version >= '3.6.8'
 redis==4.3.4

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "336facd2d2eecba05066f7b22d13c45bb80a261d0f28816a10d30b1094035222"
+            "sha256": "222273ebd9a50e2cd71b9ba59f0d4098eeac24f3f7cff55e674f228b1c893432"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -206,11 +206,8 @@
             "version": "==21.3"
         },
         "py3-validate-email": {
-            "hashes": [
-                "sha256:e23d00adea76946daa451cba6f7d5fa4f8d10ce33e197feccc1131487b03860c"
-            ],
-            "index": "PyPi",
-            "version": "==1.0.7"
+            "git": "https://gitea.ksol.io/karolyi/py3-validate-email",
+            "ref": "32c8f4cdfaba4c7e7fc81405a023c849a9268859"
         },
         "pygments": {
             "hashes": [
@@ -463,6 +460,14 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.2.13"
         },
+        "exceptiongroup": {
+            "hashes": [
+                "sha256:542adf9dea4055530d6e1279602fa5cb11dab2395fa650b8674eaec35fc4a828",
+                "sha256:bd14967b79cd9bdb54d97323216f8fdf533e278df937aa2a90089e7d6e06e5ec"
+            ],
+            "markers": "python_version < '3.11'",
+            "version": "==1.0.4"
+        },
         "fakeredis": {
             "hashes": [
                 "sha256:17415645d11994061f5394f3f1c76ba4531f3f8b63f9c55a8fd2120bebcbfae9",
@@ -703,7 +708,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "werkzeug": {

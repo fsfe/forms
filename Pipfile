@@ -16,7 +16,7 @@ gunicorn = "*"
 redis = "*"
 requests = "*"
 webargs = "*"
-py3-validate-email = "*"
+py3-validate-email = {ref = "v1.0.9", git = "https://gitea.ksol.io/karolyi/py3-validate-email"}
 
 [dev-packages]
 fakeredis = "*"
