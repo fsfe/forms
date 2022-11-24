@@ -26,7 +26,7 @@ services:
       context: .
     container_name: forms
     environment:
-      RATELIMIT_DEFAULT: "5 per second, 50 per minute, 2000 per hour"
+      RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
       MAIL_SERVER: "mail.fsfe.org"
       MAIL_HELO_HOST: "cont2.noris.fsfeurope.org"
       LOG_EMAIL_FROM: "contact@fsfe.org"
