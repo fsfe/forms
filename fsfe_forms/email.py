@@ -72,29 +72,21 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
     # Tell the library which character set to use on serialization
     message.set_charset("utf-8")
 
-    # If in debug mode, output the email to stdout instead of sending it,
-    # except for automatic tests, where we let the mock SMTP server catch the
-    # output
-    if current_app.debug and not current_app.testing:  # pragma: no cover
-        print("*" * 79)
-        print(message.as_string())
-        print("*" * 79)
-    else:
-        # Send out the message
-        with smtplib.SMTP(
-            host=current_app.config["MAIL_SERVER"],
-            port=current_app.config["MAIL_PORT"],
-            local_hostname=current_app.config["MAIL_HELO_HOST"],
-        ) as smtp:
-            if current_app.config["MAIL_USERNAME"]:
-                smtp.login(
-                    user=current_app.config["MAIL_USERNAME"],
-                    password=current_app.config["MAIL_PASSWORD"],
-                )
-            try:
-                smtp.send_message(message)
-            except smtplib.SMTPRecipientsRefused:
-                # Ignore errors from invalid email addresses entered
-                pass
+    # Send out the message
+    with smtplib.SMTP(
+        host=current_app.config["MAIL_SERVER"],
+        port=current_app.config["MAIL_PORT"],
+        local_hostname=current_app.config["MAIL_HELO_HOST"],
+    ) as smtp:
+        if current_app.config["MAIL_USERNAME"]:
+            smtp.login(
+                user=current_app.config["MAIL_USERNAME"],
+                password=current_app.config["MAIL_PASSWORD"],
+            )
+        try:
+            smtp.send_message(message)
+        except smtplib.SMTPRecipientsRefused:
+            # Ignore errors from invalid email addresses entered
+            pass
 
     return message
