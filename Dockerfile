@@ -8,6 +8,26 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # =============================================================================
+# Create requirements.txt file
+# =============================================================================
+FROM bitnami/python:3.9 as requirements-builder
+WORKDIR /root
+ENV PATH="$PATH:/root/.local/bin"
+
+# Upgrade / install pipx
+RUN python3 -m pip install --user pipx
+RUN python3 -m pipx ensurepath
+
+# Install pipenv with pipx
+RUN python3 -m pipx install pipenv
+
+# Import Python packages
+COPY Pipfile Pipfile.lock ./
+
+# Create requirements.txt for the next step
+RUN pipenv requirements > requirements.txt
+
+# =============================================================================
 # Install dependencies
 # =============================================================================
 FROM bitnami/python:3.9 as dependencies
@@ -16,10 +36,9 @@ EXPOSE 8080
 
 WORKDIR /root
 
-COPY requirements.txt ./
+COPY --from=requirements-builder /root/requirements.txt ./
 RUN pip install --ignore-installed setuptools pip
 RUN pip install --no-cache-dir -r requirements.txt
-
 # Install the actual application
 COPY . .
 RUN ./setup.py install
