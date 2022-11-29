@@ -19,10 +19,10 @@ setup(
     author_email="contact@fsfe.org",
     license="GPL",
     packages=["fsfe_forms",
-        "fsfe_forms.static.css",
-        "fsfe_forms.static.img",
-        "fsfe_forms.templates",
-        "fsfe_forms.templates.pages"],
+                "fsfe_forms.static.css",
+                "fsfe_forms.static.img",
+                "fsfe_forms.templates",
+                "fsfe_forms.templates.pages"],
     include_package_data=True,
     zip_safe=False
 )
