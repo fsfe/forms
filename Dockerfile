@@ -38,6 +38,7 @@ WORKDIR /root
 
 COPY --from=requirements-builder /root/requirements.txt ./
 RUN pip install --ignore-installed setuptools pip
+RUN pip install wheel
 RUN pip install --no-cache-dir -r requirements.txt
 # Install the actual application
 COPY . .
