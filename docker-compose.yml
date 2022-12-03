@@ -11,10 +11,12 @@
 version: "3"
 services:
   forms-redis:
-    image: redis:6
+    image: bitnami/redis:6.2
     container_name: forms-redis
     expose:
-      - 6379
+      - "6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
     restart: always
 
   forms:
@@ -26,18 +28,18 @@ services:
       context: .
     container_name: forms
     environment:
-      RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
-      MAIL_SERVER: "mail.fsfe.org"
-      MAIL_HELO_HOST: "cont2.noris.fsfeurope.org"
+      FSFE_CD_PASSPHRASE: "${FSFE_CD_PASSPHRASE}"
+      FSFE_CD_TIMEOUT: 3
+      FSFE_CD_URL: "https://my.fsfe.org/"
       LOG_EMAIL_FROM: "contact@fsfe.org"
-      VALIDATE_EMAIL_HELO: "cont2.noris.fsfeurope.org"
-      VALIDATE_EMAIL_FROM: "contact@fsfe.org"
       LOG_EMAIL_TO: "contact@fsfe.org"
+      MAIL_HELO_HOST: "cont2.noris.fsfeurope.org"
+      MAIL_SERVER: "mail.fsfe.org"
+      RATELIMIT_DEFAULT: "1 per second, 5 per minute, 20 per hour"
       REDIS_HOST: "forms-redis"
       REDIS_PORT: "6379"
-      FSFE_CD_URL: "https://my.fsfe.org/"
-      FSFE_CD_TIMEOUT: 3
-      FSFE_CD_PASSPHRASE: "${FSFE_CD_PASSPHRASE}"
+      VALIDATE_EMAIL_FROM: "contact@fsfe.org"
+      VALIDATE_EMAIL_HELO: "cont2.noris.fsfeurope.org"
     volumes:
       - "/srv/forms:/store:rw"
     restart: always

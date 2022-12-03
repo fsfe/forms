@@ -17,3 +17,6 @@ dist/
 .pytest_cache/
 .coverage
 htmlcov
+
+# Dev forms storage
+store/

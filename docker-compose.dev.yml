@@ -8,37 +8,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-version: '3'
+version: "3"
 services:
-  forms:
-    image: forms
-    build:
-      target: development
-      context: .
-    ports:
-      - "8080:8080"
-    volumes:
-      - ".:/home/fsfe/src"
-    environment:
-      FLASK_APP: "/home/fsfe/src/fsfe_forms"
-      FLASK_DEBUG: "True"
-      FLASK_RUN_PORT: 8080
-      FLASK_RUN_HOST: "0.0.0.0"
-      MAIL_SERVER: "forms-maildev"
-      MAIL_PORT: "1025"
-      LOG_EMAIL_FROM: "contact@fsfe.org"
-      LOG_EMAIL_TO: "contact@fsfe.org"
-      VALIDATE_EMAIL_FROM: "contact@fsfe.org"
-      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
-    command: /bin/sh -c "flask run"
-
-  forms-maildev:
-    image: maildev/maildev:2.0.5
-    container_name: forms-maildev
-    ports:
-      - "1025:1025"
-      - "1080:1080"
-
   forms-redis:
     image: bitnami/redis:6.2
     container_name: forms-redis
@@ -47,6 +18,42 @@ services:
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
     restart: always
+
+  forms:
+    image: forms
+    container_name: forms
+    build:
+      target: development
+      context: .
+    depends_on:
+      - forms-redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - ".:/home/fsfe/src"
+      - "./store:/store:rw"
+    restart: always
+    environment:
+      FLASK_APP: "/home/fsfe/src/fsfe_forms"
+      FLASK_DEBUG: "True"
+      FLASK_RUN_HOST: "0.0.0.0"
+      FLASK_RUN_PORT: 8080
+      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
+      LOG_EMAIL_FROM: "contact@fsfe.org"
+      LOG_EMAIL_TO: "contact@fsfe.org"
+      MAIL_PORT: "1025"
+      MAIL_SERVER: "forms-maildev"
+      REDIS_HOST: "forms-redis"
+      REDIS_PORT: "6379"
+      VALIDATE_EMAIL_FROM: "contact@fsfe.org"
+    command: /bin/sh -c "flask run"
+
+  forms-maildev:
+    image: maildev/maildev:2.0.5
+    container_name: forms-maildev
+    ports:
+      - "1025:1025"
+      - "1080:1080"
 
   forms-fake-fsfe-cd-front:
     image: forms-fake-fsfe-cd-front
