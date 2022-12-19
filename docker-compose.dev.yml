@@ -19,6 +19,20 @@ services:
       ALLOW_EMPTY_PASSWORD: "yes"
     restart: always
 
+  # This is the container for local testing
+  forms-quality:
+    image: forms-quality
+    container_name: forms-quality
+    build:
+      dockerfile: Dockerfile-quality
+      target: dependencies
+      args:
+        user_id: "${USER_ID}"
+        group_id: "${GROUP_ID}"
+    volumes:
+      - "./back:/home/fsfe/src"
+    command: sleep infinity
+
   forms:
     image: forms
     container_name: forms
@@ -38,7 +52,6 @@ services:
       FLASK_DEBUG: "True"
       FLASK_RUN_HOST: "0.0.0.0"
       FLASK_RUN_PORT: 8080
-      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
       LOG_EMAIL_FROM: "contact@fsfe.org"
       LOG_EMAIL_TO: "contact@fsfe.org"
       MAIL_PORT: "1025"
@@ -46,6 +59,7 @@ services:
       REDIS_HOST: "forms-redis"
       REDIS_PORT: "6379"
       VALIDATE_EMAIL_FROM: "contact@fsfe.org"
+      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
     command: /bin/sh -c "flask run"
 
   forms-maildev:
