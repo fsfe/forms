@@ -24,6 +24,8 @@ WHITE  = $(shell tput -Txterm setaf 7)
 YELLOW = $(shell tput -Txterm setaf 3)
 RESET  = $(shell tput -Txterm sgr0)
 
+COMPOSE := docker compose
+
 HELPME = \
 	%help; \
 	while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
@@ -38,6 +40,31 @@ HELPME = \
 help:
 	@perl -e '$(HELPME)' $(MAKEFILE_LIST)
 .PHONY: help
+
+dev: ##@development Start all containers and show their logs.
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} docker compose -f docker-compose.dev.yml up --build --force-recreate
+.PHONY: dev
+
+dev.up: ##@development Start all containers and detach.
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} docker compose -f docker-compose.dev.yml up --build --force-recreate --detach
+.PHONY: dev.up
+
+dev.down: ##@development Stop all containers.
+	@$(COMPOSE) -f docker-compose.dev.yml down
+.PHONY: dev.down
+
+dev.kill: ##@development Kill and subsequently remove all containers.
+	@$(COMPOSE) -f docker-compose.dev.yml kill
+	@$(COMPOSE) -f docker-compose.dev.yml rm --force --stop -v
+.PHONY: dev.kill
+
+dev.logs: ##@development Show logs of running containers.
+	@$(COMPOSE) -f docker-compose.dev.yml logs --timestamps --follow
+.PHONY: dev.logs
+
+toolshell:  ##@development Start a shell in which the command line tools can be run.
+	@docker exec -it forms /bin/sh -c 'PATH=src/bin:$$PATH bash'
+.PHONY: toolshell
 
 virtualenv:  ##@development Set up the virtual environment with the Python dependencies.
 	@pipenv install --dev
