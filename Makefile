@@ -42,61 +42,52 @@ help:
 .PHONY: help
 
 dev: ##@development Start all containers and show their logs.
-	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} docker compose -f docker-compose.dev.yml up --build --force-recreate
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} $(COMPOSE) -f docker-compose.dev.yml up --build --force-recreate
 .PHONY: dev
 
 dev.up: ##@development Start all containers and detach.
-	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} docker compose -f docker-compose.dev.yml up --build --force-recreate --detach
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} $(COMPOSE) -f docker-compose.dev.yml up --build --force-recreate --detach
 .PHONY: dev.up
 
 dev.down: ##@development Stop all containers.
-	@$(COMPOSE) -f docker-compose.dev.yml down
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} $(COMPOSE) -f docker-compose.dev.yml down
 .PHONY: dev.down
 
 dev.kill: ##@development Kill and subsequently remove all containers.
-	@$(COMPOSE) -f docker-compose.dev.yml kill
-	@$(COMPOSE) -f docker-compose.dev.yml rm --force --stop -v
+	$(COMPOSE) -f docker-compose.dev.yml kill
+	$(COMPOSE) -f docker-compose.dev.yml rm --force --stop -v
 .PHONY: dev.kill
 
 dev.logs: ##@development Show logs of running containers.
-	@$(COMPOSE) -f docker-compose.dev.yml logs --timestamps --follow
+	$(COMPOSE) -f docker-compose.dev.yml logs --timestamps --follow
 .PHONY: dev.logs
 
 toolshell:  ##@development Start a shell in which the command line tools can be run.
 	@docker exec -it forms /bin/sh -c 'PATH=src/bin:$$PATH bash'
 .PHONY: toolshell
 
-virtualenv:  ##@development Set up the virtual environment with the Python dependencies.
-	@pipenv install --dev
-.PHONY: virtualenv
+isort.forms: ##@quality-control Run isort in `forms-quality` container.
+	@echo "=== [back] Checking for the correct order of imports ==="
+	@docker exec -it forms-quality /bin/sh -c "isort . --check --diff"
+	@echo "=== [back] Your imports are properly sorted ==="
+.PHONY: isort.forms
 
-applyisort:  ##@development Apply a correct Python import sort inline.
-	@pipenv run isort
-.PHONY: applyisort
+isort.all: isort.forms ##@quality-control Run isort in all modules.
 
-flask:  ##@development Run the Flask built-in web server.
-	@pipenv run flask run
-.PHONY: flask
+lint.forms: ##@quality-control Run linter in `forms-quality` container.
+	@echo "=== [back] Checking the formatting ==="
+	@docker exec -it forms-quality /bin/sh -c "pylama -i E216"
+	@echo "=== [back] Code is properly formatted ==="
+.PHONY: lint.forms
 
-gunicorn:  ##@development Run the Gunicorn based web server.
-	@. ./.env && pipenv run gunicorn --bind $$FLASK_RUN_HOST:$$FLASK_RUN_PORT "$$FLASK_APP:create_app()"
-.PHONY: gunicorn
+lint.all: lint.forms ##@quality-control Run linter in all modules.
 
-isort:  ##@quality Check the Python source code for import sorting.
-	@pipenv run isort --check --diff $(QUALITY_TARGETS)
-.PHONY: isort
+test.forms: ##@quality-control Run pytest in `forms-quality` container.
+	@docker exec -it forms-quality /bin/sh -c "pytest --cov=forms"
+	@docker exec -it forms-quality /bin/sh -c "coverage html"
+.PHONY: text.forms
 
-pylama:  ##@quality Check the Python source code for coding standards compliance.
-	@pipenv run pylama
-.PHONY: pylama
+test.all: test.forms ##@quality-control Run pytest in all modules.
 
-pytest:  ##@quality Run the functional tests.
-	@pipenv run pytest --cov=$(SOURCE_DIR) tests
-.PHONY: pytest
-
-reqs: ##@quality Ensure requirements.txt files are in sync with Pipfiles
-	@pipenv requirements --dev > requirements_all.txt && pipenv requirements > requirements.txt
-.PHONY: reqs
-
-quality: isort pylama pytest  ##@quality Run all quality checks.
-.PHONY: quality
+qc.forms: isort.forms lint.forms test.forms ##@quality-control Run all quality control tools in `forms` container.
+qc.all: qc.forms ##@quality-control Run all quality control tools in all containers.
