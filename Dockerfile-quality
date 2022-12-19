@@ -25,7 +25,9 @@ RUN python3 -m pipx install pipenv
 COPY Pipfile Pipfile.lock ./
 
 # Create requirements.txt for the next step
-RUN pipenv requirements > requirements.txt
+#RUN pipenv requirements > requirements.txt
+RUN pipenv requirements --dev > requirements_all.txt
+
 
 # =============================================================================
 # Install the dependencies
@@ -35,7 +37,7 @@ FROM bitnami/python:3.9 as dependencies
 WORKDIR /root
 
 # Install Python packages
-COPY --from=requirements-builder /root/requirements.txt ./
+COPY --from=requirements-builder /root/requirements_all.txt ./
 RUN pip install --ignore-installed setuptools pip
 RUN pip install wheel
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements_all.txt
