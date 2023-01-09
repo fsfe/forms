@@ -41,3 +41,16 @@ COPY --from=requirements-builder /root/requirements_all.txt ./
 RUN pip install --ignore-installed setuptools pip
 RUN pip install wheel
 RUN pip install --no-cache-dir -r requirements_all.txt
+
+# =============================================================================
+# Development installation
+# =============================================================================
+FROM dependencies AS development
+
+# Switch to non-root user
+RUN adduser --uid 1000 --gecos "FSFE" --shell "/sbin/nologin" --disabled-password fsfe
+RUN mkdir /store
+RUN chown -R fsfe:fsfe /store
+
+USER fsfe
+WORKDIR /home/fsfe
