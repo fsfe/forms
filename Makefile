@@ -24,6 +24,8 @@ WHITE  = $(shell tput -Txterm setaf 7)
 YELLOW = $(shell tput -Txterm setaf 3)
 RESET  = $(shell tput -Txterm sgr0)
 
+COMPOSE := docker compose
+
 HELPME = \
 	%help; \
 	while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
@@ -39,37 +41,51 @@ help:
 	@perl -e '$(HELPME)' $(MAKEFILE_LIST)
 .PHONY: help
 
-virtualenv:  ##@development Set up the virtual environment with the Python dependencies.
-	@pipenv install --dev
-.PHONY: virtualenv
+dev: ##@development Start all containers and show their logs.
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} $(COMPOSE) -f docker-compose.dev.yml up --build --force-recreate
+.PHONY: dev
 
-applyisort:  ##@development Apply a correct Python import sort inline.
-	@pipenv run isort
-.PHONY: applyisort
+dev.up: ##@development Start all containers and detach.
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} $(COMPOSE) -f docker-compose.dev.yml up --build --force-recreate --detach
+.PHONY: dev.up
 
-flask:  ##@development Run the Flask built-in web server.
-	@pipenv run flask run
-.PHONY: flask
+dev.down: ##@development Stop all containers.
+	@USER_ID=$${USER_ID:-`id -u`} GROUP_ID=$${GROUP_ID:-`id -g`} $(COMPOSE) -f docker-compose.dev.yml down
+.PHONY: dev.down
 
-gunicorn:  ##@development Run the Gunicorn based web server.
-	@. ./.env && pipenv run gunicorn --bind $$FLASK_RUN_HOST:$$FLASK_RUN_PORT "$$FLASK_APP:create_app()"
-.PHONY: gunicorn
+dev.kill: ##@development Kill and subsequently remove all containers.
+	$(COMPOSE) -f docker-compose.dev.yml kill
+	$(COMPOSE) -f docker-compose.dev.yml rm --force --stop -v
+.PHONY: dev.kill
 
-isort:  ##@quality Check the Python source code for import sorting.
-	@pipenv run isort --check --diff $(QUALITY_TARGETS)
-.PHONY: isort
+dev.logs: ##@development Show logs of running containers.
+	$(COMPOSE) -f docker-compose.dev.yml logs --timestamps --follow
+.PHONY: dev.logs
 
-pylama:  ##@quality Check the Python source code for coding standards compliance.
-	@pipenv run pylama
-.PHONY: pylama
+toolshell:  ##@development Start a shell in which the command line tools can be run.
+	@docker exec -it forms /bin/sh -c 'PATH=src/bin:$$PATH bash'
+.PHONY: toolshell
 
-pytest:  ##@quality Run the functional tests.
-	@pipenv run pytest --cov=$(SOURCE_DIR) tests
-.PHONY: pytest
+isort.forms: ##@quality-control Run isort in `forms-quality` container.
+	@echo "=== [back] Checking for the correct order of imports ==="
+	@docker exec -it forms-quality /bin/sh -c "cd src && isort . --check --diff"
+	@echo "=== [back] Your imports are properly sorted ==="
+.PHONY: isort.forms
 
-reqs: ##@quality Ensure requirements.txt files are in sync with Pipfiles
-	@pipenv requirements --dev > requirements_all.txt && pipenv requirements > requirements.txt
-.PHONY: reqs
+isort.all: isort.forms ##@quality-control Run isort in all modules.
 
-quality: isort pylama pytest  ##@quality Run all quality checks.
-.PHONY: quality
+lint.forms: ##@quality-control Run linter in `forms-quality` container.
+	@echo "=== [back] Checking the formatting ==="
+	@docker exec -it forms-quality /bin/sh -c "pylama -i E216"
+	@echo "=== [back] Code is properly formatted ==="
+.PHONY: lint.forms
+
+test.forms: ##@quality-control Run pytest in `forms-quality` container.
+	@docker exec -it forms-quality /bin/sh -c "cd src && pytest --cov=fsfe_forms"
+	@docker exec -it forms-quality /bin/sh -c "cd src && coverage html"
+.PHONY: text.forms
+
+test.all: test.forms ##@quality-control Run pytest in all modules.
+
+qc.forms: isort.forms lint.forms test.forms ##@quality-control Run all quality control tools in `forms` container.
+qc.all: qc.forms ##@quality-control Run all quality control tools in all containers.

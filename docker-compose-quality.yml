@@ -14,3 +14,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-quality
+      target: dependencies
