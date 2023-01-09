@@ -68,7 +68,7 @@ toolshell:  ##@development Start a shell in which the command line tools can be 
 
 isort.forms: ##@quality-control Run isort in `forms-quality` container.
 	@echo "=== [back] Checking for the correct order of imports ==="
-	@docker exec -it forms-quality /bin/sh -c "isort . --check --diff"
+	@docker exec -it forms-quality /bin/sh -c "cd src && isort . --check --diff"
 	@echo "=== [back] Your imports are properly sorted ==="
 .PHONY: isort.forms
 
@@ -80,11 +80,9 @@ lint.forms: ##@quality-control Run linter in `forms-quality` container.
 	@echo "=== [back] Code is properly formatted ==="
 .PHONY: lint.forms
 
-lint.all: lint.forms ##@quality-control Run linter in all modules.
-
 test.forms: ##@quality-control Run pytest in `forms-quality` container.
-	@docker exec -it forms-quality /bin/sh -c "pytest --cov=forms"
-	@docker exec -it forms-quality /bin/sh -c "coverage html"
+	@docker exec -it forms-quality /bin/sh -c "cd src && pytest --cov=fsfe_forms"
+	@docker exec -it forms-quality /bin/sh -c "cd src && coverage html"
 .PHONY: text.forms
 
 test.all: test.forms ##@quality-control Run pytest in all modules.

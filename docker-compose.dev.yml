@@ -25,12 +25,12 @@ services:
     container_name: forms-quality
     build:
       dockerfile: Dockerfile-quality
-      target: dependencies
+      target: development
       args:
         user_id: "${USER_ID}"
         group_id: "${GROUP_ID}"
     volumes:
-      - "./back:/home/fsfe/src"
+      - ".:/home/fsfe/src"
     command: sleep infinity
 
   forms:

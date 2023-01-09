@@ -13,7 +13,7 @@ is to set up an isolated Python environment using docker containers.
 This will make development independent from the operating system provided
 version of the required Python libraries.
 
-After cloning the git repository, just run `make env` in the git checkout
+After cloning the git repository, just run `make dev` in the git checkout
 directory and the container environment will be completely set up.
 
 ## Coding style
