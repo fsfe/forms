@@ -74,6 +74,19 @@ steps:
         - tag
         - deployment
 
+  - name: push-to-docs
+    image: git.fsfe.org/fsfe-system-hackers/docs-centralizer:latest
+    environment:
+      REPO_NAME: fsfe-cd
+      SSH_PRIVATE_KEY:
+        # This is an organisation secret, so you don't need to set it
+        from_secret: docs_bot_private_key
+    when:
+      branch:
+        - master
+      event:
+        - push
+
 node:
   cont2: noris
 
