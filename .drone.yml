@@ -38,6 +38,19 @@ steps:
     depends_on:
       - quality-image
 
+  - name: push-to-docs
+    image: git.fsfe.org/fsfe-system-hackers/docs-centralizer:latest
+    environment:
+      REPO_NAME: forms
+      SSH_PRIVATE_KEY:
+        # This is an organisation secret, so you don't need to set it
+        from_secret: docs_bot_private_key
+    when:
+      branch:
+        - master
+      event:
+        - push
+
   - name: deploy
     pull: if-not-exists
     image: docker/compose:1.29.2

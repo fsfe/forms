@@ -1,12 +1,15 @@
+---
+title: Installation
+description: How to install the FSFE's forms application
+---
+
 <!--
 SPDX-FileCopyrightText: 2020 Free Software Foundation Europe <contact@fsfe.org>
 
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-# How to install fsfe-forms
-
-## Requirements
+# Requirements
 
 The file [`Pipfile`] lists all Python dependencies of fsfe-forms, and
 [`Pipfile.lock`] contains information about the actual versions of these
@@ -18,7 +21,7 @@ to run properly, most notably a mail server, a redis server, and for some
 functions the FSFE Community Database Frontend.
 
 
-## Local install
+# Local install
 
 Run `./setup.py install` in the git checkout directory to install fsfe-forms
 on the local machine. There are a number of options to select the installation
@@ -31,7 +34,7 @@ list of other tasks you can do with `setup.py`.
 which additional files to install.
 
 
-## Docker image build
+# Docker image build
 
 The [`Dockerfile`] contains build instructions for a Docker container in which
 fsfe-forms can run. After installing the requirements, it installs fsfe-forms
@@ -41,7 +44,7 @@ Within the Docker container, fsfe-forms runs as non-privilleged user “fsfe” 
 security reasons.
 
 
-## Automatic deployment
+# Automatic deployment
 
 fsfe-forms uses [drone](https://drone.fsfe.org) to automatically deploy updates
 to the production server.
@@ -64,7 +67,7 @@ steps defined in [`.drone.yml`]:
    the [`Dockerfile`] described in the previous section.
 
 
-### Secrets
+## Secrets
 
 The following secrets are [managed in drone](http://docs.drone.io/manage-secrets/):
 
@@ -82,15 +85,3 @@ The following secrets are [managed in drone](http://docs.drone.io/manage-secrets
     <td>Must match the “cmd_passphrase” secret of fsfe-cd-back.</td>
   </tr>
 </table>
-
-
-[`Pipfile`]: ../Pipfile
-[`Pipfile.lock`]: ../Pipfile.lock
-[`setup.py`]: ../setup.py
-[`MANIFEST.in`]: ../MANIFEST.in
-[`Dockerfile`]: ../Dockerfile
-[`Dockerfile-quality`]: ../Dockerfile-quality
-[`docker-compose`]: https://docs.docker.com/compose/
-[`docker-compose.yml`]: ../docker-compose.yml
-[`docker-compose-quality.yml`]: ../docker-compose-quality.yml
-[`.drone.yml`]: ../.drone.yml
