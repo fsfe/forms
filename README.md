@@ -7,6 +7,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 # forms API
 
+[![in docs.fsfe.org](https://img.shields.io/badge/in%20docs.fsfe.org-OK-green)](https://docs.fsfe.org/repodocs/my_forms/00_README)
 [![Build Status](https://drone.fsfe.org/api/badges/fsfe-system-hackers/forms/status.svg)](https://drone.fsfe.org/fsfe-system-hackers/forms)
 [![REUSE status](https://api.reuse.software/badge/git.fsfe.org/fsfe-system-hackers/forms)](https://api.reuse.software/info/git.fsfe.org/fsfe-system-hackers/forms)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
