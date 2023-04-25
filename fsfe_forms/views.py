@@ -67,13 +67,19 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
     if confirm:
         fields["confirm"] = Email(required=True)
 
-        # Don't do expensive validation during
+        # Don't do expensive email validation during testing
         if current_app.testing or current_app.debug:
             result = True
 
         else:
             # Abort immediately on blacklisted domains
-            blacklisted_email_domains = ["mail.ru", "inbox.ru", "list.ru"]
+            blacklisted_email_domains = [
+                "aol.com",
+                "inbox.ru",
+                "list.ru",
+                "mail.ru",
+                "yahoo.com",
+            ]
             try:
                 if params["confirm"].split("@")[1] in blacklisted_email_domains:
                     abort(422, "Your email provider is temporarily blocked.")
