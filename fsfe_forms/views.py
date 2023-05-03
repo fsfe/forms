@@ -9,8 +9,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from flask import (
-    abort, current_app, redirect, render_template, render_template_string,
-    request, url_for)
+    abort,
+    current_app,
+    redirect,
+    render_template,
+    render_template_string,
+    request,
+    url_for,
+)
 from marshmallow import Schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
@@ -51,12 +57,26 @@ def _find_app_config(appid):
 
 
 # -----------------------------------------------------------------------------
+# Custom additions to domain blocklist
+# -----------------------------------------------------------------------------
+
+domainlist_check.domain_blacklist.update(
+    [
+        "aol.com",
+        "inbox.ru",
+        "list.ru",
+        "mail.ru",
+        "yahoo.com",
+        "ymail.com",
+    ]
+)
+
+# -----------------------------------------------------------------------------
 # Validate parameters
 # -----------------------------------------------------------------------------
 
 
 def _validate(config: dict, params: dict, confirm: bool):  # noqa
-
     current_app.logger.debug(f"config: {config}")
     current_app.logger.debug(f"params: {params}")
     current_app.logger.debug(f"confirm: {confirm}")
@@ -67,16 +87,6 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
     }
     if confirm:
         fields["confirm"] = Email(required=True)
-        domainlist_check.domain_blacklist.update(
-            [
-                "aol.com",
-                "inbox.ru",
-                "list.ru",
-                "mail.ru",
-                "yahoo.com",
-                "ymail.com",
-            ]
-        )
         if current_app.testing or current_app.debug:
             result = True
         result = validate_email(
@@ -88,7 +98,9 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             current_app.logger.info(
                 "Caught invalid email address '{}'".format(params["confirm"])
             )
-            abort(422, "Using this email address is not possible. Please try another one.")
+            abort(
+                422, "Using this email address is not possible. Please try another one."
+            )
         elif result is None:
             current_app.logger.warning(
                 "Could not verify email address '{}'".format(params["confirm"])
