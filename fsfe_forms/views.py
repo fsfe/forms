@@ -15,6 +15,7 @@ from marshmallow import Schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
 from validate_email import validate_email
+from validate_email.domainlist_check import domainlist_check
 from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
@@ -66,43 +67,32 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
     }
     if confirm:
         fields["confirm"] = Email(required=True)
-
-        # Don't do expensive email validation during testing
-        if current_app.testing or current_app.debug:
-            result = True
-
-        else:
-            # Abort immediately on blacklisted domains
-            blacklisted_email_domains = [
+        domainlist_check.domain_blacklist.update(
+            [
                 "aol.com",
                 "inbox.ru",
                 "list.ru",
                 "mail.ru",
                 "yahoo.com",
+                "ymail.com",
             ]
-            try:
-                if params["confirm"].split("@")[1] in blacklisted_email_domains:
-                    abort(422, "Your email provider is temporarily blocked.")
-            except KeyError:
-                abort(422, "Your email address didn't pass initial validation.")
-            except IndexError:
-                abort(422, "Your email address didn't pass initial validation.")
-
-            # Do expensive validation
-            result = validate_email(
-                email_address=params["confirm"],
-                smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
-                smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
+        )
+        if current_app.testing or current_app.debug:
+            result = True
+        result = validate_email(
+            email_address=params["confirm"],
+            smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
+            smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
+        )
+        if result is False:
+            current_app.logger.info(
+                "Caught invalid email address '{}'".format(params["confirm"])
             )
-            if result is False:
-                current_app.logger.info(
-                    "Caught invalid email address '{}'".format(params["confirm"])
-                )
-                abort(422, "This email address does not exist.")
-            elif result is None:
-                current_app.logger.warning(
-                    "Could not verify email address '{}'".format(params["confirm"])
-                )
+            abort(422, "Using this email address is not possible. Please try another one.")
+        elif result is None:
+            current_app.logger.warning(
+                "Could not verify email address '{}'".format(params["confirm"])
+            )
 
     for name, options in config.items():
         field_class = String
