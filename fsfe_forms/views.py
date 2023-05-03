@@ -56,10 +56,14 @@ def _find_app_config(appid):
 
 domainlist_check.domain_blacklist.update(
     [
-        "aol.com",
+        # Emails from these domains were used en masse to sign-up to our
+        # services or sign open letters which sometimes landed our SMTP server
+        # on several blocklists. Blocking these domains entirely fixes the
+        # issue.
         "inbox.ru",
         "list.ru",
         "mail.ru",
+        "aol.com",
         "yahoo.com",
         "ymail.com",
     ]
@@ -82,7 +86,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
     if confirm:
         fields["confirm"] = Email(required=True)
         if current_app.testing or current_app.debug:
-            result = True
+            return True
         result = validate_email(
             email_address=params["confirm"],
             smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
