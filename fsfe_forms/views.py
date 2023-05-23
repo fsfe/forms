@@ -87,22 +87,28 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
         fields["confirm"] = Email(required=True)
         if current_app.testing or current_app.debug:
             return True
-        result = validate_email(
-            email_address=params["confirm"],
-            smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
-            smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
-        )
-        if result is False:
-            current_app.logger.info(
-                "Caught invalid email address '{}'".format(params["confirm"])
+        try:
+            result = validate_email(
+                email_address=params["confirm"],
+                smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
+                smtp_from_address=current_app.config["VALIDATE_EMAIL_FROM"],
             )
-            abort(
-                422, "Using this email address is not possible. Please try another one."
-            )
-        elif result is None:
-            current_app.logger.warning(
-                "Could not verify email address '{}'".format(params["confirm"])
-            )
+            if result is False:
+                current_app.logger.info(
+                    "Caught invalid email address '{}'".format(params["confirm"])
+                )
+                abort(
+                    422, "Using this email address is not possible. Please try another one."
+                )
+            elif result is None:
+                current_app.logger.warning(
+                    "Could not verify email address '{}'".format(params["confirm"])
+                )
+        except KeyError:
+            current_app.logger.warning("Could not validate email address")
+            current_app.logger.info(f"config: {config}")
+            current_app.logger.info(f"params: {params}")
+            current_app.logger.info(f"confirm: {confirm}")
 
     for name, options in config.items():
         field_class = String
