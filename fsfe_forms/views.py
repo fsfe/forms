@@ -54,20 +54,18 @@ def _find_app_config(appid):
 # Custom additions to domain blocklist
 # -----------------------------------------------------------------------------
 
-domainlist_check.domain_blacklist.update(
-    [
-        # Emails from these domains were used en masse to sign-up to our
-        # services or sign open letters which sometimes landed our SMTP server
-        # on several blocklists. Blocking these domains entirely fixes the
-        # issue.
-        "inbox.ru",
-        "list.ru",
-        "mail.ru",
-        "aol.com",
-        "yahoo.com",
-        "ymail.com",
-    ]
-)
+domain_blacklist = [
+    # Emails from these domains were used en masse to sign-up to our
+    # services or sign open letters which sometimes landed our SMTP server
+    # on several blocklists. Blocking these domains entirely fixes the
+    # issue.
+    "inbox.ru",
+    "list.ru",
+    "mail.ru",
+    "aol.com",
+    "yahoo.com",
+    "ymail.com",
+]
 
 # -----------------------------------------------------------------------------
 # Validate parameters
@@ -84,10 +82,27 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
         "lang": String(validate=Regexp(r"^[a-z]{2}$"), missing=None),
     }
     if confirm:
+        # Do syntax check
         fields["confirm"] = Email(required=True)
+
+        # Don't do expensive email validation in testing
         if current_app.testing or current_app.debug:
             return True
+
         try:
+            # Check if email is in custom blacklist
+            if params["confirm"].split("@")[1] in domain_blacklist:
+                current_app.logger.info(
+                    "Email address '{}' is on domain blacklist".format(
+                        params["confirm"]
+                    )
+                )
+                abort(
+                    422,
+                    "Using this email address is not possible. Please try another one.",
+                )
+
+            # Do expensive validation
             result = validate_email(
                 email_address=params["confirm"],
                 smtp_helo_host=current_app.config["VALIDATE_EMAIL_HELO"],
@@ -110,10 +125,6 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             current_app.logger.info(f"config: {config}")
             current_app.logger.info(f"params: {params}")
             current_app.logger.info(f"confirm: {confirm}")
-            abort(
-                422,
-                "There was a problem with validating your email address. Maybe try another one.",
-            )
 
     for name, options in config.items():
         field_class = String
