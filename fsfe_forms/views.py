@@ -105,10 +105,14 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                     "Could not verify email address '{}'".format(params["confirm"])
                 )
         except KeyError:
-            current_app.logger.warning("Could not validate email address")
+            current_app.logger.warning("Could not validate email address.")
             current_app.logger.info(f"config: {config}")
             current_app.logger.info(f"params: {params}")
             current_app.logger.info(f"confirm: {confirm}")
+            abort(
+                422, "There was a problem with validating your email address. Maybe try another one."
+            )
+
 
     for name, options in config.items():
         field_class = String
