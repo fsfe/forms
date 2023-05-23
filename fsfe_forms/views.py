@@ -98,7 +98,8 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                     "Caught invalid email address '{}'".format(params["confirm"])
                 )
                 abort(
-                    422, "Using this email address is not possible. Please try another one."
+                    422,
+                    "Using this email address is not possible. Please try another one.",
                 )
             elif result is None:
                 current_app.logger.warning(
@@ -110,9 +111,9 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             current_app.logger.info(f"params: {params}")
             current_app.logger.info(f"confirm: {confirm}")
             abort(
-                422, "There was a problem with validating your email address. Maybe try another one."
+                422,
+                "There was a problem with validating your email address. Maybe try another one.",
             )
-
 
     for name, options in config.items():
         field_class = String
