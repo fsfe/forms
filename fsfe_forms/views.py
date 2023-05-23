@@ -15,7 +15,6 @@ from marshmallow import Schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
 from validate_email import validate_email
-from validate_email.domainlist_check import domainlist_check
 from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
