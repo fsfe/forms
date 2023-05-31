@@ -38,7 +38,10 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     # sender
     assert email["From"] == "EMAIL@example.com"
     # recipient
-    assert email["To"] in ["contact@fsfe.org", "helpdesk@fsfe.org"]
+    assert email["To"] in [
+        "Free Software Foundation Europe <contact@fsfe.org>",
+        "Free Software Foundation Europe <helpdesk@fsfe.org>",
+    ]
     # subject
     assert email["Subject"] == "EMAIL-SUBJECT"
     # body
@@ -141,7 +144,10 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     # sender
     assert email["From"] == "EMAIL@example.com"
     # recipient
-    assert email["To"] in ["contact@fsfe.org", "helpdesk@fsfe.org"]
+    assert email["To"] in [
+        "Free Software Foundation Europe <contact@fsfe.org>",
+        "Free Software Foundation Europe <helpdesk@fsfe.org>",
+    ]
     # subject
     assert email["Subject"] == "EMAIL-SUBJECT"
     # content

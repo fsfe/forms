@@ -44,7 +44,10 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
     # sender
     assert email["From"] == "THE NAME <EMAIL@example.com>"
     # recipients
-    assert email["To"] in ["contact@fsfe.org", "helpdesk@fsfe.org"]
+    assert email["To"] in [
+        "Free Software Foundation Europe <contact@fsfe.org>",
+        "Free Software Foundation Europe <helpdesk@fsfe.org>",
+    ]
     # subject
     assert email["Subject"] == "Application for Legal Network membership by " "THE NAME"
     # content
