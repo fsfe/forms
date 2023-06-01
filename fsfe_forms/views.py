@@ -90,7 +90,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
 
         try:
             # Check if email is in custom blacklist
-            if params["confirm"].split("@")[1] in domain_blacklist:
+            if params["confirm"].split("@")[-1] in domain_blacklist:
                 current_app.logger.info(
                     "Email address '{}' is on domain blacklist".format(
                         params["confirm"]
