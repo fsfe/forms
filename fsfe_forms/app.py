@@ -62,7 +62,7 @@ def create_app():
         logging.getLogger().addHandler(handler)
 
     # Initialize Flask-Limiter
-    app.limiter = Limiter(app, key_func=get_remote_address)
+    app.limiter = Limiter(app=app, key_func=get_remote_address)
 
     # Initialize our own email module
     init_email(app)
