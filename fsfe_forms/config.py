@@ -8,7 +8,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import urllib.parse
 from os import environ
+
+from sqlalchemy import create_engine, URL
 
 
 # Parameters for Flask-Limiter
@@ -46,3 +49,15 @@ CONFIRMATION_EXPIRATION_SECS = 86400
 # Parameters for email address validation
 VALIDATE_EMAIL_HELO = environ.get("VALIDATE_EMAIL_HELO", "localhost")
 VALIDATE_EMAIL_FROM = environ.get("VALIDATE_EMAIL_FROM")
+
+
+# PostgreSQL database connection string.
+SQLALCHEMY_DATABASE_URI = URL.create(
+    "postgresql",
+    username=environ["POSTGRES_USER"],
+    # The password may contain special characters, so we need to encode it.
+    password=urllib.parse.quote_plus(environ["POSTGRES_PASSWORD"]),
+    host=environ["POSTGRES_HOST"],
+    database=environ["POSTGRES_DATABASE"],
+)
+SQLALCHEMY_TRACK_MODIFICATIONS = False
