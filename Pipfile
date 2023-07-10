@@ -16,6 +16,9 @@ gunicorn = "*"
 redis = "*"
 requests = "*"
 webargs = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+flask-sqlalchemy = "*"
 py3-validate-email = {ref = "v1.0.9", git = "https://gitea.ksol.io/karolyi/py3-validate-email"}
 
 [dev-packages]
