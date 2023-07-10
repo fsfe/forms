@@ -60,6 +60,10 @@ services:
       REDIS_PORT: "6379"
       VALIDATE_EMAIL_FROM: "contact@fsfe.org"
       FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
+      POSTGRES_HOST: "db"
+      POSTGRES_USER: "fsfe"
+      POSTGRES_PASSWORD: "fSfE"
+      POSTGRES_DATABASE: "fsfe_forms"
     command: /bin/sh -c "flask run"
 
   forms-maildev:
@@ -77,3 +81,10 @@ services:
     container_name: forms-fake-fsfe-cd-front
     ports:
       - "8888:8888"
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: fSfE
+      POSTGRES_USER: fsfe
