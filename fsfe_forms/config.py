@@ -11,7 +11,7 @@
 import urllib.parse
 from os import environ
 
-from sqlalchemy import create_engine, URL
+from sqlalchemy import URL
 
 
 # Parameters for Flask-Limiter
@@ -54,10 +54,10 @@ VALIDATE_EMAIL_FROM = environ.get("VALIDATE_EMAIL_FROM")
 # PostgreSQL database connection string.
 SQLALCHEMY_DATABASE_URI = URL.create(
     "postgresql",
-    username=environ["POSTGRES_USER"],
+    username=environ.get("POSTGRES_USER"),
     # The password may contain special characters, so we need to encode it.
-    password=urllib.parse.quote_plus(environ["POSTGRES_PASSWORD"]),
-    host=environ["POSTGRES_HOST"],
-    database=environ["POSTGRES_DATABASE"],
+    password=urllib.parse.quote_plus(environ.get("POSTGRES_PASSWORD", '')),
+    host=environ.get("POSTGRES_HOST"),
+    database=environ.get("POSTGRES_DATABASE"),
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False
