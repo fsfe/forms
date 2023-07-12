@@ -17,7 +17,7 @@ from marshmallow.validate import Equal, Length, Regexp
 from validate_email import validate_email
 from webargs.flaskparser import use_kwargs
 
-from fsfe_forms import model
+from fsfe_forms.model import Email
 from fsfe_forms.cd import subscribe
 from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
@@ -177,7 +177,7 @@ def _process(config, params, id=None, store=None):
 
         # Store data in the database
         if store:
-            model.log(
+            Email.log(
                 store,
                 message["From"],
                 [message["To"]],
@@ -189,7 +189,7 @@ def _process(config, params, id=None, store=None):
     else:
         # Store data in log without having sent an email
         if store:
-            model.log(store, "", [""], "", "", "", params)
+            Email.log(store, "", [""], "", "", "", params)
 
     # Redirect the user's browser
     return redirect(render_template_string(config["redirect"], **params))
@@ -222,7 +222,7 @@ def email():
     if "confirm" in app_config:  # With double opt-in
         # Optionally, check for a confirmed previous registration, and if
         # found, refuse the duplicate
-        if "duplicate" in app_config and model.find(
+        if "duplicate" in app_config and Email.find(
             app_config["store"], params["confirm"]
         ):
             return _process(config=app_config["duplicate"], params=params)
