@@ -1,8 +1,5 @@
 from typing import Any, Dict, Optional
-from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import orm
-from sqlalchemy.dialects.postgresql import JSON
 
 
 EMAIL_MAX_LENGTH = 320
@@ -16,11 +13,11 @@ class Email(db.Model):
     """Email sent by the FSFE Form Server."""
     # The application name from the `applications.json` file.
     # Example: contact, pmpc-sign, reuse-booster
-    email_form = db.Column(db.String(EMAIL_MAX_LENGTH))
+    email_form = db.Column(db.String(EMAIL_MAX_LENGTH), primary_key=True)
     # Ingestion timestamp.
     create_at = db.Column(db.DateTime())
     # The email address of the sender.
-    from_ = db.Column(db.String(EMAIL_MAX_LENGTH))
+    from_ = db.Column(db.String(EMAIL_MAX_LENGTH), primary_key=True)
     # The email address of the recipient.
     to = db.Column(db.String(EMAIL_MAX_LENGTH))
     # The subject of the email.
@@ -34,9 +31,9 @@ class Email(db.Model):
     # The confirmation status of the email.
     # Some emails are not attenting confirmation. Consequently, this field
     # is nullable.
-    confirmed = db.Column(db.Boolean(nullable=True))
+    confirmed = db.Column(db.Boolean(), nullable=True)
     # Ingestion timestamp.
-    confirmed_date = db.Column(db.DateTime(nullable=True))
+    confirmed_date = db.Column(db.DateTime(), nullable=True)
 
     @classmethod
     def log(cls, email_form: str, send_from: str, send_to: str, subject: str, content: str, reply_to: str, include_vars: Dict[str, Any]):
