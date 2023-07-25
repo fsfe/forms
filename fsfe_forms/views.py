@@ -17,6 +17,7 @@ from marshmallow.validate import Equal, Length, Regexp
 from validate_email import validate_email
 from webargs.flaskparser import use_kwargs
 
+from fsfe_forms import json_store
 from fsfe_forms.model import Email
 from fsfe_forms.cd import subscribe
 from fsfe_forms.email import send_email
@@ -177,6 +178,15 @@ def _process(config, params, id=None, store=None):
 
         # Store data in the database
         if store:
+            json_store.log(
+                store,
+                message["From"],
+                [message["To"]],
+                message["Subject"],
+                message.get_content(),
+                message["Reply-To"],
+                params,
+            )
             Email.log(
                 store,
                 message["From"],
@@ -189,6 +199,7 @@ def _process(config, params, id=None, store=None):
     else:
         # Store data in log without having sent an email
         if store:
+            json_store.log(store, "", [""], "", "", "", params)
             Email.log(store, "", [""], "", "", "", params)
 
     # Redirect the user's browser

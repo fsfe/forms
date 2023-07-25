@@ -8,6 +8,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
 import urllib.parse
 from os import environ
 
@@ -51,13 +52,8 @@ VALIDATE_EMAIL_HELO = environ.get("VALIDATE_EMAIL_HELO", "localhost")
 VALIDATE_EMAIL_FROM = environ.get("VALIDATE_EMAIL_FROM")
 
 
-# PostgreSQL database connection string.
-SQLALCHEMY_DATABASE_URI = URL.create(
-    "postgresql",
-    username=environ.get("POSTGRES_USER"),
-    # The password may contain special characters, so we need to encode it.
-    password=urllib.parse.quote_plus(environ.get("POSTGRES_PASSWORD", '')),
-    host=environ.get("POSTGRES_HOST"),
-    database=environ.get("POSTGRES_DATABASE"),
+# Database connection string.
+SQLALCHEMY_DATABASE_URI = os.environ.get(
+    "SQLALCHEMY_DATABASE_URI", "sqlite:///:memory:"
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False
