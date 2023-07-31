@@ -90,3 +90,16 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
             pass
 
     return message
+
+
+# =============================================================================
+# External utility functions.
+# =============================================================================
+
+
+def extract_email_address(email_address: str):
+    """
+    Extract the email address from a string containing a name and an email.
+    The inverse of `format_email` done our mail templates.
+    """
+    return email.utils.parseaddr(email_address)[1]

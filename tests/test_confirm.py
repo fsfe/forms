@@ -7,6 +7,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from fsfe_forms.model import Email
+
 
 def test_confirm_redeem_id(client, signed_up):
     """Confirm landing page with a valid ID"""
@@ -39,6 +41,9 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
     logfile = file_mock().write.call_args[0][0]
     assert "EMAIL@example.com" in logfile
     assert "THE NAME" in logfile
+    # Check email in database.
+    email = Email._get("ln-apply", "EMAIL@example.com")
+    assert email.from_ == "EMAIL@example.com"
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender

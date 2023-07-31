@@ -28,20 +28,12 @@ class Email(db.Model):
     reply_to = db.Column(db.String(EMAIL_MAX_LENGTH))
     # The variables included in the email parameters.
     include_vars = db.Column(db.Text)
-    # The confirmation status of the email.
-    # Some emails are not attenting confirmation. Consequently, this field
-    # is nullable.
-    confirmed = db.Column(db.Boolean(), nullable=True)
-    # Ingestion timestamp.
-    confirmed_date = db.Column(db.DateTime(), nullable=True)
+
 
     @classmethod
     def log(cls, email_form: str, send_from: str, send_to: str, subject: str, content: str, reply_to: str, include_vars: Dict[str, Any]):
-        """Save the e-mail to the database or confirm the previous."""
-        if email := cls._get(email_form, send_from):
-            cls._confirmed(email)
-        else:
-            cls._create(email_form, send_from, send_to, subject, content, reply_to, include_vars)
+        """Save the e-mail to the database."""
+        cls._create(email_form, send_from, send_to, subject, content, reply_to, include_vars)
 
     @classmethod
     def find(cls, email_form: str, email: str) -> bool:
@@ -56,12 +48,6 @@ class Email(db.Model):
         ).one_or_none()
 
     @classmethod
-    def _confirmed(cls, email: "Email"):
-        email.confirmed = True
-        email.confirmed_date = db.func.now()
-        db.session.commit()
-
-    @classmethod
     def _create(cls, email_form: str, send_from: str, send_to: str, subject: str, content: str, reply_to: str, include_vars: Dict[str, Any]):
         must_be_confirmed = bool(include_vars.get("include_vars", {}).get("confirm"))
 
@@ -72,9 +58,7 @@ class Email(db.Model):
             subject=subject,
             content=content,
             reply_to=reply_to,
-            include_vars=str(include_vars),
-            confirmed=False if must_be_confirmed else None,
-            confirmed_date=None
+            include_vars=str(include_vars)
         )
 
         db.session.add(record)

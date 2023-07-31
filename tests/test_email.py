@@ -40,7 +40,6 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     assert email.from_ == "EMAIL@example.com"
     assert email.subject == "EMAIL-SUBJECT"
     assert email.content == "EMAIL-CONTENT"
-    assert email.confirmed is None
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
@@ -151,11 +150,7 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     assert email.from_ == "EMAIL@example.com"
     assert email.subject == "EMAIL-SUBJECT"
     assert email.content == "EMAIL-CONTENT"
-    assert email.to in [
-        "Free Software Foundation Europe <contact@fsfe.org>",
-        "Free Software Foundation Europe <helpdesk@fsfe.org>",
-    ]
-    assert email.confirmed is None
+    assert email.to in ["contact@fsfe.org", "helpdesk@fsfe.org"]
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender

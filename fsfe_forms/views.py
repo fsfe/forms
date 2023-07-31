@@ -20,7 +20,7 @@ from webargs.flaskparser import use_kwargs
 from fsfe_forms import json_store
 from fsfe_forms.model import Email as EmailLogged
 from fsfe_forms.cd import subscribe
-from fsfe_forms.email import send_email
+from fsfe_forms.email import send_email, extract_email_address
 from fsfe_forms.queue import queue_pop, queue_push
 
 
@@ -175,7 +175,6 @@ def _process(config, params, id=None, store=None, appid=None):
             confirmation_url=url_for("confirm", _external=True, id=id),
             **params,
         )
-
         # Store data in the database
         if store:
             json_store.log(
@@ -189,8 +188,11 @@ def _process(config, params, id=None, store=None, appid=None):
             )
             EmailLogged.log(
                 appid,
-                message["From"],
-                message["To"],
+                # Our email template format the email addresses.
+                # We need to extract the raw email address from the formatted.
+                # This should not be done on the legacy json system to keep compatibility.
+                extract_email_address(message["From"]),
+                extract_email_address(message["To"]),
                 message["Subject"],
                 message.get_content(),
                 message["Reply-To"],
