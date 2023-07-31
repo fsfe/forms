@@ -36,7 +36,11 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email in database.
-    assert Email._get("contact", "EMAIL@example.com")
+    email = Email._get("contact", "EMAIL@example.com")
+    assert email.from_ == "EMAIL@example.com"
+    assert email.subject == "EMAIL-SUBJECT"
+    assert email.content == "EMAIL-CONTENT"
+    assert email.confirmed is None
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
@@ -116,7 +120,6 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
     # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
-
 # =============================================================================
 # POST method
 # =============================================================================
@@ -143,6 +146,16 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL@example.com" in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
+    # Check email in database.
+    email = Email._get("contact", "EMAIL@example.com")
+    assert email.from_ == "EMAIL@example.com"
+    assert email.subject == "EMAIL-SUBJECT"
+    assert email.content == "EMAIL-CONTENT"
+    assert email.to in [
+        "Free Software Foundation Europe <contact@fsfe.org>",
+        "Free Software Foundation Europe <helpdesk@fsfe.org>",
+    ]
+    assert email.confirmed is None
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
