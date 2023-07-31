@@ -22,6 +22,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from fsfe_forms import config
 from fsfe_forms.email import init_email
 from fsfe_forms.views import confirm, email, index, redeem
+from fsfe_forms.model import db
 
 
 # =============================================================================
@@ -44,6 +45,11 @@ def create_app():
         format="[%(asctime)s] (%(name)s) %(levelname)s: %(message)s",
         level=(logging.DEBUG if app.debug else logging.INFO),
     )
+
+    # Initialize database
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
     # Add a log handler which forwards errors by email
     if not (app.debug or app.testing):  # pragma: no cover

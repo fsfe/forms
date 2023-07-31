@@ -15,6 +15,8 @@
 # Without confirmation
 # -----------------------------------------------------------------------------
 
+from fsfe_forms.model import Email
+
 
 def test_email_get(client, smtp_mock, redis_mock, file_mock):
     response = client.get(
@@ -33,6 +35,8 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL@example.com" in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
+    # Check email in database.
+    assert Email._get("contact", "EMAIL@example.com")
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender

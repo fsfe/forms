@@ -18,7 +18,7 @@ from validate_email import validate_email
 from webargs.flaskparser import use_kwargs
 
 from fsfe_forms import json_store
-from fsfe_forms.model import Email
+from fsfe_forms.model import Email as EmailLogged
 from fsfe_forms.cd import subscribe
 from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
@@ -166,7 +166,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
 # -----------------------------------------------------------------------------
 
 
-def _process(config, params, id=None, store=None):
+def _process(config, params, id=None, store=None, appid=None):
 
     if "email" in config:
         # Send out email
@@ -187,10 +187,10 @@ def _process(config, params, id=None, store=None):
                 message["Reply-To"],
                 params,
             )
-            Email.log(
-                store,
+            EmailLogged.log(
+                appid,
                 message["From"],
-                [message["To"]],
+                message["To"],
                 message["Subject"],
                 message.get_content(),
                 message["Reply-To"],
@@ -200,7 +200,7 @@ def _process(config, params, id=None, store=None):
         # Store data in log without having sent an email
         if store:
             json_store.log(store, "", [""], "", "", "", params)
-            Email.log(store, "", [""], "", "", "", params)
+            EmailLogged.log(appid, "", "", "", "", "", params)
 
     # Redirect the user's browser
     return redirect(render_template_string(config["redirect"], **params))
@@ -223,9 +223,10 @@ def index():
 def email():
     # Remove all empty parameters
     params = {k: v for k, v in request.values.items() if v != ""}
+    appid = params.get("appid")
 
     # Load application configuration
-    app_config = _find_app_config(params.get("appid"))
+    app_config = _find_app_config(appid)
 
     # Validate required parameters
     _validate(app_config["parameters"], params, "confirm" in app_config)
@@ -233,8 +234,8 @@ def email():
     if "confirm" in app_config:  # With double opt-in
         # Optionally, check for a confirmed previous registration, and if
         # found, refuse the duplicate
-        if "duplicate" in app_config and Email.find(
-            app_config["store"], params["confirm"]
+        if "duplicate" in app_config and EmailLogged.find(
+            appid, params["confirm"]
         ):
             return _process(config=app_config["duplicate"], params=params)
         else:
@@ -242,7 +243,10 @@ def email():
             return _process(config=app_config["register"], params=params, id=id)
     else:  # Without double opt-in
         return _process(
-            config=app_config["register"], params=params, store=app_config.get("store")
+            config=app_config["register"],
+            params=params,
+            store=app_config.get("store"),
+            appid=appid
         )
 
 
@@ -274,5 +278,8 @@ def redeem(id):
             return response
 
     return _process(
-        config=app_config["confirm"], params=params, store=app_config["store"]
+        config=app_config["confirm"],
+        params=params,
+        store=app_config["store"],
+        appid=params["appid"]
     )
