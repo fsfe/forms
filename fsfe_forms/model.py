@@ -1,3 +1,14 @@
+# =============================================================================
+# Storage of (confirmed) request data in a database.
+# =============================================================================
+# This file is part of the FSFE Form Server.
+#
+# SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>
+# SPDX-FileCopyrightText: 2023 Florian Vuillemot <florian.vuillemot@fsfe.org>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
 from typing import Any, Dict, Optional
 from flask_sqlalchemy import SQLAlchemy
 
