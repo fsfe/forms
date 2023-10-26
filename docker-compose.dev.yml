@@ -63,7 +63,7 @@ services:
     command: /bin/sh -c "flask run"
 
   forms-maildev:
-    image: maildev/maildev:2.0.5
+    image: maildev/maildev:2.1.0
     container_name: forms-maildev
     ports:
       - "1025:1025"
