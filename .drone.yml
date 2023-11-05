@@ -18,7 +18,7 @@ steps:
       - reuse lint
 
   - name: quality-image
-    image: docker:24
+    image: docker:24.0.7
     environment:
       XDG_RUNTIME_DIR: "/run/user/1001"
       DOCKER_HOST: "unix:///run/user/1001/docker.sock"

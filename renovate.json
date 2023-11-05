@@ -1,4 +1,4 @@
 {
   "enabledManagers": ["dockerfile", "pipenv", "docker-compose"],
-  "extends": ["config:base"]
+  "extends": ["config:recommended"]
 }
