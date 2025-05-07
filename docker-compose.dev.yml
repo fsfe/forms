@@ -11,7 +11,7 @@
 version: "3"
 services:
   forms-redis:
-    image: bitnami/redis:6.2
+    image: bitnami/redis:8.0
     container_name: forms-redis
     expose:
       - "6379"
