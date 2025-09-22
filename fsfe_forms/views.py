@@ -78,7 +78,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
     # Build Marshmallow Schema from configuration
     fields = {
         "appid": String(required=True),
-        "lang": String(validate=Regexp(r"^[a-z]{2}$"), missing=None),
+        "lang": String(validate=Regexp(r"^[a-z]{2}$"), load_default=None),
     }
     if confirm:
         # Do syntax check
@@ -148,7 +148,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                 raise AppConfigError("Invalid option {opt} for parameter {name}")
         kwargs = {"required": required, "validate": validate}
         if not required:
-            kwargs["missing"] = None
+            kwargs["load_default"] = None
         fields[name] = field_class(**kwargs)
     schema = Schema.from_dict(fields)()
 
