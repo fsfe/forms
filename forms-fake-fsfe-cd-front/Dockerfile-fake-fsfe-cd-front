@@ -1,13 +1,11 @@
-# SPDX-FileCopyrightText: 2020 Florian Vuillemot <florian.vuillemot@posteo.net>
+# SPDX-FileCopyrightText: 2025 Filip Kobierski <fkobi@fsfe.org>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-FROM python:3.6
-
-RUN pip install mock-server
-
-EXPOSE 8888
+FROM python:alpine
 
 COPY ./config /config
+EXPOSE 8888
 
+RUN pip install mock-server
 CMD mock-server --dir=/config -address=0.0.0.0
