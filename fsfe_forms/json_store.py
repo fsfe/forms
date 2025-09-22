@@ -15,7 +15,7 @@ import filelock
 from flask import current_app
 
 
-def log(storage, send_from, send_to, subject, content, reply_to, include_vars):
+def log(storage, send_from, send_to, subject, content, reply_to, include_vars) -> None:
     add = {
         "timestamp": time.time(),
         "from": send_from,
@@ -43,7 +43,7 @@ def find(storage: str, email: str) -> bool:
         return False
 
 
-def _read_log(storage):
+def _read_log(storage) -> list:
     if os.path.exists(storage):
         with open(storage, "r") as file:
             return json.loads(file.read())
