@@ -22,11 +22,6 @@ from fsfe_forms.email import send_email
 from fsfe_forms.queue import queue_pop, queue_push
 
 
-# =============================================================================
-# Exception classes
-# =============================================================================
-
-
 class AppConfigError(Exception):
     def __init__(self, message):
         self.message = f"Error in application configuration: {message}"
@@ -36,12 +31,9 @@ class AppConfigError(Exception):
 # Helper functions
 # =============================================================================
 
-# -----------------------------------------------------------------------------
-# Find application config or issue 404 error
-# -----------------------------------------------------------------------------
-
 
 def _find_app_config(appid):
+    """# Find application config or issue 404 error"""
     try:
         return current_app.app_configs[appid]
     except KeyError:
@@ -65,12 +57,9 @@ domain_blacklist = [
     "ymail.com",
 ]
 
-# -----------------------------------------------------------------------------
-# Validate parameters
-# -----------------------------------------------------------------------------
-
 
 def _validate(config: dict, params: dict, confirm: bool):  # noqa
+    """Validate parameters"""
     current_app.logger.debug(f"config: {config}")
     current_app.logger.debug(f"params: {params}")
     current_app.logger.debug(f"confirm: {confirm}")
@@ -159,12 +148,8 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
         abort(422, "\n".join(messages))
 
 
-# -----------------------------------------------------------------------------
-# Send email, store data, and redirect
-# -----------------------------------------------------------------------------
-
-
 def _process(config, params, id=None, store=None):
+    """Send email, store data, and redirect"""
 
     if "email" in config:
         # Send out email
@@ -194,21 +179,13 @@ def _process(config, params, id=None, store=None):
     return redirect(render_template_string(config["redirect"], **params))
 
 
-# =============================================================================
-# Index endpoint (shows static information page)
-# =============================================================================
-
-
 def index():
+    """Index endpoint (shows static information page)"""
     return render_template("pages/index.html")
 
 
-# =============================================================================
-# Registration endpoint
-# =============================================================================
-
-
 def email():
+    """Registration endpoint"""
     # Remove all empty parameters
     params = {k: v for k, v in request.values.items() if v != ""}
 
