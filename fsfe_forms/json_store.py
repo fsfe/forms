@@ -1,6 +1,5 @@
-# =============================================================================
-# Storage of (confirmed) request data in a JSON file
-# =============================================================================
+"""Storage of (confirmed) request data in a JSON file"""
+
 # This file is part of the FSFE Form Server.
 #
 # SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>

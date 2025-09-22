@@ -1,6 +1,5 @@
-# =============================================================================
-# Endpoints for the WSGI server
-# =============================================================================
+"""Endpoints for the WSGI server"""
+
 # This file is part of the FSFE Form Server.
 #
 # SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>

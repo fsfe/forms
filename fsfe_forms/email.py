@@ -1,6 +1,5 @@
-# =============================================================================
-# Email delivery based on a Jinja2 template
-# =============================================================================
+"""Email delivery based on a Jinja2 template"""
+
 # This file is part of the FSFE Form Server.
 #
 # SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>

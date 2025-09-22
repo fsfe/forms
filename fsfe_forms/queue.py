@@ -1,6 +1,5 @@
-# =============================================================================
-# Queue of registrations pending double opt-in
-# =============================================================================
+"""Queue of registrations pending double opt-in"""
+
 # This file is part of the FSFE Form Server.
 #
 # SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>
