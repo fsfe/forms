@@ -11,7 +11,7 @@ import json
 import os
 import time
 
-import filelock
+from filelock import FileLock
 from flask import current_app
 
 
@@ -29,14 +29,14 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars) -
     if not os.path.exists(os.path.dirname(storage)):
         os.makedirs(os.path.dirname(storage))
 
-    with filelock.FileLock(current_app.config["LOCK_FILENAME"]):
+    with FileLock(current_app.config["LOCK_FILENAME"]):
         logs = _read_log(storage) + [add]
         with open(storage, "w") as file:
             file.write(json.dumps(logs))
 
 
 def find(storage: str, email: str) -> bool:
-    with filelock.FileLock(current_app.config["LOCK_FILENAME"]):
+    with FileLock(current_app.config["LOCK_FILENAME"]):
         for entry in _read_log(storage):
             if entry.get("include_vars", {}).get("confirm") == email:
                 return True
