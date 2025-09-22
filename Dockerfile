@@ -10,7 +10,7 @@
 # =============================================================================
 # Create requirements.txt file
 # =============================================================================
-FROM bitnami/python:3.9 as requirements-builder
+FROM bitnami/python:3.10 as requirements-builder
 WORKDIR /root
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -30,7 +30,7 @@ RUN pipenv requirements > requirements.txt
 # =============================================================================
 # Install dependencies
 # =============================================================================
-FROM bitnami/python:3.9 as dependencies
+FROM bitnami/python:3.10 as dependencies
 
 EXPOSE 8080
 
