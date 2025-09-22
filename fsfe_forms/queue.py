@@ -50,7 +50,7 @@ def queue_push(data: dict) -> uuid.UUID:
 
 def queue_pop(the_id: uuid.UUID) -> dict:
     """Pop a registration from the queue"""
-    result = _get(the_id)
+    rval: dict = _get(the_id)
     current_app.queue_db.delete(the_id.hex)
     current_app.logger.info(f"UUID {the_id} deleted")
-    return result
+    return rval
