@@ -53,7 +53,7 @@ steps:
 
   - name: deploy
     pull: if-not-exists
-    image: docker:24
+    image: docker:28
     commands:
       - docker compose -p forms up --build -d
     environment:
