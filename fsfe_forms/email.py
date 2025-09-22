@@ -17,7 +17,7 @@ from typing import Optional
 from flask import current_app, render_template
 
 
-def init_email(app):
+def init_email(app) -> None:
     """Initialize the module"""
 
     # Change default transfer-encoding for utf-8 to 'quoted-printable'
@@ -28,7 +28,7 @@ def init_email(app):
 
     # Make 'format_email' function available to templates
     @app.context_processor
-    def context_processor():
+    def context_processor() -> dict:
         def format_email(name, address):
             return email.utils.formataddr((name, address))
 
@@ -39,14 +39,13 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
     """Send out an email"""
 
     # Compile list of template filenames to look for
-    template_list = []
-    if lang is not None:
-        template_list.append(f"{template}.{lang}.eml")
-    template_list.append(f"{template}.eml")
+    templates: list = [f"{template}.eml"] + (
+        [f"{template}.{lang}.eml"] if lang is not None else []
+    )
 
     # Prepare message from template
     message = email.message_from_string(
-        render_template(template_list, **kwargs), policy=email.policy.render
+        render_template(templates, **kwargs), policy=email.policy.render
     )
 
     # Add some standard headers

@@ -13,17 +13,17 @@ import uuid
 from flask import abort, current_app
 
 
-def _get(id: uuid.UUID) -> dict:
+def _get(the_id: uuid.UUID) -> dict:
     """Helper function to read a dictionary from Redis"""
-    data = current_app.queue_db.get(id.hex)
+    data = current_app.queue_db.get(the_id.hex)
     if data is None:
         abort(404, "No such pending confirmation ID")
     return json.loads(data.decode("utf-8"))
 
 
-def _set(id: uuid.UUID, data: dict, ttl: int):
+def _set(the_id: uuid.UUID, data: dict, ttl: int):
     """Helper function to write a dictionary to Redis"""
-    current_app.queue_db.set(id.hex, json.dumps(data).encode("utf-8"), ttl)
+    current_app.queue_db.set(the_id.hex, json.dumps(data).encode("utf-8"), ttl)
 
 
 def queue_push(data: dict) -> uuid.UUID:
@@ -42,15 +42,15 @@ def queue_push(data: dict) -> uuid.UUID:
             return id
 
     # None found, so generate a new id
-    id = uuid.uuid4()
-    _set(id, data, current_app.config["CONFIRMATION_EXPIRATION_SECS"])
-    current_app.logger.info(f"UUID {id} created")
-    return id
+    the_id = uuid.uuid4()
+    _set(the_id, data, current_app.config["CONFIRMATION_EXPIRATION_SECS"])
+    current_app.logger.info(f"UUID {the_id} created")
+    return the_id
 
 
-def queue_pop(id: uuid.UUID) -> dict:
+def queue_pop(the_id: uuid.UUID) -> dict:
     """Pop a registration from the queue"""
-    result = _get(id)
-    current_app.queue_db.delete(id.hex)
-    current_app.logger.info(f"UUID {id} deleted")
-    return result
+    rval: dict = _get(the_id)
+    current_app.queue_db.delete(the_id.hex)
+    current_app.logger.info(f"UUID {the_id} deleted")
+    return rval
