@@ -42,16 +42,16 @@ def create_app():
 
     # Add a log handler which forwards errors by email
     if not (app.debug or app.testing):  # pragma: no cover
-        if app.config["MAIL_USERNAME"] is not None:
-            credentials = (app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
-        else:
-            credentials = None
         handler = logging.handlers.SMTPHandler(
             mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]),
             fromaddr=app.config["LOG_EMAIL_FROM"],
             toaddrs=[app.config["LOG_EMAIL_TO"]],
             subject="Log message from fsfe-forms",
-            credentials=credentials,
+            credentials=(
+                None
+                if app.config["MAIL_USERNAME"] is None
+                else (app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
+            ),
         )
         handler.setLevel(logging.ERROR)
         logging.getLogger().addHandler(handler)
