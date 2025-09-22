@@ -17,12 +17,8 @@ from typing import Optional
 from flask import current_app, render_template
 
 
-# =============================================================================
-# Initialize this module
-# =============================================================================
-
-
 def init_email(app):
+    """Initialize the module"""
 
     # Change default transfer-encoding for utf-8 to 'quoted-printable'
     email.charset.add_charset("utf-8", email.charset.QP, email.charset.QP)
@@ -39,12 +35,8 @@ def init_email(app):
         return {"format_email": format_email}
 
 
-# =============================================================================
-# Send out an email
-# =============================================================================
-
-
 def send_email(template: str, lang: Optional[str] = None, **kwargs):
+    """Send out an email"""
 
     # Compile list of template filenames to look for
     template_list = []
