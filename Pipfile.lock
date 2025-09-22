@@ -206,7 +206,7 @@
             "version": "==21.3"
         },
         "py3-validate-email": {
-            "git": "https://gitea.ksol.io/karolyi/py3-validate-email",
+            "git": "https://git.ksol.io/karolyi/py3-validate-email",
             "ref": "32c8f4cdfaba4c7e7fc81405a023c849a9268859"
         },
         "pygments": {
