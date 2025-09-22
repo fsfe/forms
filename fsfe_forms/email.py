@@ -17,7 +17,7 @@ from typing import Optional
 from flask import current_app, render_template
 
 
-def init_email(app):
+def init_email(app) -> None:
     """Initialize the module"""
 
     # Change default transfer-encoding for utf-8 to 'quoted-printable'
@@ -28,7 +28,7 @@ def init_email(app):
 
     # Make 'format_email' function available to templates
     @app.context_processor
-    def context_processor():
+    def context_processor() -> dict:
         def format_email(name, address):
             return email.utils.formataddr((name, address))
 
