@@ -10,7 +10,7 @@
 # =============================================================================
 # Create requirements.txt file
 # =============================================================================
-FROM bitnami/python:3.10 as requirements-builder
+FROM python:3.10-alpine as requirements-builder
 WORKDIR /root
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -32,9 +32,10 @@ RUN pipenv requirements --dev > requirements_all.txt
 # =============================================================================
 # Install the dependencies
 # =============================================================================
-FROM bitnami/python:3.10 as dependencies
-
+FROM python:3.10-alpine as dependencies
 WORKDIR /root
+
+RUN apk add --no-cache git
 
 # Install Python packages
 COPY --from=requirements-builder /root/requirements_all.txt ./

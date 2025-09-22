@@ -10,7 +10,7 @@
 # =============================================================================
 # Create requirements.txt file
 # =============================================================================
-FROM bitnami/python:3.10 as requirements-builder
+FROM python:3.10-alpine as requirements-builder
 WORKDIR /root
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -30,11 +30,14 @@ RUN pipenv requirements > requirements.txt
 # =============================================================================
 # Install dependencies
 # =============================================================================
-FROM bitnami/python:3.10 as dependencies
+FROM python:3.10-alpine as dependencies
 
 EXPOSE 8080
 
 WORKDIR /root
+RUN apk add --no-cache git
+# FIXME: should not be nescessary
+RUN pip install more-itertools
 
 COPY --from=requirements-builder /root/requirements.txt ./
 RUN pip install --ignore-installed setuptools pip
