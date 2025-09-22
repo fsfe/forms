@@ -73,7 +73,7 @@ services:
     image: forms-fake-fsfe-cd-front
     build:
       context: ./forms-fake-fsfe-cd-front
-      dockerfile: Dockerfile-fake-fsfe-cd-front
+      dockerfile: Dockerfile
     container_name: forms-fake-fsfe-cd-front
     ports:
       - "8888:8888"
