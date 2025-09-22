@@ -72,9 +72,9 @@ The HTML form could look like this:
 </form>
 ```
 
-And finally, the template (totick2-template.eml):
+And finally, the template (`totick2-template.eml`):
 
-```
+```eml
 From: {{ format_email(participant_name, from) }}
 To: contact@fsfe.org
 Subject: Registration of event from {{ participant_name }}
@@ -134,10 +134,10 @@ The HTML form could look like this:
 </form>
 ```
 
-Here, we have two email templates. The first one, tosign-register.eml, is used
+Here, we have two email templates. The first one, `tosign-register.eml`, is used
 upon registration of a new sigature:
 
-```
+```eml
 From: no-reply@fsfe.org
 To: {{ format_email(name, confirm) }}
 Subject: Your signature for campaign X
@@ -153,7 +153,7 @@ Best regards,
 the FSFE
 ```
 
-The second template, tosign-confirm.eml, is then used when the confirmation
+The second template, `tosign-confirm.eml`, is then used when the confirmation
 link has been clicked:
 
 ```
@@ -196,8 +196,8 @@ If you want to send an email in a specific language you have to add an hidden fi
 `<input type="hidden" name="lang" value="it">`
 
 Now, for example when looking for the template "tosign-register", the server
-will look for a file named "tosign-register.it.eml", and if that does not
-exist, it will fall back to "tosign-register.eml".
+will look for a file named `tosign-register.it.eml`, and if that does not
+exist, it will fall back to `tosign-register.eml`.
 
 
 ## API
