@@ -7,7 +7,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-version: "3"
 services:
   fsfe-forms-quality:
     image: fsfe-forms-quality
