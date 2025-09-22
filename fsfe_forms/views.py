@@ -118,22 +118,23 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
         validate = []
         required = False
         for opt in options:
-            if opt == "boolean":
-                field_class = Boolean
-            elif opt == "email":
-                field_class = Email
-            elif opt == "forbidden":
-                validate.append(Length(equal=0))
-            elif opt == "mandatory":
-                field_class = Boolean
-                required = True
-                validate.append(Equal(True, error="Mandatory."))
-            elif opt == "required":
-                required = True
-            elif opt == "single-line":
-                validate.append(Regexp(r"^[^\r\n]*$"))
-            else:
-                raise AppConfigError("Invalid option {opt} for parameter {name}")
+            match opt:
+                case "boolean":
+                    field_class = Boolean
+                case "email":
+                    field_class = Email
+                case "forbidden":
+                    validate.append(Length(equal=0))
+                case "mandatory":
+                    field_class = Boolean
+                    required = True
+                    validate.append(Equal(True, error="Mandatory."))
+                case "required":
+                    required = True
+                case "single-line":
+                    validate.append(Regexp(r"^[^\r\n]*$"))
+                case _:
+                    raise AppConfigError(f"Invalid option {opt} for parameter {name}")
         kwargs = {"required": required, "validate": validate}
         if not required:
             kwargs["load_default"] = None
