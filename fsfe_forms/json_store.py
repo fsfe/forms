@@ -44,8 +44,8 @@ def find(storage: str, email: str) -> bool:
 
 
 def _read_log(storage) -> list:
+    rval: list = []
     if os.path.exists(storage):
-        with open(storage, "r") as file:
-            return json.loads(file.read())
-    else:
-        return []
+        with open(storage, "r") as f:
+            rval = json.loads(f.read())
+    return rval
