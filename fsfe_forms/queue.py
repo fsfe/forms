@@ -13,12 +13,8 @@ import uuid
 from flask import abort, current_app
 
 
-# =============================================================================
-# Helper functions to read and write a dictionary to and from Redis
-# =============================================================================
-
-
 def _get(id: uuid.UUID) -> dict:
+    """Helper function to read a dictionary from Redis"""
     data = current_app.queue_db.get(id.hex)
     if data is None:
         abort(404, "No such pending confirmation ID")
@@ -26,15 +22,12 @@ def _get(id: uuid.UUID) -> dict:
 
 
 def _set(id: uuid.UUID, data: dict, ttl: int):
+    """Helper function to write a dictionary to Redis"""
     current_app.queue_db.set(id.hex, json.dumps(data).encode("utf-8"), ttl)
 
 
-# =============================================================================
-# Push a new registration to the queue
-# =============================================================================
-
-
 def queue_push(data: dict) -> uuid.UUID:
+    """Push a new registration to the queue"""
 
     # Check for an unconfirmed previous registration, and if found, update and
     # reuse that one
@@ -55,12 +48,8 @@ def queue_push(data: dict) -> uuid.UUID:
     return id
 
 
-# =============================================================================
-# Pop a registration from the queue
-# =============================================================================
-
-
 def queue_pop(id: uuid.UUID) -> dict:
+    """Pop a registration from the queue"""
     result = _get(id)
     current_app.queue_db.delete(id.hex)
     current_app.logger.info(f"UUID {id} deleted")
