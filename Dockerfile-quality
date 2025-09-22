@@ -10,7 +10,7 @@
 # =============================================================================
 # Create requirements.txt file
 # =============================================================================
-FROM python:3.10-alpine as requirements-builder
+FROM python:3.13-alpine as requirements-builder
 WORKDIR /root
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -32,7 +32,7 @@ RUN pipenv requirements --dev > requirements_all.txt
 # =============================================================================
 # Install the dependencies
 # =============================================================================
-FROM python:3.10-alpine as dependencies
+FROM python:3.13-alpine as dependencies
 WORKDIR /root
 
 RUN apk add --no-cache git
