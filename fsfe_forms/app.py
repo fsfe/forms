@@ -1,6 +1,5 @@
-# =============================================================================
-# WSGI application
-# =============================================================================
+"""WSGI application"""
+
 # This file is part of the FSFE Form Server.
 #
 # SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>
@@ -24,12 +23,8 @@ from fsfe_forms.email import init_email
 from fsfe_forms.views import confirm, email, index, redeem
 
 
-# =============================================================================
-# Main application factory
-# =============================================================================
-
-
 def create_app():
+    """Main application factory"""
     app = Flask(__name__.split(".")[0])
 
     # This enables Flask-Limiter to detect the real remote address even though

@@ -1,6 +1,5 @@
-# =============================================================================
-# Interaction with the FSFE Community Database
-# =============================================================================
+"""Interaction with the FSFE Community Database"""
+
 # This file is part of the FSFE Form Server.
 #
 # SPDX-FileCopyrightText: 2020 FSFE e.V. <contact@fsfe.org>
@@ -14,12 +13,8 @@ from flask import current_app
 from requests import post
 
 
-# =============================================================================
-# Subscribe an email address in the FSFE Community Database
-# =============================================================================
-
-
 def subscribe(config, params):
+    """Subscribe an email address in the FSFE Community Database"""
 
     subscribe_params = {
         "referrer": "campaign:" + params["appid"],
