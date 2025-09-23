@@ -29,7 +29,7 @@ services:
     environment:
       FSFE_CD_PASSPHRASE: "${FSFE_CD_PASSPHRASE}"
       FSFE_CD_TIMEOUT: 3
-      FSFE_CD_URL: "https://my.fsfe.org/"
+      FSFE_CD_URL: "https://my.fsfe.org"
       LOG_EMAIL_FROM: "contact@fsfe.org"
       LOG_EMAIL_TO: "contact@fsfe.org"
       MAIL_HELO_HOST: "cont2.noris.fsfeurope.org"
