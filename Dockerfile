@@ -10,7 +10,7 @@
 # =============================================================================
 # Create requirements.txt file
 # =============================================================================
-FROM python:3.13-alpine as requirements-builder
+FROM python:3.13-alpine AS requirements-builder
 WORKDIR /root
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -30,7 +30,7 @@ RUN pipenv requirements > requirements.txt
 # =============================================================================
 # Install dependencies
 # =============================================================================
-FROM python:3.13-alpine as dependencies
+FROM python:3.13-alpine AS dependencies
 
 EXPOSE 8080
 
@@ -60,7 +60,7 @@ WORKDIR /home/fsfe
 # Production installation
 # =============================================================================
 
-FROM development as production
+FROM development AS production
 
 # Run the WSGI server
 CMD gunicorn --bind 0.0.0.0:8080 "fsfe_forms:create_app()"
