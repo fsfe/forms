@@ -7,5 +7,8 @@ FROM python:alpine
 COPY ./config /config
 EXPOSE 8888
 
+# required for mock-server
+RUN apk add --no-cache build-base
+
 RUN pip install mock-server
 CMD mock-server --dir=/config -address=0.0.0.0
