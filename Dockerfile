@@ -36,8 +36,6 @@ EXPOSE 8080
 
 WORKDIR /root
 RUN apk add --no-cache git
-# FIXME: should not be nescessary
-RUN pip install more-itertools
 
 COPY --from=requirements-builder /root/requirements.txt ./
 RUN pip install --ignore-installed setuptools pip
