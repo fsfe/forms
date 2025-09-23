@@ -10,7 +10,7 @@
 
 services:
   forms-redis:
-    image: bitnami/redis:6.2
+    image: redis:6-alpine
     container_name: forms-redis
     expose:
       - "6379"
