@@ -58,7 +58,7 @@ services:
       REDIS_HOST: "forms-redis"
       REDIS_PORT: "6379"
       VALIDATE_EMAIL_FROM: "contact@fsfe.org"
-      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888"
+      FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
     command: /bin/sh -c "flask run"
 
   forms-maildev:
