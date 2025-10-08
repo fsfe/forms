@@ -10,7 +10,7 @@
 # =============================================================================
 # Create requirements.txt file
 # =============================================================================
-FROM python:3.13-alpine AS requirements-builder
+FROM python:3.14-alpine AS requirements-builder
 WORKDIR /root
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -30,7 +30,7 @@ RUN pipenv requirements > requirements.txt
 # =============================================================================
 # Install dependencies
 # =============================================================================
-FROM python:3.13-alpine AS dependencies
+FROM python:3.14-alpine AS dependencies
 
 EXPOSE 8080
 
