@@ -14,8 +14,6 @@ services:
     container_name: forms-redis
     expose:
       - "6379"
-    environment:
-      ALLOW_EMPTY_PASSWORD: "yes"
     restart: always
 
   # This is the container for local testing
