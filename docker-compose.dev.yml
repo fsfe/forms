@@ -9,41 +9,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 services:
-  forms-redis:
-    container_name: forms-redis
-    image: redis:8-alpine
-    restart: always
-    expose:
-      - "6379"
-
-  # This is the container for local testing
-  forms-quality:
-    container_name: forms-quality
-    image: forms-quality
-    build:
-      dockerfile: Dockerfile-quality
-      target: development
-      args:
-        user_id: "${USER_ID}"
-        group_id: "${GROUP_ID}"
-    volumes:
-      - ".:/home/fsfe/src"
-    command: sleep infinity
-
   forms:
     container_name: forms
     image: forms
     restart: always
-    build:
-      target: development
-      context: .
     depends_on:
       - forms-redis
+    build:
+      context: .
+      target: development
     ports:
       - "8080:8080"
-    volumes:
-      - ".:/home/fsfe/src"
-      - "./store:/store:rw"
     environment:
       FLASK_APP: "/home/fsfe/src/fsfe_forms"
       FLASK_DEBUG: "True"
@@ -57,7 +33,17 @@ services:
       REDIS_PORT: "6379"
       VALIDATE_EMAIL_FROM: "contact@fsfe.org"
       FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
+    volumes:
+      - ".:/home/fsfe/src"
+      - "./store:/store:rw"
     command: /bin/sh -c "flask run"
+
+  forms-redis:
+    container_name: forms-redis
+    image: redis:8-alpine
+    restart: always
+    expose:
+      - "6379"
 
   forms-maildev:
     image: maildev/maildev:2.2.1
@@ -74,3 +60,17 @@ services:
     container_name: forms-fake-fsfe-cd-front
     ports:
       - "8888:8888"
+
+  # This is the container for local testing
+  forms-quality:
+    container_name: forms-quality
+    image: forms-quality
+    build:
+      dockerfile: Dockerfile-quality
+      target: development
+      args:
+        user_id: "${USER_ID}"
+        group_id: "${GROUP_ID}"
+    volumes:
+      - ".:/home/fsfe/src"
+    command: sleep infinity

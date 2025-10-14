@@ -16,8 +16,8 @@ services:
     depends_on:
       - forms-redis
     build:
-      target: production
       context: .
+      target: production
     environment:
       FSFE_CD_PASSPHRASE: "${FSFE_CD_PASSPHRASE}"
       FSFE_CD_TIMEOUT: 3
