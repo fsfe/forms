@@ -30,11 +30,9 @@ FROM python:3.14-alpine AS dependencies
 EXPOSE 8080
 
 WORKDIR /root
-RUN apk add --no-cache git
+RUN apk add --no-cache git py3-setuptools py3-wheel
 
 COPY --from=requirements-builder /root/requirements.txt ./
-RUN pip install --ignore-installed setuptools
-RUN pip install wheel
 RUN pip install --no-cache-dir -r requirements.txt
 # Install the actual application
 COPY . .
