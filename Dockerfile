@@ -47,7 +47,7 @@ RUN pip install .
 FROM dependencies AS development
 
 # Switch to non-root user
-RUN adduser --uid 1000 --shell "/sbin/nologin" --disabled-password fsfe
+RUN adduser --system fsfe --home=/home/fsfe --uid 1000
 WORKDIR /home/fsfe
 USER fsfe
 
