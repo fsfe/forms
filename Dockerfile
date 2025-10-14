@@ -12,19 +12,14 @@
 # =============================================================================
 FROM python:3.14-alpine AS requirements-builder
 WORKDIR /root
-ENV PATH="$PATH:/root/.local/bin"
 
-# Upgrade / install pipx
-RUN python3 -m pip install --user pipx
-RUN python3 -m pipx ensurepath
-
-# Install pipenv with pipx
-RUN python3 -m pipx install pipenv
-
-# Import Python packages
 COPY Pipfile Pipfile.lock ./
 
-# Create requirements.txt for the next step
+# Install pipenv via pipx
+RUN apk add --no-cache pipx
+ENV PATH="$PATH:/root/.local/bin"
+RUN pipx install pipenv
+
 RUN pipenv requirements > requirements.txt
 
 # =============================================================================
