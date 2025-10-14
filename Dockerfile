@@ -38,7 +38,7 @@ RUN pip install wheel
 RUN pip install --no-cache-dir -r requirements.txt
 # Install the actual application
 COPY . .
-RUN ./setup.py install
+RUN pip install .
 
 # =============================================================================
 # Development installation
