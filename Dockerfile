@@ -48,7 +48,7 @@ FROM dependencies AS development
 
 # Switch to non-root user
 RUN adduser --system fsfe --home=/home/fsfe --uid 1000
-WORKDIR /home/fsfe
+WORKDIR /tmp
 USER fsfe
 
 # =============================================================================
