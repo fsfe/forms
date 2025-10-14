@@ -33,7 +33,7 @@ WORKDIR /root
 RUN apk add --no-cache git
 
 COPY --from=requirements-builder /root/requirements.txt ./
-RUN pip install --ignore-installed setuptools pip
+RUN pip install --ignore-installed setuptools
 RUN pip install wheel
 RUN pip install --no-cache-dir -r requirements.txt
 # Install the actual application
