@@ -9,21 +9,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 services:
-  forms-redis:
-    image: redis:8-alpine
-    container_name: forms-redis
-    expose:
-      - "6379"
-    restart: always
-
   forms:
+    container_name: forms
+    image: forms
+    restart: always
     depends_on:
       - forms-redis
-    image: forms
     build:
       target: production
       context: .
-    container_name: forms
     environment:
       FSFE_CD_PASSPHRASE: "${FSFE_CD_PASSPHRASE}"
       FSFE_CD_TIMEOUT: 3
@@ -39,10 +33,16 @@ services:
       VALIDATE_EMAIL_HELO: "cont2.noris.fsfeurope.org"
     volumes:
       - "/srv/forms:/store:rw"
-    restart: always
     # Reverse Proxy
     labels:
       proxy.host: "forms.fsfe.org"
       proxy.port: "870"
     ports:
       - "870:8080"
+
+  forms-redis:
+    container_name: forms-redis
+    image: redis:8-alpine
+    restart: always
+    expose:
+      - "6379"
