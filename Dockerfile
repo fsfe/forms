@@ -47,9 +47,9 @@ RUN pip install .
 FROM dependencies AS development
 
 # Switch to non-root user
-RUN adduser --system fsfe --uid 1000
+RUN adduser --system forms --uid 1000
 WORKDIR /tmp
-USER fsfe
+USER forms
 
 # =============================================================================
 # Production installation
