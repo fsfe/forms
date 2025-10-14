@@ -54,7 +54,7 @@ temporary clone of the repository and then sequentially executes the following
 steps defined in [`.drone.yml`]:
 
 1. *build-quality*: use [`docker-compose`] with [`docker-compose-quality.yml`]
-   as a wrapper around [`Dockerfile-quality`] to create a docker image for
+   as a wrapper around [`Dockerfile.quality`] to create a docker image for
    automatic quality checks.
 
 2. *quality*: in a container with the previously created image, run a number of

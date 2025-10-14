@@ -12,5 +12,5 @@ services:
     image: fsfe-forms-quality
     build:
       context: .
-      dockerfile: Dockerfile-quality
+      dockerfile: Dockerfile.quality
       target: dependencies
