@@ -1,0 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Free Software Foundation Europe <https://fsfe.org>
+//
+// SPDX-License-Identifier: CC0-1.0
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["dockerfile", "pipenv", "docker-compose"],
+  "extends": ["config:recommended"],
+  "addLabels": [ "enhancement" ]
+}
