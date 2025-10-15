@@ -54,4 +54,4 @@ RUN mkdir /store
 RUN chown -R fsfe:fsfe /store
 
 USER fsfe
-WORKDIR /home/fsfe
+WORKDIR /tmp
