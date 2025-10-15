@@ -49,7 +49,7 @@ RUN pip install --no-cache-dir -r requirements_all.txt
 FROM dependencies AS development
 
 # Switch to non-root user
-RUN adduser --uid 1000 --shell "/sbin/nologin" --disabled-password forms
+RUN adduser --system forms --uid 1000
 RUN mkdir /store
 RUN chown -R forms:forms /store
 
