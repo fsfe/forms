@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2025 Free Software Foundation Europe e.V.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[project]
+name = "fsfe-forms"
+description = "FSFE Form Server"
+authors = [ {name = "Free Software Foundation Europe", email = "techsupport@fsfe.org"} ]
+license = "GPL-3.0-or-later"
+version = "1.0.0-dev"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools]
+packages = [
+    "fsfe_forms",
+    "fsfe_forms.static.css",
+    "fsfe_forms.static.img",
+    "fsfe_forms.templates",
+    "fsfe_forms.templates.pages"
+]
+include-package-data = true
+zip-safe = false
