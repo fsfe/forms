@@ -26,10 +26,8 @@ RUN pipenv requirements > requirements.txt
 # Install dependencies
 # =============================================================================
 FROM python:3.14-alpine AS dependencies
-
-EXPOSE 8080
-
 WORKDIR /root
+
 RUN apk add --no-cache git py3-setuptools py3-wheel
 
 COPY --from=requirements-builder /root/requirements.txt ./
@@ -54,6 +52,7 @@ USER forms
 # =============================================================================
 
 FROM development AS production
+EXPOSE 8080
 
 # Run the WSGI server
 CMD gunicorn --bind 0.0.0.0:8080 "fsfe_forms:create_app()"
