@@ -50,8 +50,6 @@ FROM dependencies AS development
 
 # Switch to non-root user
 RUN adduser --system forms --uid 1000
-RUN mkdir /store
-RUN chown -R forms:forms /store
-
+RUN mkdir /store && chown -R forms:forms /store
 WORKDIR /tmp
 USER forms
