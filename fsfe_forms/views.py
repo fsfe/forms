@@ -207,13 +207,14 @@ def email():
             app_config["store"], params["confirm"]
         ):
             return _process(config=app_config["duplicate"], params=params)
-        else:
-            id = queue_push(params)
-            return _process(config=app_config["register"], params=params, id=id)
-    else:  # Without double opt-in
+        # else
         return _process(
-            config=app_config["register"], params=params, store=app_config.get("store")
+            config=app_config["register"], params=params, id=queue_push(params)
         )
+    # Without double opt-in
+    return _process(
+        config=app_config["register"], params=params, store=app_config.get("store")
+    )
 
 
 # =============================================================================
