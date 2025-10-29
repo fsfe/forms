@@ -7,4 +7,4 @@
 
 # pylama:ignore=W0611
 
-from fsfe_forms.app import create_app
+from fsfe_forms.app import create_app as create_app
