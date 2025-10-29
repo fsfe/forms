@@ -64,7 +64,7 @@ domain_blacklist = [
 ]
 
 
-def _validate(config: dict, params: dict, confirm: bool):  # noqa
+def _validate(config: dict, params: dict, confirm: bool):
     """Validate parameters"""
     current_app.logger.debug("config:", config)
     current_app.logger.debug("params:", params)
