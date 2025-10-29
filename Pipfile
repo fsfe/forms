@@ -26,6 +26,7 @@ pytest = "*"
 pytest-cov = "*"
 pytest-flask = "*"
 pytest-mock = "*"
+ruff = "*"
 
 [requires]
 python_version = "3.14"
