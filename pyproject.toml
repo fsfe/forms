@@ -20,3 +20,7 @@ packages = [
     "fsfe_forms.templates",
     "fsfe_forms.templates.pages"
 ]
+
+[tool.isort]
+multi_line_output = 4
+lines_after_imports = 2
