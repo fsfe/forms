@@ -39,9 +39,7 @@ def send_email(template: str, lang: Optional[str] = None, **kwargs):
     """Send out an email"""
 
     # Compile list of template filenames to look for
-    templates: list = [f"{template}.eml"] + (
-        [f"{template}.{lang}.eml"] if lang is not None else []
-    )
+    templates: list = [f"{template}.eml"] + ([f"{template}.{lang}.eml"] if lang else [])
 
     # Prepare message from template
     message = email.message_from_string(
