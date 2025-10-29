@@ -31,8 +31,8 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars) -
 
     with FileLock(current_app.config["LOCK_FILENAME"]):
         logs = _read_log(storage) + [add]
-        with open(storage, "w") as file:
-            file.write(json.dumps(logs))
+        with open(storage, "w") as f:
+            f.write(json.dumps(logs))
 
 
 def find(storage: str, email: str) -> bool:
