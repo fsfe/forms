@@ -12,6 +12,7 @@ import email.charset
 import email.policy
 import email.utils
 import smtplib
+from contextlib import suppress
 
 from flask import current_app, render_template
 
@@ -69,10 +70,7 @@ def send_email(template: str, lang: str | None = None, **kwargs):
                 user=current_app.config["MAIL_USERNAME"],
                 password=current_app.config["MAIL_PASSWORD"],
             )
-        try:
+        with suppress(smtplib.SMTPRecipientsRefused):
             smtp.send_message(message)
-        except smtplib.SMTPRecipientsRefused:
-            # Ignore errors from invalid email addresses entered
-            pass
 
     return message
