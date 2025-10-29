@@ -30,7 +30,6 @@ steps:
     image: fsfe-forms-quality
     commands:
       - ruff check --no-cache
-      - pylama
       - pytest --cov=fsfe_forms tests
     depends_on:
       - quality-image
