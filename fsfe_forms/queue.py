@@ -31,15 +31,15 @@ def queue_push(data: dict) -> uuid.UUID:
 
     # Check for an unconfirmed previous registration, and if found, update and
     # reuse that one
-    for id in [uuid.UUID(key.decode()) for key in current_app.queue_db.keys()]:
-        old_data = _get(id)
+    for existing_id in [uuid.UUID(key.decode()) for key in current_app.queue_db.keys()]:
+        old_data = _get(existing_id)
         if (
             old_data["appid"] == data["appid"]
             and old_data["confirm"] == data["confirm"]
         ):
-            _set(id, data, current_app.queue_db.ttl(id.hex))
-            current_app.logger.info(f"UUID {id} reused")
-            return id
+            _set(existing_id, data, current_app.queue_db.ttl(existing_id.hex))
+            current_app.logger.info(f"UUID {existing_id} reused")
+            return existing_id
 
     # None found, so generate a new id
     the_id = uuid.uuid4()
