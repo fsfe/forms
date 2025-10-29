@@ -34,7 +34,7 @@ select = [
   "ERA",   # Commented out code
   "F",     # pyflakes
   "FURB",  # More upgrades to newer styles
-  # "G",     # Logging Formatting
+  "G",     # Logging Formatting
   "I",     # ordered import
   # "ISC",   # implicit string concatenation
   "LOG",   # Logging stuff
