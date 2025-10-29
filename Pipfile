@@ -20,7 +20,6 @@ py3-validate-email = {ref = "v1.0.9", git = "https://git.ksol.io/karolyi/py3-val
 
 [dev-packages]
 fakeredis = "*"
-isort = "*"
 pylama = "*"
 pytest = "*"
 pytest-cov = "*"

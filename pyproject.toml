@@ -21,10 +21,6 @@ packages = [
     "fsfe_forms.templates.pages"
 ]
 
-[tool.isort]
-multi_line_output = 4
-lines_after_imports = 2
-
 [tool.ruff.lint]
 #  See https://docs.astral.sh/ruff/rules/ for information
 select = [
@@ -39,7 +35,7 @@ select = [
   "F",     # pyflakes
   "FURB",  # More upgrades to newer styles
   # "G",     # Logging Formatting
-  # "I",     # ordered import
+  "I",     # ordered import
   # "ISC",   # implicit string concatenation
   "LOG",   # Logging stuff
   "N",     # pep 8 naming

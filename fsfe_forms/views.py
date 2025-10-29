@@ -8,8 +8,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from flask import (
-    abort, current_app, redirect, render_template, render_template_string,
-    request, url_for)
+    abort,
+    current_app,
+    redirect,
+    render_template,
+    render_template_string,
+    request,
+    url_for,
+)
 from marshmallow import Schema
 from marshmallow.fields import UUID, Boolean, Email, String
 from marshmallow.validate import Equal, Length, Regexp
