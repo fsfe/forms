@@ -32,11 +32,8 @@ def subscribe(config, params):
 
         if not value:
             continue
-        if (
-            key.startswith("signed_")
-            and key.endswith("_on")
-            or key.startswith("wants_")
-            and key.endswith("_info")
+        if (key.startswith("signed_") and key.endswith("_on")) or (
+            key.startswith("wants_") and key.endswith("_info")
         ):
             confirm_params[key] = value
         else:
