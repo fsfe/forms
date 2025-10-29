@@ -66,9 +66,9 @@ domain_blacklist = [
 
 def _validate(config: dict, params: dict, confirm: bool):  # noqa
     """Validate parameters"""
-    current_app.logger.debug(f"config: {config}")
-    current_app.logger.debug(f"params: {params}")
-    current_app.logger.debug(f"confirm: {confirm}")
+    current_app.logger.debug("config:", config)
+    current_app.logger.debug("params:", params)
+    current_app.logger.debug("confirm:", confirm)
     # Build Marshmallow Schema from configuration
     fields = {
         "appid": String(required=True),
@@ -115,9 +115,9 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                 )
         except KeyError:
             current_app.logger.warning("Could not validate email address.")
-            current_app.logger.info(f"config: {config}")
-            current_app.logger.info(f"params: {params}")
-            current_app.logger.info(f"confirm: {confirm}")
+            current_app.logger.info("config:", config)
+            current_app.logger.info("params:", params)
+            current_app.logger.info("confirm:", confirm)
 
     for name, options in config.items():
         field_class = String
