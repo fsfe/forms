@@ -12,7 +12,6 @@ import email.charset
 import email.policy
 import email.utils
 import smtplib
-from typing import Optional
 
 from flask import current_app, render_template
 
@@ -35,7 +34,7 @@ def init_email(app) -> None:
         return {"format_email": format_email}
 
 
-def send_email(template: str, lang: Optional[str] = None, **kwargs):
+def send_email(template: str, lang: str | None = None, **kwargs):
     """Send out an email"""
 
     # Compile list of template filenames to look for
