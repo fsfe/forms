@@ -20,4 +20,3 @@ packages = [
     "fsfe_forms.templates",
     "fsfe_forms.templates.pages"
 ]
-include-package-data = true
