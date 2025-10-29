@@ -61,7 +61,7 @@ def subscribe(config, params):
     # Determine command signature
     parts = ["command=persons.confirm", f"record_id={person_id}"]
     for key in sorted(confirm_params.keys()):
-        parts.append("{}={}".format(key, confirm_params[key]))
+        parts.append(f"{key}={confirm_params[key]}")
     parts.append(current_app.config["FSFE_CD_PASSPHRASE"])
     signature = sha256(";".join(parts).encode("UTF-8")).hexdigest()
 
