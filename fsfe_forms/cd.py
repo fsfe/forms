@@ -28,10 +28,8 @@ def subscribe(config, params):
     # step. Otherwise, they would not be updated on existing registrations in
     # the Community Database.
     for key, value in config.items():
-        if value == "<date>":
-            value = str(date.today())
-        else:
-            value = params.get(value)
+        value = str(date.today()) if value == "<date>" else params.get(value)
+
         if not value:
             continue
         if (
