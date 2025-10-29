@@ -29,6 +29,8 @@ def test_confirm_bad_id(client):
 
 def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_up):
     """Redeem a valid ID"""
+    name: str = "THE NAME"
+
     response = client.get(path="/redeem", query_string={"id": signed_up})
     assert response.status_code == 302
     assert (
@@ -38,18 +40,18 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
     assert "EMAIL@example.com" in logfile
-    assert "THE NAME" in logfile
+    assert name in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email["From"] == "THE NAME <EMAIL@example.com>"
+    assert email["From"] == f"{name} <EMAIL@example.com>"
     # recipients
     assert email["To"] in [
         "Free Software Foundation Europe <contact@fsfe.org>",
         "Free Software Foundation Europe <helpdesk@fsfe.org>",
     ]
     # subject
-    assert email["Subject"] == "Application for Legal Network membership by " "THE NAME"
+    assert email["Subject"] == f"Application for Legal Network membership by {name}"
     # content
     assert "MY ACTIVITIES" in email.as_string()
 
