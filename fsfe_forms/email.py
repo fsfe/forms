@@ -54,7 +54,6 @@ def send_email(template: str, lang: str | None = None, **kwargs):
     message["Message-ID"] = email.utils.make_msgid(
         domain=current_app.config["MAIL_HELO_HOST"]
     )
-    # message['Auto-Submitted'] = 'auto-generated'  # OTRS doesn't like this
 
     # Tell the library which character set to use on serialization
     message.set_charset("utf-8")
