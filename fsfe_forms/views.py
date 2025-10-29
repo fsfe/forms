@@ -86,9 +86,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             # Check if email is in custom blacklist
             if params["confirm"].split("@")[-1] in domain_blacklist:
                 current_app.logger.info(
-                    "Email address '{}' is on domain blacklist".format(
-                        params["confirm"]
-                    )
+                    "Email address is on domain blacklist:", params["confirm"]
                 )
                 abort(
                     422,
@@ -103,7 +101,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
             )
             if result is False:
                 current_app.logger.info(
-                    "Caught invalid email address '{}'".format(params["confirm"])
+                    "Caught invalid email address:", params["confirm"]
                 )
                 abort(
                     422,
@@ -111,7 +109,7 @@ def _validate(config: dict, params: dict, confirm: bool):  # noqa
                 )
             elif result is None:
                 current_app.logger.warning(
-                    "Could not verify email address '{}'".format(params["confirm"])
+                    "Could not verify email address:", params["confirm"]
                 )
         except KeyError:
             current_app.logger.warning("Could not validate email address.")
