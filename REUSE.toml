@@ -1,0 +1,11 @@
+version = 1
+
+SPDX-PackageName = "Forms API"
+SPDX-PackageSupplier = "Free Software Foundation Europe <https://fsfe.org/contact>"
+SPDX-PackageDownloadLocation = "https://git.fsfe.org/fsfe-system-hackers/forms/"
+
+[[annotations]]
+path = "fsfe_forms/templates/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2020 Free Software Foundation Europe <contact@fsfe.org>"
+SPDX-License-Identifier = "CC0-1.0"
