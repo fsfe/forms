@@ -12,10 +12,7 @@ name: default
 
 steps:
   - name: reuse
-    pull: if-not-exists
-    image: fsfe/reuse:latest
-    commands:
-      - reuse lint
+    image: fsfe/reuse
 
   - name: quality-image
     image: docker
