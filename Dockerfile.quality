@@ -19,11 +19,9 @@ RUN pipenv requirements --dev > requirements_all.txt
 FROM python:3.14-alpine AS dependencies
 WORKDIR /root
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git py3-setuptools py3-wheel
 
-# Install Python packages
 COPY --from=requirements-builder /root/requirements_all.txt ./
-RUN pip install setuptools wheel
 RUN pip install --no-cache-dir -r requirements_all.txt
 
 
