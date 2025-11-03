@@ -35,7 +35,7 @@ services:
       FSFE_CD_URL: "http://forms-fake-fsfe-cd-front:8888/"
     volumes:
       - ".:/home/fsfe/src"
-      - "./store:/store:rw"
+      - "./store:/store"
     command: /bin/sh -c "flask run"
 
   forms-redis:

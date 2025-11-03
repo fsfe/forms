@@ -32,7 +32,7 @@ services:
       VALIDATE_EMAIL_FROM: "contact@fsfe.org"
       VALIDATE_EMAIL_HELO: "cont2.noris.fsfeurope.org"
     volumes:
-      - "/srv/forms:/store:rw"
+      - "/srv/forms:/store"
     # Reverse Proxy
     labels:
       proxy.host: "forms.fsfe.org"
