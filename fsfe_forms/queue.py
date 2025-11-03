@@ -31,7 +31,9 @@ def queue_push(data: dict) -> uuid.UUID:
 
     # Check for an unconfirmed previous registration, and if found, update and
     # reuse that one
-    for existing_id in [uuid.UUID(key.decode()) for key in current_app.queue_db.keys()]:
+    for existing_id in [
+        uuid.UUID(key.decode()) for key in current_app.queue_db.keys()  # noqa: SIM118
+    ]:
         old_data = _get(existing_id)
         if (
             old_data["appid"] == data["appid"]
