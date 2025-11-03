@@ -151,6 +151,7 @@ def _validate(config: dict, params: dict, confirm: bool):
     if errors:
         messages = [k + ": " + " ".join(v) for k, v in errors.items()]
         abort(422, "\n".join(messages))
+    return None
 
 
 def _process(config, params, id=None, store=None):

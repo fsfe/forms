@@ -94,3 +94,4 @@ def signed_up(client, smtp_mock):
     for line in email.as_string().splitlines():
         if url_for("confirm") in line:
             return line.split("=3D")[-1]
+    return None

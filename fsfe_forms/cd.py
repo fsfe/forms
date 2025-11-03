@@ -79,3 +79,4 @@ def subscribe(config, params):
         # human-readable error description, which we just forward unchanged to
         # the user.
         return response.text, response.status_code
+    return None
