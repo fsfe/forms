@@ -2,9 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# =============================================================================
 # Create requirements.txt file
-# =============================================================================
 FROM python:3.14-alpine AS requirements-builder
 WORKDIR /root
 
@@ -17,9 +15,7 @@ RUN pipx install pipenv
 
 RUN pipenv requirements > requirements.txt
 
-# =============================================================================
-# Install dependencies
-# =============================================================================
+# Install dependencies using requirements.txt
 FROM python:3.14-alpine AS dependencies
 WORKDIR /root
 
@@ -31,9 +27,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN pip install .
 
-# =============================================================================
-# Development installation
-# =============================================================================
 
 FROM dependencies AS development
 
@@ -42,9 +35,6 @@ RUN adduser --system forms --uid 1000
 WORKDIR /tmp
 USER forms
 
-# =============================================================================
-# Production installation
-# =============================================================================
 
 FROM development AS production
 EXPOSE 8080
