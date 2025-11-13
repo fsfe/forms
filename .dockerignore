@@ -12,7 +12,6 @@ Dockerfile
 Dockerfile-quality
 .dockerignore
 .drone.yml
-fake-smtp-server
 .git
 .gitignore
 .gitmodules
