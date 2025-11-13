@@ -16,7 +16,6 @@ fake-smtp-server
 .git
 .gitignore
 .gitmodules
-.isort.cfg
 LICENSE
 Makefile
 README.md
