@@ -295,7 +295,49 @@ def redeem(confirmation_id):
     )
 
 
+# =============================================================================
+# API endpoints
+# =============================================================================
+
 api1 = Blueprint("api", __name__, url_prefix="/api/v1")
+
+
+def get_all_by_key_path(logs: list, key_path: str) -> list:
+    """
+    Extract values from log entries by a specified key path.
+
+    Example:
+        ```python
+        >>> logs = [{"include_vars": {"var": "foo"}}, {"include_vars": {"var": "bar"}}]
+        >>> key_path = "include_vars/var"
+        >>> get_all_by_key_path(logs, key_path)
+        ["foo", "bar"]
+        ```
+
+    Args:
+        logs (list): List of log entries (dictionaries).
+        key_path (str): A '/'-separated string specifying the nested key path to extract.
+
+    Returns:
+        list: List of values extracted from each log entry at the specified key path.
+              Entries missing the key path are skipped.
+    """
+    keys = key_path.split("/")
+    rval = []
+    # Iterate through all log entries
+    for entry in logs:
+        subentry = entry
+        try:
+            # Drill down into the sub-dictionaries according to the key path
+            for key in keys:
+                # Go one level deeper, until we reach the first missing key or the end
+                subentry = subentry[key]
+            # If we have found a value, add it to the result list
+            rval.append(subentry)
+        # If any key is missing, go to the next log entry
+        except (KeyError, TypeError):
+            continue
+    return rval
 
 
 @api1.route("/apps", methods=["GET"])
@@ -311,9 +353,29 @@ def get_app_config(appid):
     return {"parameters": app_config}
 
 
-@api1.route("/app/<string:appid>/store", methods=["GET"])
-def get_all_logs(appid):
-    """Get all log entries for a given app ID"""
+@api1.route(
+    "/app/<string:appid>/store", defaults={"key_path": ""}, methods=["GET"]
+)
+@api1.route(
+    "/app/<string:appid>/store/", defaults={"key_path": ""}, methods=["GET"]
+)
+@api1.route("/app/<string:appid>/store/<path:key_path>", methods=["GET"])
+def get_all_logs(appid, key_path):
+    """
+    Retrieve all log entries for a given application ID, optionally extracting
+    values by a specified key path.
+
+    Args:
+        appid (str): The application ID to retrieve logs for
+        key_path (str): Optional. A '/'-separated string specifying the
+            nested key path to extract from each log entry
+
+    Returns:
+        list: List of log entries or extracted values
+    """
     app_config = _find_app_config(appid)
     logs = json_store.get_all(app_config["store"])
-    return logs
+    if not key_path:
+        return logs
+
+    return get_all_by_key_path(logs, key_path)
