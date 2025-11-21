@@ -30,6 +30,7 @@ from fsfe_forms.queue import queue_pop, queue_push
 
 
 class AppConfigError(Exception):
+    """Exception for invalid application configuration"""
     def __init__(self, message):
         self.message = f"Error in application configuration: {message}"
 
@@ -65,17 +66,17 @@ domain_blacklist = [
 ]
 
 
-def _validate(config: dict, params: dict, confirm: bool):
+def _validate(config: dict, params: dict, email_confirm: bool):
     """Validate parameters"""
     current_app.logger.debug("config:", config)
     current_app.logger.debug("params:", params)
-    current_app.logger.debug("confirm:", confirm)
+    current_app.logger.debug("confirm:", email_confirm)
     # Build Marshmallow Schema from configuration
     fields = {
         "appid": String(required=True),
         "lang": String(validate=Regexp(r"^[a-z]{2}$"), load_default=None),
     }
-    if confirm:
+    if email_confirm:
         # Do syntax check
         fields["confirm"] = Email(required=True)
 
@@ -116,7 +117,7 @@ def _validate(config: dict, params: dict, confirm: bool):
             current_app.logger.warning("Could not validate email address.")
             current_app.logger.info("config:", config)
             current_app.logger.info("params:", params)
-            current_app.logger.info("confirm:", confirm)
+            current_app.logger.info("confirm:", email_confirm)
 
     for name, options in config.items():
         field_class = String
@@ -157,14 +158,14 @@ def _validate(config: dict, params: dict, confirm: bool):
     return None
 
 
-def _process(config, params, id=None, store=None):
+def _process(config, params, confirmation_id=None, store=None):
     """Send email, store data, and redirect"""
 
     if "email" in config:
         # Send out email
         message = send_email(
             template=config["email"],
-            confirmation_url=url_for("general.confirm", _external=True, id=id),
+            confirmation_url=url_for("general.confirm", _external=True, id=confirmation_id),
             **params,
         )
 
@@ -218,7 +219,7 @@ def email():
             return _process(config=app_config["duplicate"], params=params)
         # else
         return _process(
-            config=app_config["register"], params=params, id=queue_push(params)
+            config=app_config["register"], params=params, confirmation_id=queue_push(params)
         )
     # Without double opt-in
     return _process(
@@ -237,16 +238,16 @@ confirm_parameters = {"id": UUID(required=True)}
 
 @general.route("/confirm", methods=["GET"])
 @use_kwargs(confirm_parameters, location="query")
-def confirm(id):
+def confirm(confirmation_id):
     """A landing page to confirm the ID via a click. Hands over to redeem()"""
-    return render_template("pages/confirm.html", id=id)
+    return render_template("pages/confirm.html", id=confirmation_id)
 
 
 @general.route("/redeem", methods=["GET"])
 @use_kwargs(confirm_parameters, location="query")
-def redeem(id):
+def redeem(confirmation_id):
     """Redeems an ID after checking its validity, refers to further actions then"""
-    params = queue_pop(id)
+    params = queue_pop(confirmation_id)
 
     app_config = _find_app_config(params["appid"])
 
