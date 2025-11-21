@@ -10,6 +10,7 @@
 import json
 import os
 import time
+from pathlib import Path
 
 from filelock import FileLock
 from flask import current_app
@@ -52,12 +53,24 @@ def get_all(storage: str) -> list:
     with FileLock(current_app.config["LOCK_FILENAME"]):
         return _read_log(storage)
 
+def _combine_path_prefix(storage: str) -> str:
+    """Combine storage path with configured prefix"""
+    if not current_app.config["STORE_FILE_PREFIX"]:
+        return storage
+    storage_path = Path(storage)
+    prefix_path = Path(current_app.config["STORE_FILE_PREFIX"])
+    if storage_path.is_absolute():
+        storage_path = storage_path.relative_to(storage_path.anchor)
+    return str(prefix_path / storage_path)
+
 
 def _read_log(storage) -> list:
     """Read log from storage file"""
     rval: list = []
+    storage = _combine_path_prefix(storage)
     if os.path.exists(storage):
         with open(storage, encoding="UTF-8") as f:
+            current_app.logger.debug(f"Reading log file {storage}")
             rval = json.loads(f.read())
     else:
         current_app.logger.warning(f"Log file {storage} does not exist")

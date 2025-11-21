@@ -34,8 +34,9 @@ FSFE_CD_URL = environ.get("FSFE_CD_URL", "http://localhost:8089/")
 FSFE_CD_TIMEOUT: int = int(environ.get("FSFE_CD_TIMEOUT", "3"))
 FSFE_CD_PASSPHRASE = environ.get("FSFE_CD_PASSPHRASE", "cmd_passphrase")
 
-# Filename for a temporary lockfile
+# Parameters for file operations
 LOCK_FILENAME = environ.get("LOCK_FILENAME", "/tmp/forms.lock")
+STORE_FILE_PREFIX = environ.get("STORE_FILE_PREFIX", "")
 
 # Expiration time for double opt-in confirmation
 # (None means no expiration)
