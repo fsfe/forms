@@ -20,7 +20,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from fsfe_forms import config
 from fsfe_forms.email import init_email
-from fsfe_forms.views import general
+from fsfe_forms.views import api1, general
 
 
 def create_app():
@@ -77,5 +77,6 @@ def create_app():
 
     # Register views and routes
     app.register_blueprint(general)
+    app.register_blueprint(api1)
 
     return app

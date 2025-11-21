@@ -31,6 +31,7 @@ from fsfe_forms.queue import queue_pop, queue_push
 
 class AppConfigError(Exception):
     """Exception for invalid application configuration"""
+
     def __init__(self, message):
         self.message = f"Error in application configuration: {message}"
 
@@ -41,7 +42,7 @@ class AppConfigError(Exception):
 
 
 def _find_app_config(appid):
-    """# Find application config or issue 404 error"""
+    """Find application config or issue 404 error"""
     try:
         return current_app.app_configs[appid]
     except KeyError:
@@ -67,7 +68,34 @@ domain_blacklist = [
 
 
 def _validate(config: dict, params: dict, email_confirm: bool):
-    """Validate parameters"""
+    """
+    Validates input parameters against a dynamic schema built from the provided configuration.
+
+    Args:
+        config (dict): Configuration dictionary specifying validation rules for each parameter
+        params (dict): Dictionary of parameters to validate
+        email_confirm (bool): If True, performs additional validation on the 'confirm' email field
+
+    Validation Steps:
+        - Logs the configuration, parameters, and email confirmation status.
+        - Builds a Marshmallow schema based on the configuration and email confirmation flag.
+        - If email confirmation is required:
+            - Checks email syntax.
+            - Skips expensive validation in testing or debug mode.
+            - Checks for blacklisted email domains.
+            - Performs SMTP-based email validation.
+        - Iterates over config to set up field types and validation options.
+        - Validates parameters against the constructed schema.
+        - Aborts with HTTP 422 if validation fails, providing error messages.
+
+    Returns:
+        None if validation succeeds.
+        Aborts the request with HTTP 422 if validation fails.
+
+    Raises:
+        AppConfigError: If an invalid option is specified in the configuration.
+        werkzeug.exceptions.HTTPException: If validation fails or a forbidden email is used.
+    """
     current_app.logger.debug("config:", config)
     current_app.logger.debug("params:", params)
     current_app.logger.debug("confirm:", email_confirm)
@@ -165,7 +193,9 @@ def _process(config, params, confirmation_id=None, store=None):
         # Send out email
         message = send_email(
             template=config["email"],
-            confirmation_url=url_for("general.confirm", _external=True, id=confirmation_id),
+            confirmation_url=url_for(
+                "general.confirm", _external=True, id=confirmation_id
+            ),
             **params,
         )
 
@@ -219,7 +249,9 @@ def email():
             return _process(config=app_config["duplicate"], params=params)
         # else
         return _process(
-            config=app_config["register"], params=params, confirmation_id=queue_push(params)
+            config=app_config["register"],
+            params=params,
+            confirmation_id=queue_push(params),
         )
     # Without double opt-in
     return _process(
@@ -261,3 +293,27 @@ def redeem(confirmation_id):
     return _process(
         config=app_config["confirm"], params=params, store=app_config["store"]
     )
+
+
+api1 = Blueprint("api", __name__, url_prefix="/api/v1")
+
+
+@api1.route("/apps", methods=["GET"])
+def list_apps():
+    """List available application IDs"""
+    return {"applications": list(current_app.app_configs)}
+
+
+@api1.route("/app/<string:appid>", methods=["GET"])
+def get_app_config(appid):
+    """Get application configuration for a given app ID"""
+    app_config = _find_app_config(appid)
+    return {"parameters": app_config}
+
+
+@api1.route("/app/<string:appid>/store", methods=["GET"])
+def get_all_logs(appid):
+    """Get all log entries for a given app ID"""
+    app_config = _find_app_config(appid)
+    logs = json_store.get_all(app_config["store"])
+    return logs

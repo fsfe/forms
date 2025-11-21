@@ -15,7 +15,10 @@ from filelock import FileLock
 from flask import current_app
 
 
-def log(storage, send_from, send_to, subject, content, reply_to, include_vars) -> None:
+def log(
+    storage, send_from, send_to, subject, content, reply_to, include_vars
+) -> None:
+    """Log a registration event to a JSON file"""
     add = {
         "timestamp": time.time(),
         "from": send_from,
@@ -31,11 +34,12 @@ def log(storage, send_from, send_to, subject, content, reply_to, include_vars) -
 
     with FileLock(current_app.config["LOCK_FILENAME"]):
         logs = _read_log(storage) + [add]
-        with open(storage, "w") as f:
+        with open(storage, "w", encoding="UTF-8") as f:
             f.write(json.dumps(logs))
 
 
 def find(storage: str, email: str) -> bool:
+    """Find whether an email is already in the log"""
     with FileLock(current_app.config["LOCK_FILENAME"]):
         for entry in _read_log(storage):
             if entry.get("include_vars", {}).get("confirm") == email:
@@ -43,9 +47,18 @@ def find(storage: str, email: str) -> bool:
         return False
 
 
+def get_all(storage: str) -> list:
+    """Get all log entries from storage file"""
+    with FileLock(current_app.config["LOCK_FILENAME"]):
+        return _read_log(storage)
+
+
 def _read_log(storage) -> list:
+    """Read log from storage file"""
     rval: list = []
     if os.path.exists(storage):
-        with open(storage) as f:
+        with open(storage, encoding="UTF-8") as f:
             rval = json.loads(f.read())
+    else:
+        current_app.logger.warning(f"Log file {storage} does not exist")
     return rval
