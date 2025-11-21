@@ -57,3 +57,15 @@ select = [
 ]
 [tool.ruff.lint.isort]
 lines-after-imports = 2
+
+# FORMATTING settings
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 80
+
+# MYPY settings
+[tool.mypy]
+files = ["forms/*.py", "tests/*.py"]
+disable_error_code = ["import-untyped"]
