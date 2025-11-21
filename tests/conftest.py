@@ -14,7 +14,6 @@ from requests import Response
 
 from fsfe_forms import config, create_app
 
-
 # -----------------------------------------------------------------------------
 # Mocked SMTP connection
 # -----------------------------------------------------------------------------
@@ -92,6 +91,6 @@ def signed_up(client, smtp_mock):
     # Return the confirmation ID
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     for line in email.as_string().splitlines():
-        if url_for("confirm") in line:
+        if url_for("general.confirm") in line:
             return line.split("=3D")[-1]
     return None

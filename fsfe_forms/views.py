@@ -8,6 +8,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from flask import (
+    Blueprint,
     abort,
     current_app,
     redirect,
@@ -138,7 +139,9 @@ def _validate(config: dict, params: dict, confirm: bool):
                 case "single-line":
                     validate.append(Regexp(r"^[^\r\n]*$"))
                 case _:
-                    raise AppConfigError(f"Invalid option {opt} for parameter {name}")
+                    raise AppConfigError(
+                        f"Invalid option {opt} for parameter {name}"
+                    )
         kwargs = {"required": required, "validate": validate}
         if not required:
             kwargs["load_default"] = None
@@ -161,7 +164,7 @@ def _process(config, params, id=None, store=None):
         # Send out email
         message = send_email(
             template=config["email"],
-            confirmation_url=url_for("confirm", _external=True, id=id),
+            confirmation_url=url_for("general.confirm", _external=True, id=id),
             **params,
         )
 
@@ -185,11 +188,16 @@ def _process(config, params, id=None, store=None):
     return redirect(render_template_string(config["redirect"], **params))
 
 
+general = Blueprint("general", __name__)
+
+
+@general.route("/", methods=["GET"])
 def index():
     """Index endpoint (shows static information page)"""
     return render_template("pages/index.html")
 
 
+@general.route("/email", methods=["GET", "POST"])
 def email():
     """Registration endpoint"""
     # Remove all empty parameters
@@ -214,7 +222,9 @@ def email():
         )
     # Without double opt-in
     return _process(
-        config=app_config["register"], params=params, store=app_config.get("store")
+        config=app_config["register"],
+        params=params,
+        store=app_config.get("store"),
     )
 
 
@@ -225,12 +235,14 @@ def email():
 confirm_parameters = {"id": UUID(required=True)}
 
 
+@general.route("/confirm", methods=["GET"])
 @use_kwargs(confirm_parameters, location="query")
 def confirm(id):
     """A landing page to confirm the ID via a click. Hands over to redeem()"""
     return render_template("pages/confirm.html", id=id)
 
 
+@general.route("/redeem", methods=["GET"])
 @use_kwargs(confirm_parameters, location="query")
 def redeem(id):
     """Redeems an ID after checking its validity, refers to further actions then"""

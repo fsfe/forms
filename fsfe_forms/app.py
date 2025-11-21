@@ -20,7 +20,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from fsfe_forms import config
 from fsfe_forms.email import init_email
-from fsfe_forms.views import confirm, email, index, redeem
+from fsfe_forms.views import general
 
 
 def create_app():
@@ -75,10 +75,7 @@ def create_app():
     with open(filename) as f:
         app.app_configs = json.load(f)
 
-    # Register views
-    app.add_url_rule(rule="/", view_func=index)
-    app.add_url_rule(rule="/email", view_func=email, methods=["GET", "POST"])
-    app.add_url_rule(rule="/confirm", view_func=confirm)
-    app.add_url_rule(rule="/redeem", view_func=redeem)
+    # Register views and routes
+    app.register_blueprint(general)
 
     return app
