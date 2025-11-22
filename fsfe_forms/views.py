@@ -7,10 +7,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import secrets
+from functools import wraps
+
 from flask import (
     Blueprint,
     abort,
     current_app,
+    jsonify,
     redirect,
     render_template,
     render_template_string,
@@ -302,7 +306,34 @@ def redeem(confirmation_id):
 api1 = Blueprint("api", __name__, url_prefix="/api/v1")
 
 
-def get_all_by_key_path(logs: list, key_path: str) -> list:
+def _extract_bearer_token() -> str:
+    """Extract Bearer token from Authorization header.
+
+    Returns:
+        str: The extracted token. Empty string if no valid token is found.
+    """
+    auth = request.headers.get("Authorization", "")
+    parts = auth.split()
+    if len(parts) == 2 and parts[0].lower() == "bearer":
+        return parts[1]
+    return ""
+
+
+def _trucate_token(token: str) -> str:
+    """Truncate a token for logging purposes.
+
+    Args:
+        token (str): The full token string.
+    Returns:
+        str: The truncated token (first 4 and last 4 characters) or the full token if shorter than 8
+            characters.
+    """
+    if len(token) <= 8:
+        return token
+    return f"{token[:4]}***{token[-4:]}"
+
+
+def _get_all_by_key_path(logs: list, key_path: str) -> list:
     """
     Extract values from log entries by a specified key path.
 
@@ -340,17 +371,104 @@ def get_all_by_key_path(logs: list, key_path: str) -> list:
     return rval
 
 
+def require_token(url_prefix: str = "/"):
+    """
+    Decorator to require Token authentication for endpoints.
+
+    Args:
+        url_prefix (str): URL prefix for the endpoints (e.g., "/api/v1")
+
+    Returns:
+        function: Decorated function that enforces token authentication
+    """
+    # normalize
+    url_prefix = "/" + url_prefix.strip("/")  # `/api/v1` -> `api/v1`
+
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            token = _extract_bearer_token()
+            # Case: no token provided
+            if not token:
+                current_app.logger.debug("No Authorization header provided")
+                return jsonify({"error": "Unauthorized"}), 401
+
+            # Within the token file, look for tokens for this path, defined by the url_prefix, e.g.:
+            # `api/v1` -> ["api", "v1"]
+            dict_path = url_prefix.split("/")
+            # Then, traverse the tokens dict accordingly. Example: `{"api": {"v1": {<tokens>}}}`
+            valid_tokens = current_app.tokens
+            for component in dict_path[1:]:  # skip the first empty component
+                valid_tokens = valid_tokens.get(component, {})
+
+            # find the matching token entry
+            allowed_prefixes = None
+            for stored_token, prefixes in valid_tokens.items():
+                # Use constant-time comparison to prevent timing attacks
+                if secrets.compare_digest(stored_token, token):
+                    allowed_prefixes = prefixes
+                    break
+
+            # Case: token is not found in the token file
+            if allowed_prefixes is None:
+                current_app.logger.debug(
+                    "Invalid token provided: %s", _trucate_token(token)
+                )
+                return jsonify({"error": "Unauthorized"}), 401
+
+            # convert JSON prefixes to fully-qualified paths
+            full_prefixes = []
+            for p in allowed_prefixes:
+                p = "/" + p.strip("/")  # "/" stays "/"
+                if p == "/":
+                    # meaning: full access to this API version root
+                    full_prefixes.append(url_prefix + "/")
+                    full_prefixes.append(url_prefix)
+                else:
+                    full_prefixes.append(url_prefix + p)
+
+            # Check access to the requested endpoint. If the request path
+            # does not start with any of the allowed prefixes, deny access.
+            # Case: token found but does not allow access to this endpoint
+            if not any(
+                request.path == fp
+                or request.path.startswith(fp.rstrip("/") + "/")
+                for fp in full_prefixes
+            ):
+                current_app.logger.debug(
+                    "Token '%s' does not allow access to endpoint %s",
+                    _trucate_token(token),
+                    request.path,
+                )
+                return jsonify({"error": "Forbidden"}), 403
+
+            # Case: token is valid and allows access to this path
+            current_app.logger.debug(
+                "Token '%s' granted access to endpoint %s",
+                _trucate_token(token),
+                request.path,
+            )
+
+            return f(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
 @api1.route("/apps", methods=["GET"])
+@require_token(api1.url_prefix)
 def list_apps():
     """List available application IDs"""
-    return {"applications": list(current_app.app_configs)}
+    return jsonify({"applications": list(current_app.app_configs)})
 
 
 @api1.route("/app/<string:appid>", methods=["GET"])
+@require_token(api1.url_prefix)
 def get_app_config(appid):
     """Get application configuration for a given app ID"""
     app_config = _find_app_config(appid)
-    return {"parameters": app_config}
+    return jsonify({"parameters": app_config})
 
 
 @api1.route(
@@ -360,6 +478,7 @@ def get_app_config(appid):
     "/app/<string:appid>/store/", defaults={"key_path": ""}, methods=["GET"]
 )
 @api1.route("/app/<string:appid>/store/<path:key_path>", methods=["GET"])
+@require_token(api1.url_prefix)
 def get_all_logs(appid, key_path):
     """
     Retrieve all log entries for a given application ID, optionally extracting
@@ -376,6 +495,6 @@ def get_all_logs(appid, key_path):
     app_config = _find_app_config(appid)
     logs = json_store.get_all(app_config["store"])
     if not key_path:
-        return logs
+        return jsonify(logs)
 
-    return get_all_by_key_path(logs, key_path)
+    return jsonify(_get_all_by_key_path(logs, key_path))

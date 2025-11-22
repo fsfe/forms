@@ -72,8 +72,17 @@ def create_app():
 
     # Load application configurations
     filename = os.path.join(os.path.dirname(__file__), "applications.json")
-    with open(filename) as f:
+    with open(filename, encoding="UTF-8") as f:
         app.app_configs = json.load(f)
+
+    # Load tokens if any. TOKEN_FILE is a JSON file
+    if token_file := app.config["TOKEN_FILE"]:
+        app.logger.info("Loading tokens from '%s'", token_file)
+        with open(token_file, encoding="UTF-8") as f:
+            app.tokens = json.load(f)
+    else:
+        app.logger.info("No token file configured, API endpoints cannot be accessed")
+        app.tokens = {}
 
     # Register views and routes
     app.register_blueprint(general)

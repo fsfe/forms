@@ -45,3 +45,6 @@ CONFIRMATION_EXPIRATION_SECS: int = 86400
 # Parameters for email address validation
 VALIDATE_EMAIL_HELO = environ.get("VALIDATE_EMAIL_HELO", "localhost")
 VALIDATE_EMAIL_FROM = environ.get("VALIDATE_EMAIL_FROM")
+
+# Parameters for Token authentication, e.g. for API endpoints
+TOKEN_FILE = environ.get("TOKEN_FILE")
