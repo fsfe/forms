@@ -36,9 +36,9 @@ services:
     # Reverse Proxy
     labels:
       proxy.host: "forms.fsfe.org"
-      proxy.port: "870"
+      proxy.port: "8700"
     ports:
-      - "870:8080"
+      - "8700:8080"
 
   forms-redis:
     container_name: forms-redis
