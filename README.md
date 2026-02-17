@@ -196,7 +196,7 @@ exist, it will fall back to `tosign-register.eml`.
 
 ## API
 
-### POST/GET https://forms.fsfe.org/email
+### POST/GET `/email`
 
 This will trigger the sending of an email, potentially with a double opt-in
 according to the configuration.
@@ -209,7 +209,7 @@ Please note that for applications requiring double opt-in, the parameter for
 the user's email address *must* be called "confirm".
 
 
-### GET https://forms.fsfe.org/confirm
+### GET `/confirm`
 
 This will confirm an e-mail address if using double opt-in. The following
 parameters are supported:
