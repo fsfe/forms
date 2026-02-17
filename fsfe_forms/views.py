@@ -50,7 +50,7 @@ def _find_app_config(appid):
 # Custom additions to domain blocklist
 # -----------------------------------------------------------------------------
 
-domain_blacklist = [
+domain_blacklist: set[str] = {
     # Emails from these domains were used en masse to sign-up to our
     # services or sign open letters which sometimes landed our SMTP server
     # on several blocklists. Blocking these domains entirely fixes the
@@ -61,7 +61,7 @@ domain_blacklist = [
     "aol.com",
     "yahoo.com",
     "ymail.com",
-]
+}
 
 
 def _validate(config: dict, params: dict, confirm: bool):
