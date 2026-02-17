@@ -296,7 +296,7 @@ website](https://www.npmjs.com/package/fake-smtp-server).
 After running docker-compose, you can access all services locally:
 
 * forms-web: http://localhost:8080
-* forms-fakesmtp: http://localhost:1080
+* forms-fakesmtp: http://localhost:1080 (see the sent emails here)
 
 Now you either replace the URLs of a form with
 `http://localhost:8080/email` (for example in your browser with
@@ -306,5 +306,3 @@ curl -X POST \
 	"http://localhost:8080/email" \
 	-d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`
 ```
-
-On `http://localhost:1080` you can then see the sent emails.
