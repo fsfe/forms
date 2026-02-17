@@ -71,8 +71,7 @@ def create_app():
     )
 
     # Load application configurations
-    filename = path.join(path.dirname(__file__), "applications.json")
-    with open(filename) as f:
+    with open(path.join(path.dirname(__file__), "applications.json")) as f:
         app.app_configs = json.load(f)
 
     # Register views
