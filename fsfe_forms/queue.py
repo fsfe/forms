@@ -21,7 +21,7 @@ def _get(the_id: uuid.UUID) -> dict:
     return json.loads(data.decode("utf-8"))
 
 
-def _set(the_id: uuid.UUID, data: dict, ttl: int):
+def _set(the_id: uuid.UUID, data: dict, ttl: int) -> None:
     """Helper function to write a dictionary to Redis"""
     current_app.queue_db.set(the_id.hex, json.dumps(data).encode("utf-8"), ttl)
 
