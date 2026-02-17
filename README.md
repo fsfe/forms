@@ -227,41 +227,41 @@ matching application configuration.
 The application configuration is again an object with the following possible
 keys:
 
-* **parameters**: An object defining the parameters to be included in a
+- **parameters**: An object defining the parameters to be included in a
   request. Required.
-* **cd**: An object defining the parameters to be sent to the FSFE Community
+- **cd**: An object defining the parameters to be sent to the FSFE Community
   Database, where names are the properties in fsfe-cd and values are the
   matching parameter names in the form. Optional.
-* **store**: If set to a filename, then information about emails sent is
+- **store**: If set to a filename, then information about emails sent is
   stored in this file. This does not inclue emails which have not been
   confirmed (if double opt-in is in use). Optional.
-* **register**: Defines what to do upon registration of a user. Required.
-* **confirm**: If present, forces double opt-in, and defines what to do upon
+- **register**: Defines what to do upon registration of a user. Required.
+- **confirm**: If present, forces double opt-in, and defines what to do upon
   confirmation of a registration. Optional.
-* **duplicate**: If present, forces the check for duplicate registrations, and
+- **duplicate**: If present, forces the check for duplicate registrations, and
   defines what to do when one occurs. Optional.
 
 In the "parameters" object, each key defines a parameter name, where the value
 is a list of zero or more validations to apply to this parameter, with the
 following being avaliable:
 
-* **required**: must be included and non-empty.
-* **single-line**: must not contain line breaks. Use this for all fields that
+- **required**: must be included and non-empty.
+- **single-line**: must not contain line breaks. Use this for all fields that
   are included in email headers to avoid header injection attacks.
-* **email**: must look like a valid email address. The actual existence of the
+- **email**: must look like a valid email address. The actual existence of the
   address is not checked, though.
-* **boolean**: must be something that can be understood as a boolean value
+- **boolean**: must be something that can be understood as a boolean value
   (true/false, t/f, yes/no, y/n, on/off, 1/0).
-* **mandatory**: must be a true-ish boolean value. Use this for fields like "I
+- **mandatory**: must be a true-ish boolean value. Use this for fields like "I
   agree to the privacy statement".
-* **forbidden**: must be empty or not included at all. Use this for honeypot
+- **forbidden**: must be empty or not included at all. Use this for honeypot
   entries to catch spam bots.
 
 Each of "register", "confirm", and "duplicate" are again objects with the
 following keys:
 
-* **email**: Template for the email to be sent.
-* **redirect**: Address to redirect the user's browser to after having
+- **email**: Template for the email to be sent.
+- **redirect**: Address to redirect the user's browser to after having
   accepted and processed a request
 
 
@@ -295,8 +295,8 @@ website](https://www.npmjs.com/package/fake-smtp-server).
 
 After running docker-compose, you can access all services locally:
 
-* forms-web: http://localhost:8080
-* forms-fakesmtp: http://localhost:1080 (see the sent emails here)
+- forms-web: http://localhost:8080
+- forms-fakesmtp: http://localhost:1080 (see the sent emails here)
 
 Now you either replace the URLs of a form with
 `http://localhost:8080/email` (for example in your browser with
