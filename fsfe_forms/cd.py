@@ -28,7 +28,7 @@ def subscribe(config, params):
     # step. Otherwise, they would not be updated on existing registrations in
     # the Community Database.
     for key, value in config.items():
-        value = str(date.today()) if value == "<date>" else params.get(value)
+        value: str = str(date.today()) if value == "<date>" else params.get(value)
 
         if not value:
             continue
@@ -56,8 +56,8 @@ def subscribe(config, params):
     # Second step: Automatically confirm the registration.
 
     # Determine command signature
-    parts = ["command=persons.confirm", f"record_id={person_id}"]
-    param_parts = [
+    parts: list[str] = ["command=persons.confirm", f"record_id={person_id}"]
+    param_parts: list[str] = [
         f"{key}={confirm_params[key]}" for key in sorted(confirm_params.keys())
     ]
     parts.extend(param_parts)
