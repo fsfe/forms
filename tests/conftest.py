@@ -11,6 +11,9 @@ from requests import Response
 from fsfe_forms import config, create_app
 
 
+EML: str = "EMAIL@example.com"
+
+
 @pytest.fixture
 def smtp_mock(mocker):
     return mocker.patch("smtplib.SMTP")
@@ -53,7 +56,7 @@ def signed_up(client, smtp_mock):
         query_string={
             "appid": "ln-apply",
             "name": "THE NAME",
-            "confirm": "EMAIL@example.com",
+            "confirm": EML,
             "activities": "MY ACTIVITIES",
             "obligatory": "yes",
         },

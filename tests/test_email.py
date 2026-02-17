@@ -5,6 +5,8 @@ This file is part of the FSFE Form Server.
 
 from http import HTTPStatus
 
+from .conftest import EML
+
 
 # =============================================================================
 # GET method
@@ -20,7 +22,7 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
         path="/email",
         query_string={
             "appid": "contact",
-            "from": "EMAIL@example.com",
+            "from": EML,
             "subject": "EMAIL-SUBJECT",
             "content": "EMAIL-CONTENT",
         },
@@ -29,13 +31,13 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     assert response.location == "https://fsfe.org/contact/"
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
-    assert "EMAIL@example.com" in logfile
+    assert EML in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email["From"] == "EMAIL@example.com"
+    assert email["From"] == EML
     # recipient
     assert email["To"] in [
         "Free Software Foundation Europe <contact@fsfe.org>",
@@ -68,7 +70,7 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
         query_string={
             "appid": "pmpc-sign",
             "name": "THE NAME",
-            "confirm": "EMAIL@example.com",
+            "confirm": EML,
             "lang": "en",
             "permissionPriv": "yes",
         },
@@ -82,7 +84,7 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     # sender
     assert "no-reply@fsfe.org" in email["From"]
     # recipient
-    assert email["To"] == "THE NAME <EMAIL@example.com>"
+    assert email["To"] == f"THE NAME <{EML}>"
     # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
@@ -93,7 +95,7 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
         query_string={
             "appid": "pmpc-sign",
             "name": "THE NAME",
-            "confirm": "EMAIL@example.com",
+            "confirm": EML,
             "lang": "en",
             "permissionPriv": "yes",
         },
@@ -107,7 +109,7 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
     # sender
     assert "no-reply@fsfe.org" in email["From"]
     # recipient
-    assert email["To"] == "THE NAME <EMAIL@example.com>"
+    assert email["To"] == f"THE NAME <{EML}>"
     # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
@@ -126,7 +128,7 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
         path="/email",
         data={
             "appid": "contact",
-            "from": "EMAIL@example.com",
+            "from": EML,
             "subject": "EMAIL-SUBJECT",
             "content": "EMAIL-CONTENT",
         },
@@ -135,13 +137,13 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     assert response.location == "https://fsfe.org/contact/"
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
-    assert "EMAIL@example.com" in logfile
+    assert EML in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email["From"] == "EMAIL@example.com"
+    assert email["From"] == EML
     # recipient
     assert email["To"] in [
         "Free Software Foundation Europe <contact@fsfe.org>",

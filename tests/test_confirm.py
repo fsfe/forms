@@ -5,6 +5,8 @@ This file is part of the FSFE Form Server.
 
 from http import HTTPStatus
 
+from .conftest import EML
+
 
 def test_confirm_redeem_id(client, signed_up):
     """Confirm landing page with a valid ID"""
@@ -37,12 +39,12 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
     )
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
-    assert "EMAIL@example.com" in logfile
+    assert EML in logfile
     assert name in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     # sender
-    assert email["From"] == f"{name} <EMAIL@example.com>"
+    assert email["From"] == f"{name} <{EML}>"
     # recipients
     assert email["To"] in [
         "Free Software Foundation Europe <contact@fsfe.org>",
