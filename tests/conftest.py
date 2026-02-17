@@ -12,6 +12,7 @@ from fsfe_forms import config, create_app
 
 
 EML: str = "EMAIL@example.com"
+NAME: str = "THE NAME"
 
 
 @pytest.fixture
@@ -55,7 +56,7 @@ def signed_up(client, smtp_mock):
         path="/email",
         query_string={
             "appid": "ln-apply",
-            "name": "THE NAME",
+            "name": NAME,
             "confirm": EML,
             "activities": "MY ACTIVITIES",
             "obligatory": "yes",

@@ -5,7 +5,7 @@ This file is part of the FSFE Form Server.
 
 from http import HTTPStatus
 
-from .conftest import EML
+from .conftest import EML, NAME
 
 
 # =============================================================================
@@ -69,7 +69,7 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
         path="/email",
         query_string={
             "appid": "pmpc-sign",
-            "name": "THE NAME",
+            "name": NAME,
             "confirm": EML,
             "lang": "en",
             "permissionPriv": "yes",
@@ -84,7 +84,7 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     # sender
     assert "no-reply@fsfe.org" in email["From"]
     # recipient
-    assert email["To"] == f"THE NAME <{EML}>"
+    assert email["To"] == f"{NAME} <{EML}>"
     # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
@@ -94,7 +94,7 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
         path="/email",
         query_string={
             "appid": "pmpc-sign",
-            "name": "THE NAME",
+            "name": NAME,
             "confirm": EML,
             "lang": "en",
             "permissionPriv": "yes",
@@ -109,7 +109,7 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
     # sender
     assert "no-reply@fsfe.org" in email["From"]
     # recipient
-    assert email["To"] == f"THE NAME <{EML}>"
+    assert email["To"] == f"{NAME} <{EML}>"
     # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
