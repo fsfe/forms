@@ -153,7 +153,7 @@ def _validate(config: dict, params: dict, confirm: bool) -> None:
         abort(422, "\n".join(messages))
 
 
-def _process(config, params, id=None, store=None):
+def _process(config, params, id=None, store=None) -> str:
     """Send email, store data, and redirect"""
 
     if "email" in config:
