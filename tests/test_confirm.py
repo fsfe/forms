@@ -35,10 +35,12 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
         response.location == "https://fsfe.org/activities/ln/"
         "application-success.html"
     )
+
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
     assert EML in logfile
     assert NAME in logfile
+
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     assert email["From"] == f"{NAME} <{EML}>"

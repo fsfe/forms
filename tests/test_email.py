@@ -122,11 +122,13 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     )
     assert response.status_code == HTTPStatus.FOUND
     assert response.location == "https://fsfe.org/contact/"
+
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
     assert EML in logfile
     assert "EMAIL-SUBJECT" in logfile
     assert "EMAIL-CONTENT" in logfile
+
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
     assert email["From"] == EML
