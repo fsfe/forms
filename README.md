@@ -269,7 +269,13 @@ following keys:
 
 ### Testing in a local docker container
 
-In order to contribute, a local testing setup is very useful. All you need is Docker and docker-compose. In the repository, just run `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build` to spin up the three default containers this application includes and an extra "fake SMTP" for local testing.
+In order to contribute, a local testing setup is very useful. All you
+need is Docker and docker-compose. To spin up the three default
+containers this application (including and an extra "fake SMTP" for
+local testing) run the following command:
+```sh
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
 
 #### Fake SMTP server
 
