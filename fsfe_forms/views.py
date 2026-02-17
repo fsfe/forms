@@ -175,10 +175,8 @@ def _process(config, params, id=None, store=None) -> str:
                 message["Reply-To"],
                 params,
             )
-    else:
-        # Store data in JSON log without having sent an email
-        if store:
-            json_store.log(store, "", [""], "", "", "", params)
+    elif store:  # Store data in JSON log without having sent an email
+        json_store.log(store, "", [""], "", "", "", params)
 
     # Redirect the user's browser
     return redirect(render_template_string(config["redirect"], **params))
