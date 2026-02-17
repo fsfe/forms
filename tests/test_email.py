@@ -1,7 +1,7 @@
-# =============================================================================
-# Functional tests of the "email" endpoint
-# =============================================================================
-# This file is part of the FSFE Form Server.
+"""Functional tests of the "email" endpoint.
+
+This file is part of the FSFE Form Server.
+"""
 
 # =============================================================================
 # GET method

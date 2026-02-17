@@ -1,7 +1,7 @@
-# =============================================================================
-# Functional tests of the "confirm" and "redeem" endpoint
-# =============================================================================
-# This file is part of the FSFE Form Server.
+"""Functional tests of the "confirm" and "redeem" endpoint.
+
+This file is part of the FSFE Form Server.
+"""
 
 
 def test_confirm_redeem_id(client, signed_up):

@@ -1,7 +1,7 @@
-# =============================================================================
-# Fixtures for functional tests
-# =============================================================================
-# This file is part of the FSFE Form Server.
+"""Fixtures for functional tests.
+
+This file is part of the FSFE Form Server.
+"""
 
 import pytest
 from fakeredis import FakeRedis
