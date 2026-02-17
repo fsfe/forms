@@ -21,13 +21,9 @@ def redis_mock(mocker):
     return mocker.patch("redis.Redis", FakeRedis)
 
 
-# -----------------------------------------------------------------------------
-# Mocked logfile
-# -----------------------------------------------------------------------------
-
-
 @pytest.fixture
 def file_mock(mocker):
+    """Mock the logfile."""
     mocker.patch("os.makedirs")
     return mocker.patch(
         "fsfe_forms.json_store.open", mocker.mock_open(read_data="[\n]")
@@ -42,24 +38,16 @@ def fsfe_cd_mock(mocker):
     return mocker.patch(target="fsfe_forms.cd.post", return_value=response)
 
 
-# -----------------------------------------------------------------------------
-# WebTest application interface
-# -----------------------------------------------------------------------------
-
-
 @pytest.fixture
 def app(redis_mock):
+    """Mock the WebTest application interface."""
     config.TESTING = True
     return create_app()
 
 
-# -----------------------------------------------------------------------------
-# An already signed up user
-# -----------------------------------------------------------------------------
-
-
 @pytest.fixture
 def signed_up(client, smtp_mock):
+    """Mock a signed up user."""
     client.get(
         path="/email",
         query_string={
