@@ -3,6 +3,9 @@
 This file is part of the FSFE Form Server.
 """
 
+from http import HTTPStatus
+
+
 # =============================================================================
 # GET method
 # =============================================================================
@@ -22,7 +25,7 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
             "content": "EMAIL-CONTENT",
         },
     )
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
     assert response.location == "https://fsfe.org/contact/"
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
@@ -46,12 +49,12 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
 
 def test_email_get_no_params(client):
     response = client.get(path="/email")
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_email_get_bad_appid(client):
     response = client.get(path="/email", query_string={"appid": "BAD-APPID"})
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 # -----------------------------------------------------------------------------
@@ -70,7 +73,7 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
             "permissionPriv": "yes",
         },
     )
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
     assert response.location == "https://publiccode.eu/en/openletter/confirm"
     # Check no logfile written (yet).
     assert not file_mock().write.called
@@ -95,7 +98,7 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
             "permissionPriv": "yes",
         },
     )
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
     assert response.location == "https://publiccode.eu/en/openletter/confirm"
     # Check no logfile written (yet).
     assert not file_mock().write.called
@@ -128,7 +131,7 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
             "content": "EMAIL-CONTENT",
         },
     )
-    assert response.status_code == 302
+    assert response.status_code == HTTPStatus.FOUND
     assert response.location == "https://fsfe.org/contact/"
     # Check logfile written.
     logfile = file_mock().write.call_args[0][0]
@@ -152,9 +155,9 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
 
 def test_email_post_no_params(client):
     response = client.post(path="/email")
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_email_post_bad_appid(client):
     response = client.post(path="/email", data={"appid": "BAD-APPID"})
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
