@@ -66,9 +66,9 @@ domain_blacklist: set[str] = {
 
 def _validate(config: dict, params: dict, confirm: bool) -> None:
     """Validate parameters"""
-    current_app.logger.debug("config:", config)
-    current_app.logger.debug("params:", params)
-    current_app.logger.debug("confirm:", confirm)
+    current_app.logger.debug("config: %s", config)
+    current_app.logger.debug("params: %s", params)
+    current_app.logger.debug("confirm: %s", confirm)
     # Build Marshmallow Schema from configuration
     fields = {
         "appid": String(required=True),
@@ -86,7 +86,7 @@ def _validate(config: dict, params: dict, confirm: bool) -> None:
             # Check if email is in custom blacklist
             if params["confirm"].split("@")[-1] in domain_blacklist:
                 current_app.logger.info(
-                    "Email address is on domain blacklist:", params["confirm"]
+                    "Email address is on domain blacklist: %s", params["confirm"]
                 )
                 abort(
                     422,
@@ -101,7 +101,7 @@ def _validate(config: dict, params: dict, confirm: bool) -> None:
             )
             if result is False:
                 current_app.logger.info(
-                    "Caught invalid email address:", params["confirm"]
+                    "Caught invalid email address: %s", params["confirm"]
                 )
                 abort(
                     422,
@@ -109,13 +109,13 @@ def _validate(config: dict, params: dict, confirm: bool) -> None:
                 )
             elif result is None:
                 current_app.logger.warning(
-                    "Could not verify email address:", params["confirm"]
+                    "Could not verify email address: %s", params["confirm"]
                 )
         except KeyError:
             current_app.logger.warning("Could not validate email address.")
-            current_app.logger.info("config:", config)
-            current_app.logger.info("params:", params)
-            current_app.logger.info("confirm:", confirm)
+            current_app.logger.info("config: %s", config)
+            current_app.logger.info("params: %s", params)
+            current_app.logger.info("confirm: %s", confirm)
 
     for name, options in config.items():
         field_class = String
