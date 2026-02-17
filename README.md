@@ -214,10 +214,8 @@ the user's email address *must* be called "confirm".
 This will confirm an e-mail address if using double opt-in. The following
 parameters are supported:
 
- * id (required)
-
-The id is generated automatically by the forms system. You should never need to
-generate this URL yourself.
+1. **id** (required) -- generated automatically by the forms system. You
+   should never need to generate this URL yourself.
 
 
 ## Application configuration
