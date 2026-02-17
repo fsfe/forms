@@ -10,7 +10,7 @@
 import json
 import logging
 import logging.handlers
-import os
+from os import path
 
 import redis
 from flask import Flask
@@ -71,7 +71,7 @@ def create_app():
     )
 
     # Load application configurations
-    filename = os.path.join(os.path.dirname(__file__), "applications.json")
+    filename = path.join(path.dirname(__file__), "applications.json")
     with open(filename) as f:
         app.app_configs = json.load(f)
 
