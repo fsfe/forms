@@ -5,7 +5,7 @@ This file is part of the FSFE Form Server.
 
 from http import HTTPStatus
 
-from .conftest import EML, NAME
+from .conftest import EML, FSFE_ADDRS, NAME
 
 
 def test_confirm_redeem_id(client, signed_up):
@@ -44,10 +44,7 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
     # sender
     assert email["From"] == f"{NAME} <{EML}>"
     # recipients
-    assert email["To"] in [
-        "Free Software Foundation Europe <contact@fsfe.org>",
-        "Free Software Foundation Europe <helpdesk@fsfe.org>",
-    ]
+    assert email["To"] in FSFE_ADDRS
     # subject
     assert email["Subject"] == f"Application for Legal Network membership by {NAME}"
     # content

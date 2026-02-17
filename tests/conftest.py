@@ -14,6 +14,11 @@ from fsfe_forms import config, create_app
 EML: str = "EMAIL@example.com"
 NAME: str = "THE NAME"
 
+FSFE_ADDRS: set[str] = {
+        "Free Software Foundation Europe <contact@fsfe.org>",
+        "Free Software Foundation Europe <helpdesk@fsfe.org>",
+    }
+
 
 @pytest.fixture
 def smtp_mock(mocker):

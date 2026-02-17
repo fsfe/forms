@@ -5,7 +5,7 @@ This file is part of the FSFE Form Server.
 
 from http import HTTPStatus
 
-from .conftest import EML, NAME
+from .conftest import EML, FSFE_ADDRS, NAME
 
 
 # =============================================================================
@@ -39,10 +39,7 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     # sender
     assert email["From"] == EML
     # recipient
-    assert email["To"] in [
-        "Free Software Foundation Europe <contact@fsfe.org>",
-        "Free Software Foundation Europe <helpdesk@fsfe.org>",
-    ]
+    assert email["To"] in FSFE_ADDRS
     # subject
     assert email["Subject"] == "EMAIL-SUBJECT"
     # body
@@ -145,10 +142,7 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     # sender
     assert email["From"] == EML
     # recipient
-    assert email["To"] in [
-        "Free Software Foundation Europe <contact@fsfe.org>",
-        "Free Software Foundation Europe <helpdesk@fsfe.org>",
-    ]
+    assert email["To"] in FSFE_ADDRS
     # subject
     assert email["Subject"] == "EMAIL-SUBJECT"
     # content
