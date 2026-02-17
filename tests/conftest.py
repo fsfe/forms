@@ -11,19 +11,9 @@ from requests import Response
 from fsfe_forms import config, create_app
 
 
-# -----------------------------------------------------------------------------
-# Mocked SMTP connection
-# -----------------------------------------------------------------------------
-
-
 @pytest.fixture
 def smtp_mock(mocker):
     return mocker.patch("smtplib.SMTP")
-
-
-# -----------------------------------------------------------------------------
-# Mocked Redis connection
-# -----------------------------------------------------------------------------
 
 
 @pytest.fixture
@@ -42,11 +32,6 @@ def file_mock(mocker):
     return mocker.patch(
         "fsfe_forms.json_store.open", mocker.mock_open(read_data="[\n]")
     )
-
-
-# -----------------------------------------------------------------------------
-# Mocked backend connection
-# -----------------------------------------------------------------------------
 
 
 @pytest.fixture
