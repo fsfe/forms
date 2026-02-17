@@ -27,7 +27,6 @@ the API configuration, which is available in `fsfe_forms/applications.json`.
 - [Usage](#usage)
 - [API](#api)
 - [Contribute](#contribute)
-- [License](#license)
 
 ## Install
 
@@ -299,10 +298,3 @@ After running docker-compose, you can access all services locally:
 Now you either replace the URLs of a form with `http://localhost:8080/email` (for example in your browser with developer tools), or send POST requests via curl like: `curl -X POST "http://localhost:8080/email" -d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`.
 
 On `http://localhost:1080` you can then see the sent emails.
-
-## License
-
-This project is mainly licensed under GPL-3.0-or-later, but also
-contains components under CC-BY-SA-4.0 and CC0-1.0. It is fully [REUSE
-compliant](https://reuse.software) so it contains licensing and
-copyright information for every file.
