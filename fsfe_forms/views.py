@@ -64,7 +64,7 @@ domain_blacklist: set[str] = {
 }
 
 
-def _validate(config: dict, params: dict, confirm: bool):
+def _validate(config: dict, params: dict, confirm: bool) -> None:
     """Validate parameters"""
     current_app.logger.debug("config:", config)
     current_app.logger.debug("params:", params)
@@ -80,7 +80,7 @@ def _validate(config: dict, params: dict, confirm: bool):
 
         # Don't do expensive email validation in testing
         if current_app.testing or current_app.debug:
-            return True
+            return
 
         try:
             # Check if email is in custom blacklist
@@ -151,7 +151,6 @@ def _validate(config: dict, params: dict, confirm: bool):
     if errors:
         messages = [k + ": " + " ".join(v) for k, v in errors.items()]
         abort(422, "\n".join(messages))
-    return None
 
 
 def _process(config, params, id=None, store=None):
