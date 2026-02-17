@@ -26,7 +26,7 @@ packages = [
 select = [
   # "ANN",   # Flake 8 type annotations
   # "A",     # prevent using keywords that clobber python builtins
-  # "ARG",   # Unused arguments
+  "ARG",   # Unused arguments
   "ASYNC", # Flake 8 aysnc
   "B",     # bugbear: security warnings
   "C4",    # Comprehensions
@@ -55,5 +55,12 @@ select = [
   "UP",    # Update syntax to newer versions
   "W",     # pycodestyle warnings
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  "ANN", "ARG001", "D",
+]
+
 [tool.ruff.lint.isort]
 lines-after-imports = 2
+
