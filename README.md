@@ -288,6 +288,13 @@ After running docker-compose, you can access all services locally:
 * forms-web: http://localhost:8080
 * forms-fakesmtp: http://localhost:1080
 
-Now you either replace the URLs of a form with `http://localhost:8080/email` (for example in your browser with developer tools), or send POST requests via curl like: `curl -X POST "http://localhost:8080/email" -d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`.
+Now you either replace the URLs of a form with
+`http://localhost:8080/email` (for example in your browser with
+developer tools), or send POST requests via curl like:
+```sh
+curl -X POST \
+	"http://localhost:8080/email" \
+	-d "appid=pmpc-sign&name=tester1&confirm=mail@example.com&permissionPriv=yes"`
+```
 
 On `http://localhost:1080` you can then see the sent emails.
