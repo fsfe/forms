@@ -23,14 +23,9 @@ the API configuration, which is available in `fsfe_forms/applications.json`.
 
 ## Table of Contents
 
-- [Install](#install)
 - [Usage](#usage)
 - [API](#api)
 - [Contribute](#contribute)
-
-## Install
-
-See the file `doc/install.md`.
 
 ## Usage
 
