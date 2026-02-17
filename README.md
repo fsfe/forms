@@ -279,11 +279,17 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 #### Fake SMTP server
 
-To test emails, you are recommended to use `fake-smtp-server` linked as submodule in this repository. It allows you to use a local SMTP server which does not send the emails but lists them in your browser. Doing this, you can view and debug sent emails without having to set up this service.
+To test emails, you are recommended to use `fake-smtp-server` linked
+as submodule in this repository. It allows you to use a local SMTP
+server which does not send the emails but lists them in your
+browser. Doing this, you can view and debug sent emails without having
+to set up this service.
 
-The above command using the extra file `docker-compose.dev.yml` sets this up automatically.
+The above command using the extra file `docker-compose.dev.yml` sets
+this up automatically.
 
-More info on the fake smtp server on [its official website](https://www.npmjs.com/package/fake-smtp-server).
+More info on the fake smtp server on [its official
+website](https://www.npmjs.com/package/fake-smtp-server).
 
 #### Use the service locally
 
