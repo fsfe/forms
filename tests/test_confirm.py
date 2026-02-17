@@ -41,13 +41,9 @@ def test_redeem(client, smtp_mock, redis_mock, file_mock, fsfe_cd_mock, signed_u
     assert NAME in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
-    # sender
     assert email["From"] == f"{NAME} <{EML}>"
-    # recipients
     assert email["To"] in FSFE_ADDRS
-    # subject
     assert email["Subject"] == f"Application for Legal Network membership by {NAME}"
-    # content
     assert "MY ACTIVITIES" in email.as_string()
 
 

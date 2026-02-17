@@ -36,13 +36,9 @@ def test_email_get(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
-    # sender
     assert email["From"] == EML
-    # recipient
     assert email["To"] in FSFE_ADDRS
-    # subject
     assert email["Subject"] == "EMAIL-SUBJECT"
-    # body
     assert "EMAIL-CONTENT" in email.as_string()
 
 
@@ -78,11 +74,8 @@ def test_email_get_with_confirmation(client, smtp_mock, redis_mock, file_mock):
     assert not file_mock().write.called
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
-    # sender
     assert "no-reply@fsfe.org" in email["From"]
-    # recipient
     assert email["To"] == f"{NAME} <{EML}>"
-    # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
 
@@ -103,11 +96,8 @@ def test_email_get_duplicate(client, smtp_mock, redis_mock, file_mock, signed_up
     assert not file_mock().write.called
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
-    # sender
     assert "no-reply@fsfe.org" in email["From"]
-    # recipient
     assert email["To"] == f"{NAME} <{EML}>"
-    # subject
     assert email["Subject"] == "Public Code: Please confirm your signature"
 
 
@@ -139,13 +129,9 @@ def test_email_post(client, smtp_mock, redis_mock, file_mock):
     assert "EMAIL-CONTENT" in logfile
     # Check email sent.
     email = smtp_mock().__enter__().send_message.call_args[0][0]
-    # sender
     assert email["From"] == EML
-    # recipient
     assert email["To"] in FSFE_ADDRS
-    # subject
     assert email["Subject"] == "EMAIL-SUBJECT"
-    # content
     assert "EMAIL-CONTENT" in email.as_string()
 
 
