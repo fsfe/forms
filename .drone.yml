@@ -1,3 +1,4 @@
+---
 # =============================================================================
 # Continuous Delivery instructions
 # =============================================================================
@@ -50,7 +51,7 @@ steps:
 
   - name: deploy
     pull: if-not-exists
-    image: docker:28
+    image: docker:29
     commands:
       - docker compose -p forms up --build -d
     environment:
@@ -78,3 +79,8 @@ volumes:
   - name: dockersock
     host:
       path: /run/user/1001/docker.sock
+---
+kind: signature
+hmac: 4a47470373ba8f7bb54fba21ed9207b406f1ce1321f719fb23ba6b7358bf7f48
+
+...
