@@ -46,7 +46,7 @@ services:
       - "6379"
 
   forms-maildev:
-    image: maildev/maildev:2.2.1
+    image: maildev/maildev:3.0.0
     container_name: forms-maildev
     ports:
       - "1025:1025"
